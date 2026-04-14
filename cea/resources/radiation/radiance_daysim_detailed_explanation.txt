@@ -1,0 +1,199 @@
+City Energy Analyst (CEA): How Radiance and Daysim Work
+=======================================================
+
+Scope
+-----
+This note explains how CEA runs the classic radiation pipeline (`cea radiation`) using Radiance/Daysim, what files are created, and how downstream modules (demand and solar technologies) use the results.
+
+Quick Mental Model
+------------------
+- Radiance in CEA is used to describe scene optics and geometry (materials, polygons, sensor rays).
+- Daysim is used to run annual hourly daylight-coefficient calculations from weather + geometry + sensors.
+- CEA glues both together in `cea/resources/radiation/main.py`, `radiance.py`, `daysim.py`, and `geometry_generator.py`.
+
+Entry Point and High-Level Flow
+-------------------------------
+Script registry:
+- `scripts.yml` -> `radiation` script maps to `cea.resources.radiation.main`.
+
+Runtime sequence in `main(config)` (`cea/resources/radiation/main.py`):
+1. Resolve scenario paths with `InputLocator`.
+2. Locate Daysim binaries (`daysim.check_daysim_bin_directory`).
+3. Read and validate input geometry:
+   - `inputs/geometry/zone.shp`
+   - `inputs/geometry/surroundings.shp`
+   - optional trees geometry
+4. Read envelope optical data (wall/roof reflectance, window transmittance source).
+5. Build 3D geometry and save `BuildingGeometry` pickles.
+6. Create Radiance material and geometry files.
+7. Convert weather EPW -> WEA (`epw2wea`).
+8. Convert Radiance source files to Daysim-ready files (`radfiles2daysim`).
+9. Split selected buildings into chunks and run Daysim per chunk.
+10. Aggregate and write per-building radiation outputs.
+11. Clean temporary project folders.
+
+Geometry Preparation (What gets simulated)
+------------------------------------------
+Implemented in `geometry_generator.py`.
+
+Key points:
+- Surfaces are classified into:
+  - `walls`, `windows`, `roofs`, `undersides`
+- Orientations are labelled:
+  - walls/windows: `north`, `south`, `east`, `west`
+  - roofs: `top`
+  - undersides: `bottom`
+- Buildings are converted from 2D footprints to 3D solids/faces, with terrain-aware elevation.
+- For each building, a `BuildingGeometry` object is pickled to:
+  - `<scenario>/outputs/data/solar-radiation/radiance_geometry_pickle/zone/<building>`
+  - plus surroundings pickles
+
+These pickles are later read by `daysim.py` to generate sensor grids and metadata.
+
+Material and Optical Modelling
+------------------------------
+Implemented in `radiance.py`.
+
+Material inputs come from:
+- Building architecture file (`type_wall`, `type_roof`, `type_win`)
+- Assemblies databases for:
+  - `r_wall` (wall reflectance)
+  - `r_roof` (roof reflectance)
+  - `G_win` (window solar transmittance input)
+
+CEA then writes Radiance materials:
+- Opaque surfaces as `plastic`
+- Windows as `glass`
+- Window transmissivity is computed from `G_win` via `calc_transmissivity(...)` (Radiance empirical relation)
+
+Files produced in a shared staging area (`common_inputs`):
+- `radiance_material.rad`
+- `radiance_geometry.rad`
+- converted Daysim files (e.g., `daysim_material.rad`, `daysim_geometry.rad`)
+- `weather_60min.wea`
+
+If trees exist, CEA writes `daysim_shading.rad` and uses a manual shading block in the header.
+
+Sensor Grid Generation
+----------------------
+Implemented in `daysim.py` (`calc_sensors_building`, `calc_sensors_zone`).
+
+For each building:
+- Each relevant face is subdivided into sensor patches using grid size:
+  - `radiation:roof-grid`
+  - `radiation:walls-grid`
+- A sensor point is set at each patch midpoint, slightly offset from the face.
+- For each sensor CEA records:
+  - coordinates (`Xcoor`, `Ycoor`, `Zcoor`)
+  - normal vector (`Xdir`, `Ydir`, `Zdir`)
+  - area represented (`AREA_m2`)
+  - type + orientation
+  - intersection flags
+
+Metadata file written:
+- `<scenario>/outputs/data/solar-radiation/<building>_geometry.csv`
+
+Daysim Project Creation and Commands
+------------------------------------
+For each chunk, CEA creates a Daysim project (`DaySimProject`) with a `.hea` file containing:
+- project and file paths
+- weather/site info
+- material/geometry file references
+- sensor file reference
+- output units
+- Radiance ray-tracing parameters (`ab`, `ad`, `as`, etc.)
+- `additional_rtrace_parameter -u-` for deterministic sampling
+
+Command sequence per chunk:
+1. `gen_dc <hea> -dir`
+2. `gen_dc <hea> -dif`
+3. `gen_dc <hea> -paste`
+4. `ds_illum <hea>`
+
+What each does:
+- `gen_dc`: computes direct and diffuse daylight coefficients and combines them.
+- `ds_illum`: multiplies daylight coefficients with weather/time data to produce annual hourly sensor irradiance/illuminance results.
+
+Result Parsing, Cleaning, and Aggregation
+-----------------------------------------
+`DaySimProject.eval_ill()` reads `<chunk>.ill` and returns array shape:
+- rows = sensors
+- columns = hours
+
+CEA post-processing in `daysim.isolation_daysim(...)`:
+- Clips negative and extreme values to `[0, max_global_horizontal_from_epw]`.
+- Removes leap-day hours if present (to force 8760 hours).
+- Sets intersecting sensors to zero.
+
+Aggregation in `write_aggregated_results(...)`:
+- Sensor irradiance (Wh/m2) is multiplied by sensor area and converted to kW-equivalent hourly power per grouped surface.
+- Group labels like:
+  - `walls_east_kW`, `walls_east_m2`
+  - `windows_south_kW`, `windows_south_m2`
+  - `roofs_top_kW`, `roofs_top_m2`
+  - `undersides_bottom_kW`, `undersides_bottom_m2`
+- Missing surface-direction combinations are added as zero columns.
+
+Main output file:
+- `<scenario>/outputs/data/solar-radiation/<building>_radiation.csv`
+
+Optional high-resolution output (if `radiation:write-sensor-data = true`):
+- `<scenario>/outputs/data/solar-radiation/<building>_insolation_Whm2.feather`
+- Contains per-sensor hourly values (used by solar technology modules).
+
+How Demand Uses Radiation Results
+---------------------------------
+`cea/demand/building_properties/building_solar.py` reads `<building>_radiation.csv` and computes sensible solar gains:
+- Wall gains from sum of wall orientations, scaled by envelope absorptance/U-value/resistance terms.
+- Roof gains from `roofs_top_kW`.
+- Window gains from window orientations with blind activation logic.
+- These are combined into hourly `I_sol` for demand simulation.
+
+`cea/demand/building_properties/building_rc_model.py` also reads geometry-area columns from `<building>_radiation.csv` to update envelope area terms (`Awall_ag`, `Awin_ag`, `Aroof`, `Aunderside`).
+
+Key Configuration Knobs (`[radiation]`)
+---------------------------------------
+From `cea/default.config`:
+- Geometry/detail controls:
+  - `buildings`
+  - `roof-grid`, `walls-grid`
+  - `zone-geometry`, `surrounding-geometry`
+  - `consider-floors`, `neglect-adjacent-buildings`
+- Radiance/Daysim ray parameters:
+  - `rad-ab`, `rad-ad`, `rad-as`, `rad-ar`, `rad-aa`
+  - `rad-lr`, `rad-st`, `rad-sj`, `rad-lw`
+  - `rad-dj`, `rad-ds`, `rad-dr`, `rad-dp`
+- Execution controls:
+  - `daysim-bin-directory`
+  - `n-buildings-in-chunk`
+  - `write-sensor-data`
+
+Binary Detection and Portability
+--------------------------------
+`daysim.check_daysim_bin_directory(...)` searches for required binaries:
+- `ds_illum`, `epw2wea`, `gen_dc`, `oconv`, `radfiles2daysim`, `rtrace_dc`
+
+CEA checks configured hints and packaged fallback locations (`cea/resources/radiation/bin/<platform>`), then sets environment variables (`PATH`, `RAYPATH`) when running commands.
+
+Parallelisation Strategy
+------------------------
+- Buildings are partitioned into chunks (`n-buildings-in-chunk`).
+- Each chunk is an independent Daysim project folder.
+- CEA can execute chunks in parallel via `cea.utilities.parallel.vectorize`.
+- Shared common inputs avoid re-generating identical material/geometry/weather assets for each chunk.
+
+Practical Notes
+---------------
+- If you need PV/PVT/SC workflows, keep `write-sensor-data = true`.
+- If runtime is too high, increase grid sizes (coarser mesh) and/or reduce selected buildings.
+- If you observe unstable results across runs, note CEA enforces deterministic `rtrace` behaviour via `-u-` in the header.
+- CEA now also has a `radiation-crax` script (beta), but the classic, established path remains the Radiance/Daysim pipeline described above.
+
+File Map (Most Relevant)
+------------------------
+- `cea/resources/radiation/main.py` - orchestration
+- `cea/resources/radiation/geometry_generator.py` - 3D surfaces and pickles
+- `cea/resources/radiation/radiance.py` - materials, headers, command wrappers
+- `cea/resources/radiation/daysim.py` - sensors, execution, aggregation
+- `cea/demand/building_properties/building_solar.py` - demand-side solar gains
+- `cea/demand/building_properties/building_rc_model.py` - envelope geometry area usage

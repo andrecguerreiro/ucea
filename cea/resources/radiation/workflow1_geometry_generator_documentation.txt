@@ -1,0 +1,488 @@
+WORKFLOW 1 DOCUMENTATION
+Custom roof remapping in modified geometry_generator.py
+====================================================================
+1. PURPOSE OF THE MODIFICATION
+====================================================================
+
+Original CEA behavior
+---------------------
+In the original geometry generation workflow, each building starts from a 2D footprint polygon coming from zone.shp or surroundings.shp. The function calc_solid(...) extrudes that footprint vertically. This creates:
+- one bottom face (footprint / underside),
+- vertical wall faces,
+- one flat top face.
+
+So, for any zone building, the roof geometry sent downstream is the flat roof created by the extrusion process.
+
+Workflow 1 behavior
+-------------------
+Workflow 1 keeps the original CEA pipeline for:
+- footprint handling,
+- terrain intersection,
+- building extrusion,
+- wall generation,
+- window generation,
+- adjacency / intersection checks,
+- pickle serialization format.
+
+But it changes ONE key thing for zone buildings:
+- instead of using the flat roof obtained from the extrusion,
+- it loads custom roof polygons from roof_surfaces.geojson,
+- converts those polygons into OCC faces,
+- and overwrites the roof_list before the BuildingGeometry object is saved.
+
+This means that the geometry pickle keeps the same data model expected by CEA, but the "roofs" entry now contains custom sloped / segmented roof faces derived from the GeoJSON rather than the default flat roof face.
+
+====================================================================
+2. HIGH-LEVEL DATA FLOW
+====================================================================
+
+The modified flow is:
+
+1) CEA reads standard scenario inputs:
+   - zone.shp
+   - surroundings.shp
+   - terrain.tif
+   - architecture data (for WWR)
+
+2) geometry_main(...) standardizes coordinate systems.
+
+3) geometry_main(...) calls:
+   load_custom_roof_faces(config, zone_df.crs)
+
+4) roof_surfaces.geojson is read from:
+   <scenario>/inputs/building-geometry/roof_surfaces.geojson
+
+5) For each GeoJSON feature:
+   - building identifier is read from column "building"
+   - geometry is read as Polygon or MultiPolygon
+   - each polygon is converted into an OCC face
+   - the face is stored in a dictionary keyed by building name
+
+6) building_2d_to_3d(...) creates the normal 3D solid from the 2D footprint, as CEA always did.
+
+7) calc_building_geometry_zone(...) identifies walls / roofs / footprint from the extruded solid.
+
+8) If a custom roof exists for that building:
+   roof_list = custom_roofs_by_building[name]
+
+9) The BuildingGeometry object is saved exactly as before, with:
+   - walls from extrusion
+   - windows from wall processing
+   - footprint / underside from extrusion
+   - roofs replaced by custom faces
+
+10) Radiation / Daysim / photovoltaic use the saved pickle without needing a new data model.
+
+====================================================================
+3. WHAT EXACTLY WAS CHANGED IN THE CODE
+====================================================================
+
+The modified behavior is concentrated in five places.
+
+--------------------------------------------------------------------
+3.1. New helper: _iter_polygons(geometry)
+--------------------------------------------------------------------
+
+Purpose:
+Normalize GeoJSON geometry input so the rest of the code can treat both Polygon and MultiPolygon consistently.
+
+Behavior:
+- If geometry is Polygon -> yield it once
+- If geometry is MultiPolygon -> yield each component polygon
+- If geometry is None -> yield nothing
+
+Why it matters:
+A building roof may be represented by:
+- a single polygon, or
+- multiple polygons (for multiple roof planes / roof pieces)
+
+This helper allows both cases to be handled with the same loop.
+
+--------------------------------------------------------------------
+3.2. New helper: _polygon_to_occ_face(poly)
+--------------------------------------------------------------------
+
+Purpose:
+Convert one shapely polygon with XYZ coordinates into the OCC face format used by CEA geometry objects.
+
+Code logic:
+1) Read exterior coordinates:
+   coords = list(poly.exterior.coords)
+
+2) Reject invalid polygons:
+   - fewer than 4 coordinates
+   - no Z coordinate
+
+3) Convert each coordinate tuple into:
+   (float(x), float(y), float(z))
+
+4) Build OCC face:
+   face = construct.make_polygon(points)
+
+5) Compute face normal:
+   n = calculate.face_normal(face)
+
+6) If normal points downward (n[2] < 0):
+   - reverse point order
+   - recreate polygon
+
+
+-------------------------------------------------------------------
+3.3. New loader: load_custom_roof_faces(config, target_crs)
+--------------------------------------------------------------------
+
+Purpose:
+Read roof_surfaces.geojson and build:
+    dict[str, list[TopoDS_Face]]
+
+Expected input file:
+<scenario>/inputs/building-geometry/roof_surfaces.geojson
+
+Expected columns:
+- building : building identifier matching zone "name"
+- geometry : Polygon or MultiPolygon with XYZ coordinates
+
+Detailed logic:
+1) Build file path
+2) If file does not exist -> return {}
+3) If file is empty -> return {}
+4) If "building" column missing -> raise ValueError
+5) If roof CRS differs from target CRS -> reproject
+6) Iterate over rows
+7) Skip rows with missing building name
+8) Iterate through polygon(s) in geometry
+9) Convert each polygon to OCC face
+10) Store by building name
+
+Output example:
+{
+    "B1000": [roof_face_1, roof_face_2],
+    "B1001": [roof_face_1],
+    ...
+}
+
+--------------------------------------------------------------------
+3.4. geometry_main(...) now loads custom roofs
+--------------------------------------------------------------------
+
+Inserted line:
+    custom_roofs_by_building = load_custom_roof_faces(config, zone_df.crs)
+
+Meaning:
+After all inputs are reprojected to a common projected CRS, the custom roofs are also brought into that same CRS before any geometric substitution happens.
+
+Why this is essential:
+If the roof GeoJSON were left in a different CRS from zone.shp, then:
+- building footprints and roof polygons would not spatially coincide,
+- roof faces would appear in the wrong location,
+- downstream radiation calculations would be meaningless.
+
+So workflow 1 depends on CRS consistency before the replacement step.
+
+--------------------------------------------------------------------
+3.5. building_2d_to_3d(...) now passes custom_roofs_by_building forward
+--------------------------------------------------------------------
+
+Signature change:
+    building_2d_to_3d(..., geometry_pickle_dir, custom_roofs_by_building)
+
+and inside multiprocessing call:
+    repeat(custom_roofs_by_building, n)
+
+Meaning:
+Every zone building geometry worker receives the dictionary of custom roofs and can decide whether its roof should be replaced.
+
+--------------------------------------------------------------------
+3.6. calc_building_geometry_zone(...) now performs the actual replacement
+--------------------------------------------------------------------
+
+Signature change:
+    calc_building_geometry_zone(..., architecture_wwr_df,
+                                custom_roofs_by_building,
+                                geometry_pickle_dir, ...)
+
+Critical inserted block:
+    custom_roofs = custom_roofs_by_building.get(name, [])
+    if custom_roofs:
+        roof_list = custom_roofs
+        print(f"Using {len(roof_list)} custom roof faces for building {name}")
+
+This is the real workflow 1 substitution point.
+
+Before this line:
+- roof_list comes from identify_surfaces_type(face_list)
+- therefore roof_list corresponds to the top horizontal face(s) of the extruded solid
+
+After this line:
+- if the building exists in the GeoJSON mapping,
+  roof_list is overwritten by custom OCC faces from the GeoJSON
+
+Then the rest of the code continues unchanged:
+- normals are computed
+- intersections are computed
+- orientation is labeled as "top"
+- BuildingGeometry is serialized
+
+So the change is local, surgical, and intentionally minimal.
+
+====================================================================
+4. MATHEMATICAL INTERPRETATION OF THE MODIFICATION
+====================================================================
+
+--------------------------------------------------------------------
+4.1. Original CEA roof geometry
+--------------------------------------------------------------------
+
+Let the building footprint in projected coordinates be the 2D polygon:
+
+    P = {(x_i, y_i)} for i = 1, ..., N
+
+Let:
+- z_terrain be the terrain elevation assigned to the footprint
+- H be the above-ground building height
+
+CEA forms the base face:
+    B = {(x_i, y_i, z_terrain)}
+
+Then the roof generated by extrusion is simply:
+    R_flat = {(x_i, y_i, z_terrain + H)}
+
+This means every roof point has identical height:
+    z = z_terrain + H
+
+Geometrically, this is a horizontal plane, with normal approximately:
+    n_flat = (0, 0, 1)
+
+That is a LOD1-like roof representation: correct footprint outline, but no roof pitch, no ridge, no plane segmentation.
+
+--------------------------------------------------------------------
+4.2. Workflow 1 roof geometry
+--------------------------------------------------------------------
+
+Instead of using R_flat, workflow 1 defines the roof as one or more custom polygons:
+
+    R_k = {(x_i, y_i, z_i)}   for roof plane k
+
+Now z varies with x and y:
+    z = a_k x + b_k y + c_k     (for planar roof face k)
+
+Each roof polygon represents one plane of a segmented roof.
+
+This means the roof is no longer horizontal. Its normal vector is obtained from the polygon geometry itself.
+
+If three non-collinear points on a roof plane are:
+    p1 = (x1, y1, z1)
+    p2 = (x2, y2, z2)
+    p3 = (x3, y3, z3)
+
+then two in-plane vectors are:
+    u = p2 - p1
+    v = p3 - p1
+
+and the non-normalized normal vector is:
+    n = u x v
+
+Explicitly:
+
+    n_x = u_y v_z - u_z v_y
+    n_y = u_z v_x - u_x v_z
+    n_z = u_x v_y - u_y v_x
+
+The upward orientation correction in _polygon_to_occ_face(...) ensures:
+    n_z > 0
+
+This is essential because roof tilt and azimuth are derived from the direction of n.
+
+--------------------------------------------------------------------
+4.3. Roof tilt and azimuth implications
+--------------------------------------------------------------------
+
+For a unit roof normal:
+    n = (n_x, n_y, n_z)
+
+roof tilt beta can be interpreted as angle from vertical:
+
+    beta = arccos(n_z)
+
+when n is normalized and upward.
+
+Interpretation:
+- beta = 0 degrees -> horizontal roof
+- beta > 0 degrees -> sloped roof
+
+The horizontal projection of the normal:
+    n_h = (n_x, n_y, 0)
+
+encodes the roof orientation / aspect.
+
+So workflow 1 improves physical realism because the irradiance engine sees surfaces whose:
+- area,
+- tilt,
+- orientation,
+- segmentation
+
+match the external roof metadata instead of being collapsed to one flat plane.
+
+
+====================================================================
+5. HOW THE GEOJSON IS MADE COMPATIBLE WITH CEA
+====================================================================
+
+The compatibility problem is this:
+
+CEA does not directly consume arbitrary GeoJSON roof metadata.
+CEA expects a BuildingGeometry pickle containing PythonOCC / py4design faces organized in specific attributes such as:
+- roofs
+- walls
+- windows
+- footprint
+- normals_*
+- orientation_*
+- intersect_*
+
+Therefore the workflow must convert:
+    GeoJSON polygon metadata
+into:
+    OCC faces inside the standard BuildingGeometry structure
+
+That compatibility bridge is achieved in four stages.
+
+--------------------------------------------------------------------
+5.1. Stage A: Building-level matching
+--------------------------------------------------------------------
+
+Each GeoJSON roof feature must contain:
+    building = <zone building name>
+
+This name is the foreign key that links external roof data to the building solid produced from zone.shp.
+
+In other words, the mapping is relational:
+    roof_surfaces.geojson.building  <->  zone_df["name"]
+
+Without this exact identifier match, no replacement happens.
+
+--------------------------------------------------------------------
+5.2. Stage B: Coordinate-system matching
+--------------------------------------------------------------------
+
+All geometry must live in the same projected CRS.
+
+That is why:
+    load_custom_roof_faces(config, zone_df.crs)
+
+receives the target CRS and reprojects the GeoJSON if necessary.
+
+This ensures the custom roof polygons occupy the same metric coordinate space as:
+- footprint polygons,
+- terrain raster,
+- surrounding buildings,
+- tree surfaces.
+
+--------------------------------------------------------------------
+5.3. Stage C: Geometry-type conversion
+--------------------------------------------------------------------
+
+CEA stores geometry as OCC topological faces, not as shapely / GeoJSON objects.
+
+So each polygon must be transformed:
+
+    GeoJSON Polygon with XYZ
+        -> shapely Polygon
+        -> list of XYZ tuples
+        -> OCC polygon face via construct.make_polygon(...)
+
+This is exactly what _polygon_to_occ_face(...) does.
+
+--------------------------------------------------------------------
+5.4. Stage D: Schema compatibility
+--------------------------------------------------------------------
+
+The saved object must still satisfy the BuildingGeometry slots:
+
+    __slots__ = [
+        "name", "terrain_elevation", "footprint",
+        "windows", "orientation_windows", "normals_windows", "intersect_windows",
+        "walls", "orientation_walls", "normals_walls", "intersect_walls",
+        "roofs", "orientation_roofs", "normals_roofs", "intersect_roofs",
+        "undersides", "orientation_undersides", "normals_undersides", "intersect_undersides"
+    ]
+
+Workflow 1 preserves this exact schema.
+
+The only substantive content change is:
+    roofs := custom roof OCC faces
+
+while:
+    orientation_roofs := ["top"] * len(roof_list)
+    normals_roofs := computed from those custom faces
+    intersect_roofs := computed from those custom faces
+
+This is why the downstream CEA modules still work.
+
+====================================================================
+6. WHAT HAPPENS TO THE GEOMETRY PICKLE
+====================================================================
+
+The geometry pickle is written by:
+
+    building_geometry.save(os.path.join(geometry_pickle_dir, 'zone', str(name)))
+
+Internally:
+- the BuildingGeometry object is serialized as an ordered list matching __slots__
+- pickle.dump(self.__getstate__(), f)
+
+This means the file format itself is unchanged.
+
+Original roof content in pickle:
+- roof faces from extruded solid
+
+Modified roof content in pickle:
+- roof faces from roof_surfaces.geojson if available
+- otherwise fallback to extruded flat roof
+
+Therefore workflow 1 is not a new pickle format.
+It is a replacement of one field's geometric content within the same serialized object structure.
+
+Practical consequence:
+Any CEA code that loads the pickle via:
+    BuildingGeometry.load(...)
+can continue to work without modification, because:
+- the object layout is identical,
+- the attribute names are identical,
+- the object types are identical at the level CEA expects (OCC faces plus lists).
+
+
+====================================================================
+9. ASSUMPTIONS AND LIMITATIONS OF THE CURRENT IMPLEMENTATION
+====================================================================
+
+1) Only zone buildings receive custom roof replacement
+   The replacement happens in calc_building_geometry_zone(...), not in calc_building_geometry_surroundings(...).
+
+2) Building body remains an extrusion of the footprint
+   So the custom roof does not alter wall-top junction geometry or rebuild the solid volume.
+   In other words:
+   - roof surfaces are more realistic,
+   - but the underlying solid used for face classification was still produced from the footprint extrusion.
+
+3) The GeoJSON must contain XYZ coordinates
+   If coordinates do not include Z, _polygon_to_occ_face(...) skips the face.
+
+4) The GeoJSON must have a "building" column
+   Otherwise the loader raises an error.
+
+5) Roof faces are assumed valid as independent polygons
+   The code does not currently check whether:
+   - adjacent roof planes stitch perfectly,
+   - roof edges align with wall tops,
+   - the union of all roof polygons exactly matches the footprint.
+
+6) orientation_roofs is always labeled "top"
+   This is fine for CEA’s category system, but the true directional information is really carried by the normal vector, not by this string.
+
+7) Debug prints remain in the code
+   For example:
+       print(zone_df.head(),'zone_df')
+       print(zone_buildings_df.head(),'zone_buildings_df')
+   These are useful for tracing but are not functionally required.
+

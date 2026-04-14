@@ -1,0 +1,354 @@
+Detailed Technical Note: CEA `photovoltaic.py` and `solar_equations.py`
+=====================================================================
+
+Audience
+--------
+This note is written for researchers and electrical engineers who need to understand, validate, or extend the CEA PV modelling stack in detail.
+
+Scope
+-----
+Files covered:
+- `cea/technologies/solar/photovoltaic.py`
+- `cea/utilities/solar_equations.py`
+
+The note explains:
+- data flow from Daysim radiation outputs to PV electricity outputs,
+- geometric and radiative assumptions,
+- equations used for absorbed irradiance and electrical conversion,
+- configuration and database parameters,
+- implementation caveats relevant for research-grade interpretation.
+
+
+1) Position in the CEA workflow
+-------------------------------
+At a high level, the PV workflow is:
+1. `cea radiation` computes per-sensor irradiance on building envelopes (roof and wall sensors).
+2. `photovoltaic.py` reads those per-sensor results plus sensor metadata.
+3. `solar_equations.py` filters candidate sensors, assigns panel tilt/spacing, groups sensors, and provides solar-geometry utilities.
+4. `photovoltaic.py` computes absorbed irradiance, cell temperature, and electrical output.
+5. Results are written per building and then aggregated to scenario-level totals.
+
+Key dependency chain:
+- Radiation inputs:
+  - `<scenario>/outputs/data/solar-radiation/<building>_insolation_Whm2.feather`
+  - `<scenario>/outputs/data/solar-radiation/<building>_geometry.csv`
+- Weather input:
+  - EPW parsed by `cea.utilities.epwreader.epw_reader`
+
+PV outputs:
+- Per building, per panel type:
+  - `<scenario>/outputs/data/potentials/solar/PV/<building>_<panel_type>.csv`
+- Scenario aggregate hourly:
+  - `<scenario>/outputs/data/potentials/solar/PV_<panel_type>_total.csv`
+- Scenario aggregate annual by building:
+  - `<scenario>/outputs/data/potentials/solar/PV_<panel_type>_total_buildings.csv`
+- Selected sensor metadata used for PV:
+  - `<scenario>/outputs/data/potentials/solar/sensors/<building>_PV_sensors.csv`
+
+
+2) Responsibility split between the two files
+--------------------------------------------
+`solar_equations.py` is mostly responsible for:
+- solar geometry and sun-position utilities,
+- local timezone derivation,
+- sensor filtering and panel placement pre-processing,
+- grouping sensors into representative classes,
+- splitting global irradiance into direct and diffuse components.
+
+`photovoltaic.py` is mostly responsible for:
+- per-building orchestration,
+- absorbed irradiance model for PV modules,
+- cell temperature model,
+- electrical power conversion model,
+- reading panel properties from database,
+- output writing and aggregation.
+
+
+3) End-to-end computational chain (expanded)
+--------------------------------------------
+
+3.1 Entry point (`photovoltaic.main`)
+- Validates scenario path.
+- Reads selected PV panel types (`config.solar.type_PVpanel`).
+- Reads selected buildings (`config.solar.buildings`).
+- Computes site latitude/longitude from zone geometry.
+- Reads EPW weather and builds local datetime index.
+- Parallelises across buildings and panel types.
+
+3.2 Per-building execution (`calc_PV`)
+For each building and panel type:
+1. Load per-sensor radiation time series and metadata.
+2. Compute solar properties (`calc_sun_properties`).
+3. Load panel properties from database (`PHOTOVOLTAIC_PANELS.csv`).
+4. Filter out non-candidate sensors and low-potential points (`filter_low_potential`).
+5. Determine panel tilt/spacing:
+   - automatic (`optimal_angle_and_tilt`) or
+   - user-defined tilt (`calc_spacing_custom_angle`).
+6. Group sensors with similar orientation/tilt/radiation bins (`calc_groups`).
+7. Compute group-level hourly PV generation (`calc_pv_generation`).
+8. Save building-level energy and selected-sensor metadata files.
+9. If no sensors pass thresholds, write zero-valued outputs.
+
+3.3 Scenario aggregation
+- Building CSV results are read back.
+- Hourly outputs are summed.
+- Annual energy and installed area indicators are assembled.
+- Results are saved to scenario-level aggregate files.
+
+
+4) `solar_equations.py` in detail
+---------------------------------
+
+4.1 Time and sun-position handling
+Functions:
+- `calc_datetime_local_from_weather_file`
+- `get_local_etc_timezone`
+- `pyephem`
+- `calc_sun_properties`
+
+Important behaviour:
+- Uses `Etc/GMT` timezone to avoid DST discontinuities.
+- Computes sun azimuth/elevation using `ephem`.
+- Derives declination and hour angle series.
+- Computes `worst_sh` and `worst_Az` for spacing design using `calc_worst_hour`.
+
+`calc_worst_hour`:
+- Northern hemisphere: 21 Dec.
+- Southern hemisphere: 21 Jun.
+- Uses `solar_window_solstice` to choose first shade-free hour around solar noon.
+
+4.2 Clearness/transmissivity proxy
+In `calc_sun_properties`, transmittivity is estimated from weather diffuse fraction:
+- `diff = difhorrad_Whm2 / glohorrad_Whm2`
+- daily mean and then yearly mean are used,
+- returned as `trr_mean` in `SunProperties`.
+
+This `trr_mean` is used later for optimal tilt estimation (Quinn-based formula).
+
+4.3 Sensor filtering (`filter_low_potential`)
+Inputs:
+- Feather radiation matrix per sensor (`8760 x N` expected).
+- Sensor metadata CSV (`N` rows).
+
+Filtering steps:
+1. Add annual sensor total radiation (`total_rad_Whm2`).
+2. Remove windows (`TYPE == windows`).
+3. Remove undersides (`TYPE == undersides`).
+4. Apply `panel_on_roof` and `panel_on_wall` switches.
+5. Apply annual threshold: `annual_radiation_threshold [kWh/m2/yr] * 1000`.
+6. Set hourly irradiance below 50 Wh/m2 to zero.
+
+Output:
+- cleaned radiation matrix,
+- cleaned metadata,
+- maximum annual sensor radiation,
+- threshold in Wh/m2/yr.
+
+4.4 Tilt and spacing assignment
+Automatic mode (`optimal_angle_and_tilt`):
+- For tilted roofs/walls (`tilt_deg >= 5`): panel tilt follows surface tilt.
+- For flat roofs (`tilt_deg < 5`): panel tilt uses `calc_optimal_angle(0, latitude, trr_mean)`.
+- Flat-roof row spacing from `calc_optimal_spacing(sun_properties, tilt, module_length)`.
+- Surface azimuth from sensor normal (`calc_surface_azimuth`).
+- Installed module area per sensor patch accounts for spacing and `roof_coverage`.
+
+Custom mode (`calc_spacing_custom_angle`):
+- Same structure, but flat-roof panel tilt comes from `config.solar.panel_tilt_angle`.
+
+4.5 Surface azimuth convention
+`calc_surface_azimuth` returns azimuth in geological convention:
+- 0 deg / 360 deg = North,
+- 90 deg = East.
+It resolves quadrant from `(Xdir, Ydir)` signs.
+
+4.6 Category bins and grouping
+`calc_categoriesroof` bins each sensor by:
+- azimuth category (`CATteta_z`),
+- tilt category (`CATB`),
+- annual-radiation category (`CATGB`).
+
+`calc_groups` then groups by:
+- (`CATB`, `CATGB`, `CATteta_z`, `type_orientation`).
+For each group, it computes:
+- mean hourly irradiance across sensors,
+- summed area (`AREA_m2`, `area_installed_module_m2`),
+- mean metadata values.
+
+This is a dimensionality-reduction step: sensor-level time series are compressed into a smaller number of representative groups.
+
+4.7 Radiation decomposition
+`calc_radiation_type` decomposes grouped global irradiance:
+- `I_diffuse = ratio_diffhout * I_sol`
+- `I_direct = I_sol - I_diffuse`
+with `ratio_diffhout` coming from EPW preprocessing.
+
+
+5) `photovoltaic.py` in detail
+------------------------------
+
+5.1 Per-group PV physics chain (`calc_pv_generation`)
+For each sensor group and each hour:
+1. Obtain `I_sol`, `I_direct`, `I_diffuse`.
+2. Compute angle of incidence (`pvlib.irradiance.aoi`).
+3. Compute effective incidence angles for diffuse and ground-reflected parts (`calc_diffuseground_comp`).
+4. Compute absorbed irradiance (`calc_absorbed_radiation_PV`).
+5. Compute cell temperature (`calc_cell_temperature`).
+6. Compute electrical output (`calc_PV_power`).
+7. Accumulate results by orientation and total.
+
+5.2 Absorbed irradiance model (`calc_absorbed_radiation_PV`)
+This function models optical conversion from incident to absorbed radiation using:
+- refractive index (`n`),
+- glazing extinction coefficient (`K`),
+- glazing thickness (`PV_th`),
+- air-mass modifier polynomial (`PV_a0...PV_a4`),
+- ground reflectance (`Pg`).
+
+Core structure:
+- compute beam ratio `Rb = cos(theta) / cos(Sz)` (with horizon guards),
+- compute air mass `m` and modifier `M`,
+- compute normal-incidence transmittance-absorptance `Ta_n`,
+- compute incidence modifiers for beam/diffuse/ground-reflected components,
+- combine components:
+
+`G_abs = M * Ta_n * [ k_beam*I_direct*Rb + k_diff*I_diffuse*(1+cos(beta))/2 + k_ground*(I_sol*Pg)*(1-cos(beta))/2 ]`
+
+- clip negative values to zero.
+
+5.3 Air-mass model (`calc_air_mass`)
+- For zenith <= 70 deg: `m = 1/cos(Sz)`.
+- For larger zenith: Kasten-Young type empirical expression with altitude correction.
+
+5.4 Cell temperature (`calc_cell_temperature`)
+NOCT linear model:
+- `T_cell = T_ambient + G_abs * (NOCT - 20) / 800`
+
+5.5 Electrical conversion (`calc_PV_power`)
+Power model:
+
+`P_el = eta_nom * A_module * G_abs * [1 - B_ref*(T_cell - 25)] * (1 - misc_losses) / 1000`
+
+Where:
+- `eta_nom` = nominal module efficiency (`PV_n`),
+- `B_ref` = temperature coefficient (`PV_Bref`),
+- `misc_losses` = aggregate balance-of-system losses.
+
+Output is in kW at hourly resolution (energy columns are named `*_kWh` because each timestep is 1 hour).
+
+5.6 Database mapping (`get_properties_PV_db`)
+Panel properties are selected by `code` from:
+- `.../COMPONENTS/CONVERSION/PHOTOVOLTAIC_PANELS.csv`
+
+Key columns used by the physics model:
+- `module_length_m`
+- `PV_th`
+- `PV_n`
+- `PV_noct`
+- `PV_Bref`
+- `PV_a0`, `PV_a1`, `PV_a2`, `PV_a3`, `PV_a4`
+- `misc_losses`
+
+
+6) Conventions, units, and data contracts
+-----------------------------------------
+
+6.1 Units
+- Radiation data from Daysim is treated as hourly irradiance-like values (`Wh/m2` over 1-hour bins).
+- Internally several functions use variable names with `Wperm2`; with 1-hour timestep this is numerically equivalent for hourly energy accounting.
+- Electrical outputs are produced in kW per hour index and reported as `*_kWh` columns.
+
+6.2 Azimuth conventions
+Two conventions coexist:
+- Surface azimuth from normals (`calc_surface_azimuth`): 0 deg North, 90 deg East.
+- Solar azimuth for Duffie-style AOI calculation in `photovoltaic.py`: shifted so equator-facing is 0 deg (hemisphere-dependent adjustment).
+
+6.3 Required metadata columns
+Expected in radiation metadata CSV:
+- `SURFACE`, `AREA_m2`, `TYPE`, `orientation`, `Xdir`, `Ydir`, `Zdir`, etc.
+
+Expected in radiation feather matrix:
+- columns indexed by `SURFACE` IDs used in metadata.
+
+
+7) Parallelism and computational scaling
+----------------------------------------
+- Building simulations are parallelised via `cea.utilities.parallel.vectorize`.
+- Scenario aggregation is additionally parallelised using a thread pool across building chunks.
+- Grouping strategy (`calc_groups`) substantially reduces physics evaluations compared with sensor-by-sensor simulation.
+
+
+8) Research-relevant assumptions and limitations
+------------------------------------------------
+1. One-way coupling:
+   - PV does not feed optical changes back into the urban radiation simulation.
+
+2. Sensor thresholding:
+   - Hourly values below 50 Wh/m2 are hard-clipped to zero.
+   - Annual minimum irradiation threshold excludes low-potential surfaces.
+
+3. Grouping approximation:
+   - Sensors are grouped into bins; intra-group variability is averaged.
+
+4. Simplified thermal model:
+   - Cell temperature uses a linear NOCT formulation (no explicit wind-speed dependence at module level).
+
+5. Balance-of-system simplification:
+   - `misc_losses` is a lumped scalar (inverter/ohmic/etc. combined).
+
+6. No explicit advanced effects in this core model:
+   - no inverter clipping curve,
+   - no bifacial modelling,
+   - no detailed spectral model,
+   - no explicit soiling dynamics unless embedded indirectly in calibration constants.
+
+7. Code-level caveat for reviewers:
+   - In `solar_equations.calc_categoriesroof`, `B` is passed from callers as `B_deg` and converted again via `degrees(B)`.
+   - This is worth checking if you are using category bins for scientific analysis of grouping behaviour.
+
+8. Legacy/duplicate functions:
+   - `photovoltaic.py` contains older helper functions (`optimal_angle_and_tilt`, `calc_optimal_spacing`) that are not the primary path used by `calc_PV`, which delegates to `solar_equations.py` equivalents.
+
+
+9) Validation checklist for researchers
+---------------------------------------
+If you are validating or publishing with this model, useful checks are:
+1. Input consistency:
+   - confirm radiation metadata surfaces align exactly with feather columns.
+2. Time consistency:
+   - verify weather year and timestamp indexing are 8760 and timezone-consistent.
+3. Sensitivity tests:
+   - vary `annual_radiation_threshold`, `panel_on_wall`, `custom_tilt_angle`, `max_roof_coverage`.
+4. Physical sanity checks:
+   - ensure winter AOI and spacing choices are plausible by latitude.
+5. Parameter provenance:
+   - document panel row selected from `PHOTOVOLTAIC_PANELS.csv`.
+6. Aggregation audit:
+   - compare grouped vs direct sensor-level computations for a sample building.
+
+
+10) Practical extension points
+------------------------------
+For future development, common insertion points are:
+- replace or augment `calc_cell_temperature` with a higher-fidelity thermal model,
+- add inverter clipping/efficiency curves in `calc_PV_power`,
+- add bifacial rear-side irradiance terms in `calc_absorbed_radiation_PV`,
+- support iterative optical feedback to urban radiation engine,
+- revise grouping logic to preserve additional dimensions (for example, explicit tilt bins without category compression).
+
+
+11) Function map (quick reference)
+----------------------------------
+`solar_equations.py`
+- Solar geometry/time: `_ephem_setup`, `pyephem`, `calc_datetime_local_from_weather_file`, `get_local_etc_timezone`, `calc_sun_properties`, `calc_worst_hour`
+- Solar math helpers: `declination_degree`, `get_hour_angle`, `get_solar_time`, `get_equation_of_time`
+- Sensor pre-processing: `filter_low_potential`
+- Panel placement: `calc_spacing_custom_angle`, `optimal_angle_and_tilt`, `calc_optimal_angle`, `calc_optimal_spacing`, `calc_surface_azimuth`
+- Grouping/decomposition: `calc_categoriesroof`, `calc_groups`, `calc_radiation_type`
+
+`photovoltaic.py`
+- Orchestration: `main`, `calc_PV`
+- Physics: `calc_pv_generation`, `calc_absorbed_radiation_PV`, `calc_air_mass`, `calc_cell_temperature`, `calc_PV_power`, `calc_diffuseground_comp`
+- Database/cost/aggregation: `get_properties_PV_db`, `aggregate_results`, `write_aggregate_results`, `calc_Cinv_pv`, `calc_Crem_pv`
+
+
+End of note.

@@ -1,0 +1,62 @@
+# CEA + UCEA runtime requirements
+# Exported from pyproject.toml [project.dependencies] plus explicit UCEA extras.
+# Python: >=3.10
+
+# Core CEA dependencies
+aiofiles
+aiocache[redis]
+aiosqlite
+asyncpg
+cea-external-tools>=0.2.1
+deap
+ephem
+fastapi
+geopandas>=1.0.0
+jinja2
+libpysal
+matplotlib
+networkx>=3.4
+numba
+numpy>=1.24.0,<2
+numpy-financial
+openpyxl
+osmnx>=2.0.0
+plotly
+psutil
+pvlib
+py4design-cea
+pyarrow
+pydantic-settings
+pyepwmorph>=1.0.5
+pyjwt[crypto]
+python-louvain
+python-multipart
+python-socketio
+pyyaml
+salib
+scikit-learn
+scipy
+shapely>=2.0.0
+sqlalchemy[asyncio]>=2.0.0
+sqlmodel
+tzfpy[pytz]
+utm
+uvicorn
+wntr>=1.3.2,<2
+xlrd
+xlwt
+
+# UCEA workflow extras (roof tiling + layered visualisation)
+folium
+gradio
+opencv-python
+owslib
+pandas
+Pillow
+pydeck
+pyproj
+requests
+ultralytics
+
+# Not available on PyPI for all platforms; install via conda/pixi if needed:
+# pythonocc-core==7.8.1
