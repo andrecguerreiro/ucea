@@ -31,6 +31,35 @@ __email__ = "cea@arch.ethz.ch"
 __status__ = "Production"
 
 
+def _use_existing_geometry_pickles_enabled() -> bool:
+    value = os.environ.get("CEA_RADIATION_REUSE_PICKLES", "").strip().lower()
+    return value in {"1", "true", "yes", "on"}
+
+
+def _list_pickled_building_names(geometry_pickle_dir: str, subfolder: str) -> list[str]:
+    folder = os.path.join(geometry_pickle_dir, subfolder)
+    if not os.path.isdir(folder):
+        return []
+    names = []
+    for entry in os.scandir(folder):
+        if entry.is_file():
+            names.append(entry.name)
+    return sorted(names)
+
+
+def _build_terrain_and_trees_only(zone_df, surroundings_df, trees_df, terrain_raster):
+    zone_df, surroundings_df, trees_df, terrain_raster = geometry_generator.standardize_coordinate_systems(
+        zone_df, surroundings_df, trees_df, terrain_raster
+    )
+    geometry_generator.check_terrain_bounds(zone_df, surroundings_df, trees_df, terrain_raster)
+    elevation_map = geometry_generator.ElevationMap.read_raster(terrain_raster)
+    terrain_tin = elevation_map.generate_tin()
+    tree_surfaces = []
+    if len(trees_df.geometry) > 0:
+        tree_surfaces = geometry_generator.tree_geometry_generator(trees_df, terrain_raster)
+    return terrain_tin, trees_df, tree_surfaces
+
+
 def read_surface_properties(locator: cea.inputlocator.InputLocator) -> pd.DataFrame:
     """
     This function returns a dataframe with the emissivity values of walls, roof, and windows
@@ -170,22 +199,40 @@ def main(config: cea.config.Configuration):
 
     geometry_staging_location = os.path.join(locator.get_solar_radiation_folder(), "radiance_geometry_pickle")
 
-    print("Creating 3D geometry and surfaces")
-    print(f"Saving geometry pickle files in: {geometry_staging_location}")
     # create geometrical faces of terrain and buildings
     terrain_raster = gdal.Open(locator.get_terrain())
     architecture_wwr_df = gpd.GeoDataFrame.from_file(locator.get_building_architecture()).set_index('name')
 
-    (geometry_terrain,
-     zone_building_names,
-     surroundings_building_names,
-     tree_surfaces) = geometry_generator.geometry_main(config,
-                                                       zone_df,
-                                                       surroundings_df,
-                                                       trees_df,
-                                                       terrain_raster,
-                                                       architecture_wwr_df,
-                                                       geometry_staging_location)
+    reuse_existing_pickles = _use_existing_geometry_pickles_enabled()
+    zone_pickles = _list_pickled_building_names(geometry_staging_location, "zone")
+    surroundings_pickles = _list_pickled_building_names(geometry_staging_location, "surroundings")
+
+    if reuse_existing_pickles and zone_pickles:
+        print("Reusing existing geometry pickles for radiation run.")
+        print(f"Geometry pickle folder: {geometry_staging_location}")
+        geometry_terrain, trees_df, tree_surfaces = _build_terrain_and_trees_only(
+            zone_df, surroundings_df, trees_df, terrain_raster
+        )
+        zone_building_names = [name for name in zone_pickles if name in architecture_wwr_df.index]
+        surroundings_building_names = surroundings_pickles
+        if not zone_building_names:
+            raise ValueError(
+                "No reusable zone pickles match envelope records. "
+                "Disable CEA_RADIATION_REUSE_PICKLES or regenerate geometry pickles."
+            )
+    else:
+        print("Creating 3D geometry and surfaces")
+        print(f"Saving geometry pickle files in: {geometry_staging_location}")
+        (geometry_terrain,
+         zone_building_names,
+         surroundings_building_names,
+         tree_surfaces) = geometry_generator.geometry_main(config,
+                                                           zone_df,
+                                                           surroundings_df,
+                                                           trees_df,
+                                                           terrain_raster,
+                                                           architecture_wwr_df,
+                                                           geometry_staging_location)
 
     daysim_staging_location = os.path.join(locator.get_temporary_folder(), 'cea_radiation')
     cea_daysim = CEADaySim(daysim_staging_location, daysim_bin_path, daysim_lib_path)

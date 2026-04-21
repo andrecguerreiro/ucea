@@ -17,6 +17,8 @@ from ultralytics import YOLO
 
 SCRIPT_DIR = os.path.abspath(os.path.dirname(__file__))
 CACHE_DIR = os.path.join(SCRIPT_DIR, "cache")
+SATELLITE_CACHE_IMAGE_NAME = "satellite_image_raw.png"
+SATELLITE_CACHE_META_NAME = "satellite_image_raw.meta.json"
 
 def _resolve_default_model_path():
     local_candidate = os.path.join(SCRIPT_DIR, "best.pt")
@@ -212,6 +214,68 @@ def retrieve_satelite_image(top_left_corner, bottom_right_corner,progress_cb = N
         return int((x - xmin) / res), int((ymax - y) / res)
 
     return satellite_image, res, conversion
+
+
+def _satellite_cache_paths(output_parent):
+    base_dir = output_parent or SCRIPT_DIR
+    return (
+        os.path.join(base_dir, SATELLITE_CACHE_IMAGE_NAME),
+        os.path.join(base_dir, SATELLITE_CACHE_META_NAME),
+    )
+
+
+def _load_cached_satellite_image(output_parent, bbox):
+    image_path, meta_path = _satellite_cache_paths(output_parent)
+    if not os.path.exists(image_path) or not os.path.exists(meta_path):
+        return None, None
+
+    try:
+        with open(meta_path, "r", encoding="utf-8") as fp:
+            metadata = json.load(fp)
+    except Exception:
+        return None, None
+
+    cached_bbox = metadata.get("bbox")
+    if not isinstance(cached_bbox, dict):
+        return None, None
+
+    def _close(a, b, tol=1e-8):
+        return abs(float(a) - float(b)) <= tol
+
+    keys = ("north", "south", "east", "west")
+    if not all(key in cached_bbox and key in bbox for key in keys):
+        return None, None
+    if not all(_close(cached_bbox[key], bbox[key]) for key in keys):
+        return None, None
+
+    try:
+        image = np.array(Image.open(image_path).convert("RGB"))
+        res = float(metadata["res"])
+    except Exception:
+        return None, None
+
+    print(f"[cache] Reusing cached satellite image: {image_path}")
+    return image, res
+
+
+def _save_cached_satellite_image(output_parent, bbox, satellite_image, res):
+    image_path, meta_path = _satellite_cache_paths(output_parent)
+    os.makedirs(os.path.dirname(image_path), exist_ok=True)
+    Image.fromarray(satellite_image).save(image_path)
+    metadata = {
+        "bbox": {
+            "north": float(bbox["north"]),
+            "south": float(bbox["south"]),
+            "east": float(bbox["east"]),
+            "west": float(bbox["west"]),
+        },
+        "res": float(res),
+        "shape": [int(satellite_image.shape[0]), int(satellite_image.shape[1])],
+    }
+    with open(meta_path, "w", encoding="utf-8") as fp:
+        json.dump(metadata, fp, ensure_ascii=True, indent=2)
+        fp.write("\n")
+    print(f"[cache] Saved raw satellite cache: {image_path}")
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -2082,21 +2146,27 @@ def use_this_function(
     )
     print(f"Zone done: {len(geojson['features'])} footprint(s)")
 
-    print("Connecting to WMTS...")
-    wmts_url = (
-        "https://cartografia.dgterritorio.gov.pt/ortos2018/service"
-        "?service=WMTS&request=GetCapabilities"
-    )
-    wmts = WebMapTileService(wmts_url)
-    matrix = wmts.tilematrixsets["PTTM_06"].tilematrix["14"]
-    col_min, col_max, row_min, row_max = get_tile_indices(tl_x, br_y, br_x, tl_y, matrix)
-    total_tiles = (col_max + 1 - col_min) * (row_max + 1 - row_min)
-    print(f"Service ready: {total_tiles} tile(s) to download")
+    cached_satellite, cached_res = _load_cached_satellite_image(output_parent, bbox)
+    if cached_satellite is not None:
+        satellite_image = cached_satellite
+        res = cached_res
+    else:
+        print("Connecting to WMTS...")
+        wmts_url = (
+            "https://cartografia.dgterritorio.gov.pt/ortos2018/service"
+            "?service=WMTS&request=GetCapabilities"
+        )
+        wmts = WebMapTileService(wmts_url)
+        matrix = wmts.tilematrixsets["PTTM_06"].tilematrix["14"]
+        col_min, col_max, row_min, row_max = get_tile_indices(tl_x, br_y, br_x, tl_y, matrix)
+        total_tiles = (col_max + 1 - col_min) * (row_max + 1 - row_min)
+        print(f"Service ready: {total_tiles} tile(s) to download")
 
-    def tile_cb(done, total):
-        print(f"Downloading tiles... {done}/{total}")
+        def tile_cb(done, total):
+            print(f"Downloading tiles... {done}/{total}")
 
-    satellite_image, res, _ = retrieve_satelite_image((tl_x, tl_y), (br_x, br_y), progress_cb=tile_cb)
+        satellite_image, res, _ = retrieve_satelite_image((tl_x, tl_y), (br_x, br_y), progress_cb=tile_cb)
+        _save_cached_satellite_image(output_parent, bbox, satellite_image, res)
     h, w = satellite_image.shape[:2]
 
     print("Running YOLO inference...")

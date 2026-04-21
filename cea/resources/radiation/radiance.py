@@ -103,11 +103,27 @@ class CEADaySim:
     def run_cmd(cmd, daysim_dir, daysim_lib):
         print(f'Running command `{cmd}`')
 
-        # Add daysim directory to path
-        env = {
-            "PATH": f'{daysim_dir}{os.pathsep}{os.environ["PATH"]}',
-            "RAYPATH": daysim_lib
-        }
+        if not os.path.isdir(daysim_dir):
+            raise FileNotFoundError(f"Daysim binary directory not found: {daysim_dir}")
+        if not os.path.isdir(daysim_lib):
+            raise FileNotFoundError(f"Daysim lib directory not found: {daysim_lib}")
+
+        # Keep the full parent environment and only prepend Daysim paths.
+        # Replacing env entirely can break subprocess behavior on Windows.
+        env = os.environ.copy()
+        env["PATH"] = f'{daysim_dir}{os.pathsep}{env.get("PATH", "")}'
+        existing_raypath = env.get("RAYPATH", "").strip()
+        raypath_value = (
+            f'.{os.pathsep}{daysim_lib}'
+            if not existing_raypath
+            else f'.{os.pathsep}{daysim_lib}{os.pathsep}{existing_raypath}'
+        )
+        env["RAYPATH"] = raypath_value
+        # Daysim / Radiance on Windows can be sensitive to variable naming conventions.
+        # Set common aliases to maximize compatibility with legacy binaries.
+        env["Raypath"] = raypath_value
+        env["RAPYPATH"] = raypath_value
+        env["Rapypath"] = raypath_value
 
         _cmd = shlex.split(cmd)
         if sys.platform == "win32":
@@ -115,13 +131,22 @@ class CEADaySim:
             # Refer to https://docs.python.org/3/library/subprocess.html#popen-constructor
             _cmd[0] = f"{daysim_dir}\\{_cmd[0]}"
 
-        process = subprocess.run(_cmd, capture_output=True, env=env)
+        # Resolve relative paths in .hea from the project directory when available.
+        cwd = None
+        if len(_cmd) > 1 and _cmd[1].lower().endswith(".hea"):
+            hea_path = _cmd[1]
+            if os.path.isfile(hea_path):
+                cwd = os.path.dirname(hea_path)
+
+        process = subprocess.run(_cmd, capture_output=True, env=env, cwd=cwd)
         output = process.stdout.decode('utf-8')
         print(output)
+        stderr = process.stderr.decode("utf-8", errors="replace")
+        if stderr.strip():
+            print(stderr)
 
         # Stops script if commands fail (i.e non-zero exit code)
         if process.returncode != 0:
-            print(process.stderr)
             raise subprocess.CalledProcessError(process.returncode, cmd)
 
         return output
@@ -575,6 +600,41 @@ def add_rad_mat(daysim_mat_file, ageometry_table):
 
 def create_rad_geometry(file_path, geometry_terrain, building_surface_properties, zone_building_names,
                         surroundings_building_names, geometry_pickle_dir):
+    def _sanitize_points(points: list[tuple[float, float, float]]) -> list[tuple[float, float, float]]:
+        cleaned: list[tuple[float, float, float]] = []
+        for point in points:
+            if len(point) < 3:
+                continue
+            xyz = (float(point[0]), float(point[1]), float(point[2]))
+            if not np.isfinite(xyz).all():
+                continue
+            if cleaned and np.allclose(cleaned[-1], xyz, atol=1e-9):
+                continue
+            cleaned.append(xyz)
+
+        while len(cleaned) >= 2 and np.allclose(cleaned[0], cleaned[-1], atol=1e-9):
+            cleaned.pop()
+        return cleaned
+
+    def _polygon_area_squared(points: list[tuple[float, float, float]]) -> float:
+        if len(points) < 3:
+            return 0.0
+        p = np.asarray(points, dtype=float)
+        cross_sum = np.zeros(3, dtype=float)
+        for i in range(len(p)):
+            cross_sum += np.cross(p[i], p[(i + 1) % len(p)])
+        area_vec = 0.5 * cross_sum
+        return float(np.dot(area_vec, area_vec))
+
+    def prepare_surface(surface: RadSurface) -> tuple[bool, str]:
+        points = _sanitize_points(surface.points)
+        if len(points) < 3:
+            return False, "fewer than 3 valid points"
+        if _polygon_area_squared(points) < 1e-12:
+            return False, "zero or near-zero polygon area"
+        surface.points = points
+        return True, ""
+
     def terrain_to_radiance(tin_occface_terrain):
         for num, occ_face in enumerate(tin_occface_terrain):
             surface_name = f"terrain_srf{num}"
@@ -618,17 +678,40 @@ def create_rad_geometry(file_path, geometry_terrain, building_surface_properties
             surface_name = f"surrounding_buildings_roof_{name}_{num}"
             yield RadSurface(surface_name, occ_face, "reflectance0.2")
 
+    skipped_invalid_surfaces = 0
+    skipped_examples: list[str] = []
+
+    def write_if_valid(rad_file, surface: RadSurface) -> None:
+        nonlocal skipped_invalid_surfaces
+        valid, reason = prepare_surface(surface)
+        if valid:
+            rad_file.write(surface.rad())
+            return
+        skipped_invalid_surfaces += 1
+        if len(skipped_examples) < 20:
+            skipped_examples.append(f"{surface.name}: {reason}")
+
     with open(file_path, "w") as rad_file:
         for terrain_surface in terrain_to_radiance(geometry_terrain):
-            rad_file.write(terrain_surface.rad())
+            write_if_valid(rad_file, terrain_surface)
 
         for building_name in zone_building_names:
             building_geometry = BuildingGeometry.load(os.path.join(geometry_pickle_dir, 'zone', building_name))
             for building_surface in zone_building_to_radiance(building_geometry, building_surface_properties):
-                rad_file.write(building_surface.rad())
+                write_if_valid(rad_file, building_surface)
 
         for building_name in surroundings_building_names:
             building_geometry = BuildingGeometry.load(
                 os.path.join(geometry_pickle_dir, 'surroundings', building_name))
             for building_surface in surrounding_building_to_radiance(building_geometry):
-                rad_file.write(building_surface.rad())
+                write_if_valid(rad_file, building_surface)
+
+    if skipped_invalid_surfaces > 0:
+        print(
+            f"WARNING: Skipped {skipped_invalid_surfaces} invalid surfaces while creating radiance geometry "
+            f"at {file_path}."
+        )
+        if skipped_examples:
+            print("Invalid surface examples (max 20):")
+            for example in skipped_examples:
+                print(f"  - {example}")

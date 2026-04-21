@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 from typing import Optional, Tuple, NamedTuple, TYPE_CHECKING
@@ -36,6 +37,46 @@ REQUIRED_LIBS = {"rayinit.cal", "isotrop_sky.cal"}
 class GridSize(NamedTuple):
     roof: int
     walls: int
+
+
+def _continue_on_chunk_error_enabled() -> bool:
+    value = os.environ.get("CEA_DAYSIM_CONTINUE_ON_CHUNK_ERROR", "").strip().lower()
+    return value in {"1", "true", "yes", "on"}
+
+
+def _keep_failed_daysim_projects_enabled() -> bool:
+    value = os.environ.get("CEA_DAYSIM_KEEP_FAILED_PROJECTS", "").strip().lower()
+    return value in {"1", "true", "yes", "on"}
+
+
+def _build_zero_sensor_values(sensor_codes: list[str]) -> pd.DataFrame:
+    if len(sensor_codes) == 0:
+        return pd.DataFrame()
+    return pd.DataFrame(
+        data=np.zeros((len(sensor_codes), HOURS_IN_YEAR), dtype=np.float32),
+        index=sensor_codes,
+    )
+
+
+def _archive_failed_daysim_project(daysim_project, locator: InputLocator, chunk_n: int) -> str:
+    debug_root = os.path.join(locator.get_solar_radiation_folder(), "daysim_failed_debug")
+    os.makedirs(debug_root, exist_ok=True)
+
+    archive_path = os.path.join(debug_root, f"chunk_{chunk_n}")
+    if os.path.isdir(archive_path):
+        shutil.rmtree(archive_path)
+    os.makedirs(archive_path, exist_ok=True)
+
+    project_root = os.path.abspath(os.path.join(daysim_project.project_path, "..", ".."))
+    common_inputs = os.path.join(project_root, "common_inputs")
+    project_chunk_dir = os.path.join(project_root, "projects", daysim_project.project_name)
+
+    if os.path.isdir(common_inputs):
+        shutil.copytree(common_inputs, os.path.join(archive_path, "common_inputs"), dirs_exist_ok=True)
+    if os.path.isdir(project_chunk_dir):
+        shutil.copytree(project_chunk_dir, os.path.join(archive_path, "project"), dirs_exist_ok=True)
+
+    return archive_path
 
 
 def check_daysim_bin_directory(path_hint: Optional[str] = None) -> Tuple[str, Optional[str]]:
@@ -268,15 +309,55 @@ def isolation_daysim(chunk_n, cea_daysim: CEADaySim, building_names, locator, ra
     print(f"Starting Daysim simulation for buildings: {names_zone}")
     print(f"Total number of sensors: {len(sensors_coords_zone)}")
 
+    # Some chunks can legitimately have no valid sensors (e.g., very small / degenerate surfaces).
+    # In that case, Daysim produces empty .dc files and ds_illum fails.
+    # We short-circuit and write zero radiation outputs for all buildings in the chunk.
+    if len(sensors_coords_zone) == 0:
+        print("No valid sensors found for this chunk. Skipping gen_dc/ds_illum and writing zero outputs.")
+        date = weatherfile["date"]
+        for building_name, sensor_code in zip(names_zone, sensors_code_zone):
+            sensor_values = _build_zero_sensor_values(sensor_code)
+            write_aggregated_results(building_name, sensor_values, locator, date)
+            if write_sensor_data:
+                sensor_data_path = locator.get_radiation_building_sensors(building_name)
+                write_sensor_results(sensor_data_path, sensor_values)
+        print('Removing results folder')
+        daysim_project.cleanup_project()
+        return
+
     print('Writing radiance parameters')
     daysim_project.write_radiance_parameters(**radiance_parameters)
 
     print('Executing hourly solar isolation calculation')
     import time
     start = time.time()
-    daysim_project.execute_gen_dc()
-    daysim_project.execute_ds_illum()
-    print(f"Daysim calculation took {time.time() - start} seconds")
+    try:
+        daysim_project.execute_gen_dc()
+        daysim_project.execute_ds_illum()
+        print(f"Daysim calculation took {time.time() - start} seconds")
+    except subprocess.CalledProcessError as exc:
+        archive_path = ""
+        if _keep_failed_daysim_projects_enabled():
+            archive_path = _archive_failed_daysim_project(daysim_project, locator, chunk_n)
+            print(f"Archived failed daysim project for debugging: {archive_path}")
+
+        if not _continue_on_chunk_error_enabled():
+            raise
+        print(
+            "Daysim chunk failed. Writing zero outputs for this chunk and continuing. "
+            f"chunk={chunk_n}, hea={daysim_project.hea_path}, error={exc}"
+        )
+        date = weatherfile["date"]
+        for building_name, sensor_code in zip(names_zone, sensors_code_zone):
+            sensor_values = _build_zero_sensor_values(sensor_code)
+            write_aggregated_results(building_name, sensor_values, locator, date)
+            if write_sensor_data:
+                sensor_data_path = locator.get_radiation_building_sensors(building_name)
+                write_sensor_results(sensor_data_path, sensor_values)
+        if not archive_path:
+            print('Removing results folder')
+            daysim_project.cleanup_project()
+        return
 
     print('Reading results...')
     solar_res = daysim_project.eval_ill()
@@ -339,19 +420,26 @@ def write_aggregated_results(building_name, sensor_values: pd.DataFrame, locator
         raise ValueError(f"Unrecognized surface names {extra_labels}")
 
     # Transform data
-    sensor_values_kw = sensor_values.multiply(geometry['AREA_m2'], axis="index") / 1000
-    data = sensor_values_kw.groupby(group_dict).sum().T.add_suffix('_kW')
+    area_raw = geometry['AREA_m2'].groupby(group_dict).sum()
+    if sensor_values.empty:
+        # Failed chunk fallback: keep schema and write zero irradiance while preserving per-surface area.
+        data = pd.DataFrame(index=range(len(date)))
+    else:
+        sensor_values_kw = sensor_values.multiply(geometry['AREA_m2'], axis="index") / 1000
+        data = sensor_values_kw.groupby(group_dict).sum().T.add_suffix('_kW')
 
-    # TODO: Remove total sensor area information from output. Area information is repeated over rows.
-    # Add area to data
-    area = geometry['AREA_m2'].groupby(group_dict).sum().add_suffix('_m2')
-    area_cols = pd.concat([area] * len(data), axis=1).T.set_index(data.index)
-    data = pd.concat([data, area_cols], axis=1)
+        # TODO: Remove total sensor area information from output. Area information is repeated over rows.
+        # Add area to data
+        area = area_raw.add_suffix('_m2')
+        area_cols = pd.concat([area] * len(data), axis=1).T.set_index(data.index)
+        data = pd.concat([data, area_cols], axis=1)
 
-    # Add missing surfaces to output
-    for surface in missing_labels:
-        data[f"{surface}_kW"] = 0.0
-        data[f"{surface}_m2"] = 0.0
+    # Ensure all surface columns exist, even for empty-sensor chunks
+    for surface in SURFACE_DIRECTION_LABELS:
+        if f"{surface}_kW" not in data.columns:
+            data[f"{surface}_kW"] = 0.0
+        if f"{surface}_m2" not in data.columns:
+            data[f"{surface}_m2"] = float(area_raw.get(surface, 0.0))
 
     # Round values and add date index
     data = data.round(2)

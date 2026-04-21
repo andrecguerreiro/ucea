@@ -310,13 +310,17 @@ def run_workflow_1(
     if clean_first:
         clean_outputs(scenario)
 
-    run_cea_script("radiation", scenario)
+    run_cea_script("radiation", scenario, ["--buildings", ""])
     if run_photovoltaic:
         backups: list[tuple[str, str]] = []
         try:
             if harmonise_pv_azimuth_convention:
                 backups = apply_temp_pv_azimuth_convention_harmonisation(scenario)
-            run_cea_script("photovoltaic", scenario, ["--panel-on-wall", "false", "--type-pvpanel", pv_panel])
+            run_cea_script(
+                "photovoltaic",
+                scenario,
+                ["--buildings", "", "--panel-on-wall", "false", "--type-pvpanel", pv_panel],
+            )
         finally:
             if backups:
                 restore_geometry_metadata_from_backups(backups)
@@ -342,7 +346,7 @@ def run_workflow_0(
 
     disabled_path = disable_roof_file_temporarily(roof_file)
     try:
-        run_cea_script("radiation", scenario)
+        run_cea_script("radiation", scenario, ["--buildings", ""])
     finally:
         restore_roof_file(roof_file, disabled_path)
 
@@ -351,7 +355,11 @@ def run_workflow_0(
         try:
             if harmonise_pv_azimuth_convention:
                 backups = apply_temp_pv_azimuth_convention_harmonisation(scenario)
-            run_cea_script("photovoltaic", scenario, ["--panel-on-wall", "false", "--type-pvpanel", pv_panel])
+            run_cea_script(
+                "photovoltaic",
+                scenario,
+                ["--buildings", "", "--panel-on-wall", "false", "--type-pvpanel", pv_panel],
+            )
         finally:
             if backups:
                 restore_geometry_metadata_from_backups(backups)

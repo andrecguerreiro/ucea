@@ -1,0 +1,7 @@
+[console_scripts]
+cea = cea.interfaces.cli.cli:main
+cea-config = cea.interfaces.cli.cea_config:main
+cea-dev = cea.interfaces.cli.cea_dev:main
+cea-doc = cea.interfaces.cli.cea_doc:main
+cea-plot = cea.plots.plot_cli:main
+cea-worker = cea.worker:main

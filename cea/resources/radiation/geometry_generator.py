@@ -545,11 +545,15 @@ def building_2d_to_3d(zone_df, surroundings_df, architecture_wwr_df, elevation_m
 
 
 def print_progress(i, n, _, __):
-    print("Generating geometry for building {i} completed out of {n}".format(i=i + 1, n=n))
+    current = i + 1
+    if current == 1 or current == n or current % 100 == 0:
+        print("Generating geometry for building {i} completed out of {n}".format(i=current, n=n))
 
 
 def print_terrain_intersection_progress(i, n, _, __):
-    print("Creating geometry for building {i} completed out of {n}".format(i=i + 1, n=n))
+    current = i + 1
+    if current == 1 or current == n or current % 100 == 0:
+        print("Creating geometry for building {i} completed out of {n}".format(i=current, n=n))
 
 
 def are_buildings_close_to_eachother(x_1, y_1, solid2, dist=100):

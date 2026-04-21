@@ -16,6 +16,7 @@ This module exports the function `map` which is intended to replace both ``map_a
 import multiprocessing
 import sys
 import logging
+import os
 from itertools import repeat
 from cea.utilities.workerstream import stream_from_queue, QueueWorkerStream
 
@@ -27,6 +28,20 @@ __version__ = "0.1"
 __maintainer__ = "Daren Thomas"
 __email__ = "cea@arch.ethz.ch"
 __status__ = "Production"
+
+WINDOWS_MAX_PARALLEL_PROCESSES = 60
+
+
+def _safe_process_count(processes):
+    if os.name != "nt":
+        return processes
+    if processes <= WINDOWS_MAX_PARALLEL_PROCESSES:
+        return processes
+    print(
+        "Requested {requested} CPU's on Windows; capping to {capped} to avoid multiprocessing handle limits."
+        .format(requested=processes, capped=WINDOWS_MAX_PARALLEL_PROCESSES)
+    )
+    return WINDOWS_MAX_PARALLEL_PROCESSES
 
 
 def vectorize(func, processes=1, on_complete=None):
@@ -56,6 +71,7 @@ def vectorize(func, processes=1, on_complete=None):
     :param int processes: The number of processes to use (use ``config.get_number_of_processes()``)
     :param on_complete: An optional function to call for each completed call to ``func``.
     """
+    processes = _safe_process_count(processes)
     if processes > 1:
         return __multiprocess_wrapper(func, processes, on_complete)
     else:

@@ -12,6 +12,7 @@ import sys
 import time
 import webbrowser
 from dataclasses import dataclass
+from datetime import datetime
 from queue import Empty, Queue
 from threading import Thread
 from typing import Any
@@ -1589,6 +1590,85 @@ def _run_stage(stage_name: str, fn):
     return result
 
 
+def _format_seconds(seconds: float) -> str:
+    total = max(0, int(round(seconds)))
+    hours, rem = divmod(total, 3600)
+    minutes, secs = divmod(rem, 60)
+    return f"{hours:02d}:{minutes:02d}:{secs:02d}"
+
+
+def _write_run_report(
+    scenario: str,
+    started_epoch: float,
+    started_at: datetime,
+    status: str,
+    runtime: UceaRuntime | None = None,
+    error: Exception | None = None,
+) -> str:
+    ended_epoch = time.time()
+    ended_at = datetime.now()
+    elapsed_seconds = ended_epoch - started_epoch
+    report_dir = os.path.join(
+        scenario,
+        "outputs",
+        "data",
+        "solar-radiation",
+        "ucea_run_reports",
+    )
+    os.makedirs(report_dir, exist_ok=True)
+
+    timestamp = ended_at.strftime("%Y%m%d_%H%M%S")
+    report_path = os.path.join(report_dir, f"run_{timestamp}.txt")
+    latest_path = os.path.join(report_dir, "latest.txt")
+
+    lines = [
+        "UCEA Run Report",
+        "===============",
+        f"Status: {status}",
+        f"Scenario: {scenario}",
+        f"Started: {started_at.strftime('%Y-%m-%d %H:%M:%S')}",
+        f"Ended: {ended_at.strftime('%Y-%m-%d %H:%M:%S')}",
+        f"Elapsed seconds: {elapsed_seconds:.2f}",
+        f"Elapsed hh:mm:ss: {_format_seconds(elapsed_seconds)}",
+    ]
+
+    if runtime is not None:
+        lines.extend(
+            [
+                "",
+                "Outputs",
+                "-------",
+                f"Comparison ran: {runtime.comparison_ran}",
+                f"Comparison root: {runtime.comparison_root or '(workflow1-only)'}",
+                f"Metrics output dir: {runtime.metrics_output_dir}",
+                f"Scenario metrics CSV: {os.path.join(runtime.metrics_output_dir, 'scenario_metrics.csv')}",
+                f"Building metrics CSV: {os.path.join(runtime.metrics_output_dir, 'building_metrics.csv')}",
+                f"Selected building (3D): {runtime.building}",
+                f"3D figure: {runtime.output_figure or '(disabled)'}",
+                f"Workflow1 image export dir: {runtime.images_output_dir or '(disabled)'}",
+                f"Viewer launched: {runtime.viewer_started}",
+            ]
+        )
+
+    if error is not None:
+        lines.extend(
+            [
+                "",
+                "Error",
+                "-----",
+                f"Type: {type(error).__name__}",
+                f"Message: {error}",
+            ]
+        )
+
+    text = "\n".join(lines) + "\n"
+    with open(report_path, "w", encoding="utf-8") as fh:
+        fh.write(text)
+    with open(latest_path, "w", encoding="utf-8") as fh:
+        fh.write(text)
+    return report_path
+
+
 def _timed_input(prompt: str, timeout_seconds: float | None) -> str:
     if timeout_seconds is None:
         return input(prompt)
@@ -1814,6 +1894,42 @@ def _run_data_preparation(config: Configuration) -> None:
     _call_api("archetypes_mapper", config)
 
 
+def _prepare_missing_radiation_inputs(config: Configuration, scenario: str) -> None:
+    locator = InputLocator(scenario)
+    missing = {
+        "envelope": not os.path.exists(locator.get_building_architecture()),
+        "terrain": not os.path.exists(locator.get_terrain()),
+        "weather": not os.path.exists(locator.get_weather_file()),
+    }
+
+    if not any(missing.values()):
+        _log("All required radiation inputs already exist. Skipping helper preparation.")
+        return
+
+    _configure_height_enrichment_paths(config)
+
+    # Keep databases in sync before running selective helper scripts.
+    _log("Running database-helper to ensure scenario databases are available.")
+    _call_api("database_helper", config, databases_path=config.ucea.database_path)
+
+    zone_path = locator.get_zone_geometry()
+    if not os.path.exists(zone_path):
+        _log(f"zone.shp missing at {zone_path}. Running zone-helper.")
+        _call_api("zone_helper", config)
+
+    if missing["terrain"]:
+        _log("terrain.tif missing. Running terrain-helper.")
+        _call_api("terrain_helper", config, buffer=config.ucea.terrain_buffer_m)
+
+    if missing["weather"]:
+        _log("weather.epw missing. Running weather-helper.")
+        _call_api("weather_helper", config, weather=config.ucea.weather_source)
+
+    if missing["envelope"]:
+        _log("envelope.csv missing. Running archetypes-mapper.")
+        _call_api("archetypes_mapper", config)
+
+
 def _configure_height_enrichment_paths(config: Configuration) -> None:
     with config.ignore_restrictions():
         zone_height_gpkg = str(config.zone_helper.building_height_gpkg).strip()
@@ -1903,6 +2019,15 @@ def _run_python_module(module: str, args: list[str]) -> None:
 
 
 def _run_cea_script(script_name: str, scenario: str, extra_args: list[str] | None = None) -> None:
+    _run_cea_script_with_env(script_name, scenario, extra_args=extra_args, env_overrides=None)
+
+
+def _run_cea_script_with_env(
+    script_name: str,
+    scenario: str,
+    extra_args: list[str] | None = None,
+    env_overrides: dict[str, str] | None = None,
+) -> None:
     command = [
         sys.executable,
         "-m",
@@ -1914,18 +2039,47 @@ def _run_cea_script(script_name: str, scenario: str, extra_args: list[str] | Non
     if extra_args:
         command.extend(extra_args)
     _log("Running command: " + " ".join(command))
-    subprocess.run(command, check=True)
+    env = os.environ.copy()
+    if env_overrides:
+        env.update(env_overrides)
+    subprocess.run(command, check=True, env=env)
 
 
 def _clean_solar_outputs(scenario: str) -> None:
-    targets = [
-        os.path.join(scenario, "outputs", "data", "solar-radiation"),
-        os.path.join(scenario, "outputs", "data", "potentials", "solar"),
-    ]
-    for target in targets:
-        if os.path.isdir(target):
-            shutil.rmtree(target)
-            _log(f"Removed stale output folder: {target}")
+    _log(
+        "Cleanup requested but disabled to preserve geometry and solar-radiation cache files."
+    )
+
+
+def _count_existing_radiance_pickles(scenario: str) -> tuple[int, int]:
+    root = os.path.join(scenario, "outputs", "data", "solar-radiation", "radiance_geometry_pickle")
+    zone_dir = os.path.join(root, "zone")
+    surroundings_dir = os.path.join(root, "surroundings")
+
+    def _count_files(path: str) -> int:
+        if not os.path.isdir(path):
+            return 0
+        try:
+            return sum(
+                1
+                for entry in os.scandir(path)
+                if entry.is_file()
+            )
+        except OSError:
+            return 0
+
+    return _count_files(zone_dir), _count_files(surroundings_dir)
+
+
+def _radiation_env_overrides(scenario: str) -> dict[str, str]:
+    explicit = os.environ.get("CEA_RADIATION_REUSE_PICKLES")
+    if explicit is not None:
+        return {"CEA_RADIATION_REUSE_PICKLES": explicit}
+
+    zone_pickle_count, surroundings_pickle_count = _count_existing_radiance_pickles(scenario)
+    if zone_pickle_count or surroundings_pickle_count:
+        return {"CEA_RADIATION_REUSE_PICKLES": "1"}
+    return {}
 
 
 def _select_building_for_3d(locator: InputLocator, preferred_building: str) -> str:
@@ -1942,18 +2096,60 @@ def _select_building_for_3d(locator: InputLocator, preferred_building: str) -> s
     return DEFAULT_BUILDING_FALLBACK
 
 
+def _run_workflow1_viewer(
+    comparison_root: str | None = None,
+    zone_pickle_dir: str | None = None,
+    metadata_dir: str | None = None,
+    images_output_dir: str | None = None,
+    launch_viewer: bool = False,
+    export_images: bool = False,
+) -> bool:
+    if not launch_viewer and not export_images:
+        _log("Workflow1 3D viewer and image export are disabled by configuration.")
+        return False
+
+    args: list[str] = []
+    if comparison_root:
+        args.extend(["--comparison-root", comparison_root])
+    if zone_pickle_dir:
+        args.extend(["--zone-pickle-dir", zone_pickle_dir])
+    if metadata_dir:
+        args.extend(["--metadata-dir", metadata_dir])
+    if export_images and images_output_dir:
+        args.extend(["--export-images-dir", images_output_dir])
+    if not launch_viewer:
+        args.append("--no-gui")
+    args.append("--show-sensors")
+
+    _run_python_module("cea.resources.radiation.workflow1_building_viewer", args)
+    return launch_viewer
+
+
 def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
     if config.ucea.workflow1_only:
         roof_file = _require_roof_file(scenario)
         _log(f"Workflow1-only mode enabled. Using roof file: {roof_file}")
-        _clean_solar_outputs(scenario)
+        zone_pickle_count, surroundings_pickle_count = _count_existing_radiance_pickles(scenario)
+        if zone_pickle_count or surroundings_pickle_count:
+            _log(
+                "Detected existing radiance geometry pickles "
+                f"(zone={zone_pickle_count}, surroundings={surroundings_pickle_count}). "
+                "Skipping solar-radiation cleanup to preserve cached geometry."
+            )
+        else:
+            _log("No existing radiance geometry pickles found. Skipping cleanup to preserve outputs by default.")
 
         pv_panel = config.ucea.pv_panel
-        _run_cea_script("radiation", scenario)
+        _run_cea_script_with_env(
+            "radiation",
+            scenario,
+            extra_args=["--buildings", ""],
+            env_overrides=_radiation_env_overrides(scenario),
+        )
         _run_cea_script(
             "photovoltaic",
             scenario,
-            ["--panel-on-wall", "false", "--type-pvpanel", pv_panel],
+            ["--buildings", "", "--panel-on-wall", "false", "--type-pvpanel", pv_panel],
         )
 
         workflow1_root = os.path.join(scenario, "outputs", "data")
@@ -1993,28 +2189,25 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
             "zone",
         )
         metadata_dir = os.path.join(scenario, "outputs", "data", "solar-radiation")
-        images_output_dir = os.path.join(
+        images_output_dir_default = os.path.join(
             scenario,
             "outputs",
             "data",
             "solar-radiation",
             "workflow1_3d_images",
         )
+        launch_viewer = bool(getattr(config.ucea, "launch_workflow1_viewer", False))
+        export_images = bool(getattr(config.ucea, "export_workflow1_images", False))
+        images_output_dir = images_output_dir_default if export_images else ""
         viewer_started = False
         try:
-            _run_python_module(
-                "cea.resources.radiation.workflow1_building_viewer",
-                [
-                    "--zone-pickle-dir",
-                    zone_pickle_dir,
-                    "--metadata-dir",
-                    metadata_dir,
-                    "--export-images-dir",
-                    images_output_dir,
-                    "--show-sensors",
-                ],
+            viewer_started = _run_workflow1_viewer(
+                zone_pickle_dir=zone_pickle_dir,
+                metadata_dir=metadata_dir,
+                images_output_dir=images_output_dir_default,
+                launch_viewer=launch_viewer,
+                export_images=export_images,
             )
-            viewer_started = True
         except Exception as exc:
             _log(f"Could not launch interactive workflow1 building viewer: {exc}")
 
@@ -2032,6 +2225,7 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
     comparison_root = _resolve_comparison_root(config, scenario)
     roof_file = _require_roof_file(scenario)
     pv_panel = config.ucea.pv_panel
+    _log("Preserving existing geometry and radiance cache files (no clean-first).")
 
     _run_python_module(
         "cea.resources.radiation.workflow_comparison",
@@ -2043,7 +2237,6 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
             "--comparison-root",
             comparison_root,
             "--include-geometry-pickles",
-            "--clean-first",
             "--pv-panel",
             pv_panel,
             "--harmonise-pv-azimuth-convention",
@@ -2066,37 +2259,38 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
 
     locator = InputLocator(scenario)
     building = _select_building_for_3d(locator, config.ucea.building_3d)
-    output_figure = os.path.join(comparison_root, f"{building}_workflow_geometry_comparison_3d.png")
-    _run_python_module(
-        "cea.resources.radiation.workflow_geometry_comparison_3d",
-        [
-            "--comparison-root",
-            comparison_root,
-            "--building",
-            building,
-            "--output-figure",
-            output_figure,
-        ],
-    )
-
-    viewer_started = False
-    metadata_dir = os.path.join(comparison_root, "workflow1_geometry_generator", "solar-radiation")
-    images_output_dir = os.path.join(comparison_root, "workflow1_3d_images")
-    try:
-        # Open interactive workflow1 viewer with dropdown building selection.
+    export_comparison_3d = bool(getattr(config.ucea, "export_workflow_comparison_3d_figure", False))
+    output_figure = ""
+    if export_comparison_3d:
+        output_figure = os.path.join(comparison_root, f"{building}_workflow_geometry_comparison_3d.png")
         _run_python_module(
-            "cea.resources.radiation.workflow1_building_viewer",
+            "cea.resources.radiation.workflow_geometry_comparison_3d",
             [
                 "--comparison-root",
                 comparison_root,
-                "--metadata-dir",
-                metadata_dir,
-                "--export-images-dir",
-                images_output_dir,
-                "--show-sensors",
+                "--building",
+                building,
+                "--output-figure",
+                output_figure,
             ],
         )
-        viewer_started = True
+    else:
+        _log("Workflow comparison 3D geometry figure export is disabled by configuration.")
+
+    viewer_started = False
+    metadata_dir = os.path.join(comparison_root, "workflow1_geometry_generator", "solar-radiation")
+    images_output_dir_default = os.path.join(comparison_root, "workflow1_3d_images")
+    launch_viewer = bool(getattr(config.ucea, "launch_workflow1_viewer", False))
+    export_images = bool(getattr(config.ucea, "export_workflow1_images", False))
+    images_output_dir = images_output_dir_default if export_images else ""
+    try:
+        viewer_started = _run_workflow1_viewer(
+            comparison_root=comparison_root,
+            metadata_dir=metadata_dir,
+            images_output_dir=images_output_dir_default,
+            launch_viewer=launch_viewer,
+            export_images=export_images,
+        )
     except Exception as exc:
         _log(f"Could not launch interactive workflow1 building viewer: {exc}")
 
@@ -2133,47 +2327,153 @@ def _resolve_scenario(config: Configuration) -> str:
     return os.path.abspath(DEFAULT_UCEA_SCENARIO)
 
 
+def _import_geopandas():
+    try:
+        import geopandas as gpd  # type: ignore
+    except ModuleNotFoundError as exc:
+        raise ModuleNotFoundError(
+            "Missing dependency 'geopandas'. Install project dependencies and retry."
+        ) from exc
+    return gpd
+
+
+def _load_site_polygon_coordinates(locator: InputLocator) -> list[tuple[float, float]]:
+    gpd = _import_geopandas()
+    site_path = locator.get_site_polygon()
+    if not os.path.exists(site_path):
+        raise FileNotFoundError(f"Site polygon not found: {site_path}")
+
+    site_gdf = gpd.read_file(site_path)
+    site_gdf = site_gdf[~site_gdf.geometry.is_empty & site_gdf.geometry.notna()].copy()
+    if site_gdf.empty:
+        raise ValueError(f"Site polygon is empty: {site_path}")
+
+    site_wgs84 = site_gdf.to_crs(epsg=4326)
+    exploded = site_wgs84.explode(index_parts=False).reset_index(drop=True)
+    exploded["__area"] = exploded.geometry.area
+    largest = exploded.sort_values("__area", ascending=False).iloc[0].geometry
+
+    if largest.geom_type == "Polygon":
+        polygon = largest
+    elif largest.geom_type == "MultiPolygon":
+        polygon = max(list(largest.geoms), key=lambda geom: geom.area)
+    else:
+        raise ValueError(f"Site geometry must be polygonal, got: {largest.geom_type}")
+
+    coords = [(float(x), float(y)) for x, y, *_ in polygon.exterior.coords]
+    if len(coords) < 3:
+        raise ValueError("Site polygon exterior has fewer than three points.")
+    return coords
+
+
 def main(config: Configuration) -> None:
     scenario = _resolve_scenario(config)
     os.makedirs(scenario, exist_ok=True)
     _log(f"Initialising experiment workflow for scenario: {scenario}")
+    run_started_epoch = time.time()
+    run_started_at = datetime.now()
 
-    _run_stage("Open geojson.io", lambda: _open_geojson_io(config))
-    _log(
-        "Draw your polygon in geojson.io, then copy the GeoJSON text from the right panel. "
-        "The runner will first try clipboard input and then ask for pasted text if needed."
-    )
+    locator = InputLocator(scenario)
+    site_path = locator.get_site_polygon()
+    zone_path = os.path.join(scenario, ZONE_SHP_RELATIVE_PATH)
+    roof_path = os.path.join(scenario, ROOF_RELATIVE_PATH)
 
-    coordinates = _run_stage(
-        "Polygon coordinate capture",
-        lambda: _capture_polygon_coordinates(config.ucea.polygon_timeout_minutes),
-    )
-    _run_stage("Create site polygon", lambda: _prepare_site_polygon(config, coordinates))
-    _run_stage("Scenario preparation scripts", lambda: _run_data_preparation(config))
-    _run_stage(
-        "Generate roof surfaces via fixedboxtilingextension",
-        lambda: _run_fixedboxtilingextension(scenario, coordinates),
-    )
-    runtime = _run_stage(
-        "Workflow comparison, metrics, and 3D check",
-        lambda: _run_experiments(config, scenario),
-    )
+    has_site_polygon = os.path.exists(site_path)
+    has_zone_geometry = os.path.exists(zone_path)
+    has_roof_surfaces = os.path.exists(roof_path)
 
-    _log("Run completed successfully.")
-    if runtime.comparison_ran:
-        _log(f"Comparison output root: {runtime.comparison_root}")
-        _log(f"Scenario metrics: {os.path.join(runtime.metrics_output_dir, 'scenario_metrics.csv')}")
-        _log(f"Building metrics: {os.path.join(runtime.metrics_output_dir, 'building_metrics.csv')}")
-        _log(f"Workflow1 image export folder: {runtime.images_output_dir}")
-        _log(f"3D building used: {runtime.building}")
-        _log(f"3D figure: {runtime.output_figure}")
-    else:
-        _log("Workflow1-only run completed.")
-        _log(f"Workflow1 metrics folder: {runtime.metrics_output_dir}")
-        _log(f"Workflow1 image export folder: {runtime.images_output_dir}")
-        _log(f"3D building selected: {runtime.building}")
-    if runtime.viewer_started:
-        _log("Interactive workflow1 building viewer was launched.")
+    coordinates: list[tuple[float, float]] | None = None
+
+    # if has_site_polygon:
+    #     _log(f"Detected existing site polygon: {site_path}")
+    # if has_zone_geometry:
+    #     _log(f"Detected existing building geometry: {zone_path}")
+    # if has_roof_surfaces:
+    #     _log(f"Detected existing roof surfaces: {roof_path}")
+
+    # if has_roof_surfaces:
+    #     _log("Skipping polygon capture, scenario preparation, and roof generation (outputs already exist).")
+    # elif has_site_polygon and has_zone_geometry:
+    #     _log("Skipping polygon capture and scenario preparation (site + zone already exist).")
+    #     coordinates = _run_stage(
+    #         "Load site polygon coordinates",
+    #         lambda: _load_site_polygon_coordinates(locator),
+    #     )
+    #     _run_stage(
+    #         "Generate roof surfaces via fixedboxtilingextension",
+    #         lambda: _run_fixedboxtilingextension(scenario, coordinates),
+    #     )
+    # else:
+    #     _run_stage("Open geojson.io", lambda: _open_geojson_io(config))
+    #     _log(
+    #         "Draw your polygon in geojson.io, then copy the GeoJSON text from the right panel. "
+    #         "The runner will first try clipboard input and then ask for pasted text if needed."
+    #     )
+
+    #     coordinates = _run_stage(
+    #         "Polygon coordinate capture",
+    #         lambda: _capture_polygon_coordinates(config.ucea.polygon_timeout_minutes),
+    #     )
+    #     _run_stage("Create site polygon", lambda: _prepare_site_polygon(config, coordinates))
+    #     _run_stage("Scenario preparation scripts", lambda: _run_data_preparation(config))
+    #     _run_stage(
+    #         "Generate roof surfaces via fixedboxtilingextension",
+    #         lambda: _run_fixedboxtilingextension(scenario, coordinates),
+    #     )
+
+    # _run_stage(
+    #     "Ensure required radiation inputs",
+    #     lambda: _prepare_missing_radiation_inputs(config, scenario),
+    # )
+
+    runtime: UceaRuntime | None = None
+    caught_error: Exception | None = None
+    try:
+        runtime = _run_stage(
+            "Workflow comparison, metrics, and 3D check",
+            lambda: _run_experiments(config, scenario),
+        )
+
+        _log("Run completed successfully.")
+        if runtime.comparison_ran:
+            _log(f"Comparison output root: {runtime.comparison_root}")
+            _log(f"Scenario metrics: {os.path.join(runtime.metrics_output_dir, 'scenario_metrics.csv')}")
+            _log(f"Building metrics: {os.path.join(runtime.metrics_output_dir, 'building_metrics.csv')}")
+            if runtime.images_output_dir:
+                _log(f"Workflow1 image export folder: {runtime.images_output_dir}")
+            else:
+                _log("Workflow1 image export: disabled.")
+            _log(f"3D building used: {runtime.building}")
+            if runtime.output_figure:
+                _log(f"3D figure: {runtime.output_figure}")
+            else:
+                _log("3D figure export: disabled.")
+        else:
+            _log("Workflow1-only run completed.")
+            _log(f"Workflow1 metrics folder: {runtime.metrics_output_dir}")
+            if runtime.images_output_dir:
+                _log(f"Workflow1 image export folder: {runtime.images_output_dir}")
+            else:
+                _log("Workflow1 image export: disabled.")
+            _log(f"3D building selected: {runtime.building}")
+        if runtime.viewer_started:
+            _log("Interactive workflow1 building viewer was launched.")
+    except Exception as exc:
+        caught_error = exc
+        raise
+    finally:
+        try:
+            report_path = _write_run_report(
+                scenario=scenario,
+                started_epoch=run_started_epoch,
+                started_at=run_started_at,
+                status="success" if caught_error is None else "failed",
+                runtime=runtime,
+                error=caught_error,
+            )
+            _log(f"Run report written: {report_path}")
+        except Exception as report_exc:
+            _log(f"Could not write run report: {report_exc}")
 
 
 if __name__ == "__main__":
