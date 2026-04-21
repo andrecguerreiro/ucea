@@ -1245,7 +1245,9 @@ def render_html(output_path: str, payload: dict[str, Any]) -> None:
       onClick: info => {{
         if (!info.object) return;
         if (info.layer.id === "roofs") {{
-          setSelectedBuilding(info.object.building);
+          const buildingName = info.object.building || "-";
+          setSelectedBuilding(buildingName);
+          details.textContent = formatBuildingDetails(buildingName);
           return;
         }} else if (info.layer.id === "solar-bars") {{
           setSelectedBuilding(info.object.building);

@@ -1576,17 +1576,113 @@ class UceaRuntime:
     comparison_ran: bool
 
 
+def _progress_ratio(completed: int, total: int) -> float:
+    if total <= 0:
+        return 1.0
+    return max(0.0, min(1.0, float(completed) / float(total)))
+
+
+def _progress_bar(ratio: float, width: int = 24) -> str:
+    clamped = max(0.0, min(1.0, ratio))
+    filled = int(round(clamped * width))
+    if filled > width:
+        filled = width
+    if filled < 0:
+        filled = 0
+    return "[" + ("#" * filled) + ("-" * (width - filled)) + "]"
+
+
+def _estimate_eta_seconds(elapsed_seconds: float, ratio: float) -> float | None:
+    if ratio <= 0.0 or ratio >= 1.0:
+        return None
+    estimated_total = elapsed_seconds / ratio
+    return max(0.0, estimated_total - elapsed_seconds)
+
+
+def _format_eta(seconds: float | None) -> str:
+    if seconds is None:
+        return "n/a"
+    return _format_seconds(seconds)
+
+
+class UceaProgressTracker:
+    def __init__(self, total_steps: int) -> None:
+        self.total_steps = max(1, int(total_steps))
+        self.completed_steps = 0
+        self.started_epoch = time.time()
+
+        self.phase_name = "not-started"
+        self.phase_total_steps = 1
+        self.phase_completed_steps = 0
+        self.phase_started_epoch = self.started_epoch
+
+    def start_phase(self, phase_name: str, phase_total_steps: int) -> None:
+        self.phase_name = phase_name.strip() or "phase"
+        self.phase_total_steps = max(1, int(phase_total_steps))
+        self.phase_completed_steps = 0
+        self.phase_started_epoch = time.time()
+        self._emit(f"Phase started: {self.phase_name}")
+
+    def advance(self, message: str, steps: int = 1) -> None:
+        inc = max(0, int(steps))
+        self.phase_completed_steps = min(self.phase_total_steps, self.phase_completed_steps + inc)
+        self.completed_steps = min(self.total_steps, self.completed_steps + inc)
+        self._emit(message)
+
+    def complete_phase(self, message: str | None = None) -> None:
+        remaining = max(0, self.phase_total_steps - self.phase_completed_steps)
+        if remaining > 0:
+            self.phase_completed_steps += remaining
+            self.completed_steps = min(self.total_steps, self.completed_steps + remaining)
+        self._emit(message or f"Phase completed: {self.phase_name}")
+
+    def note(self, message: str) -> None:
+        self._emit(message)
+
+    def _emit(self, message: str) -> None:
+        now = time.time()
+
+        overall_ratio = _progress_ratio(self.completed_steps, self.total_steps)
+        overall_elapsed = now - self.started_epoch
+        overall_eta = _estimate_eta_seconds(overall_elapsed, overall_ratio)
+
+        phase_ratio = _progress_ratio(self.phase_completed_steps, self.phase_total_steps)
+        phase_elapsed = now - self.phase_started_epoch
+        phase_eta = _estimate_eta_seconds(phase_elapsed, phase_ratio)
+
+        _log(
+            "[progress] "
+            f"{message} | overall {_progress_bar(overall_ratio)} "
+            f"{overall_ratio * 100:5.1f}% ({self.completed_steps}/{self.total_steps}) "
+            f"ETA {_format_eta(overall_eta)} | "
+            f"phase `{self.phase_name}` {_progress_bar(phase_ratio)} "
+            f"{phase_ratio * 100:5.1f}% ({self.phase_completed_steps}/{self.phase_total_steps}) "
+            f"ETA {_format_eta(phase_eta)}"
+        )
+
+
 def _log(message: str) -> None:
     print(f"[ucea] {message}")
 
 
-def _run_stage(stage_name: str, fn):
+def _run_stage(
+    stage_name: str,
+    fn,
+    progress: UceaProgressTracker | None = None,
+    progress_steps: int = 0,
+):
     _log(f"Starting: {stage_name}")
+    stage_started = time.time()
     try:
         result = fn()
     except Exception as exc:
+        if progress is not None:
+            progress.note(f"Failed: {stage_name}")
         raise UceaStageError(f"{stage_name} failed: {exc}") from exc
-    _log(f"Completed: {stage_name}")
+    elapsed = time.time() - stage_started
+    _log(f"Completed: {stage_name} (duration {_format_seconds(elapsed)})")
+    if progress is not None and progress_steps > 0:
+        progress.advance(f"Completed: {stage_name}", steps=progress_steps)
     return result
 
 
@@ -2125,9 +2221,34 @@ def _run_workflow1_viewer(
     return launch_viewer
 
 
-def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
+def _count_experiment_steps(config: Configuration) -> int:
+    steps = 1  # Ensure roof surfaces GeoJSON exists.
     if config.ucea.workflow1_only:
-        roof_file = _require_roof_file(scenario)
+        steps += 3  # radiation, photovoltaic, workflow1 metrics report
+    else:
+        steps += 2  # workflow comparison, metrics report
+        if bool(getattr(config.ucea, "export_workflow_comparison_3d_figure", False)):
+            steps += 1
+
+    if bool(getattr(config.ucea, "launch_workflow1_viewer", False)) or bool(
+        getattr(config.ucea, "export_workflow1_images", False)
+    ):
+        steps += 1
+    return max(1, steps)
+
+
+def _run_experiments(
+    config: Configuration,
+    scenario: str,
+    progress: UceaProgressTracker | None = None,
+) -> UceaRuntime:
+    if config.ucea.workflow1_only:
+        roof_file = _run_stage(
+            "Ensure roof surfaces GeoJSON",
+            lambda: _require_roof_file(scenario),
+            progress=progress,
+            progress_steps=1,
+        )
         _log(f"Workflow1-only mode enabled. Using roof file: {roof_file}")
         zone_pickle_count, surroundings_pickle_count = _count_existing_radiance_pickles(scenario)
         if zone_pickle_count or surroundings_pickle_count:
@@ -2140,16 +2261,26 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
             _log("No existing radiance geometry pickles found. Skipping cleanup to preserve outputs by default.")
 
         pv_panel = config.ucea.pv_panel
-        _run_cea_script_with_env(
-            "radiation",
-            scenario,
-            extra_args=["--buildings", ""],
-            env_overrides=_radiation_env_overrides(scenario),
+        _run_stage(
+            "Run CEA radiation (workflow1-only)",
+            lambda: _run_cea_script_with_env(
+                "radiation",
+                scenario,
+                extra_args=["--buildings", ""],
+                env_overrides=_radiation_env_overrides(scenario),
+            ),
+            progress=progress,
+            progress_steps=1,
         )
-        _run_cea_script(
-            "photovoltaic",
-            scenario,
-            ["--buildings", "", "--panel-on-wall", "false", "--type-pvpanel", pv_panel],
+        _run_stage(
+            "Run CEA photovoltaic (workflow1-only)",
+            lambda: _run_cea_script(
+                "photovoltaic",
+                scenario,
+                ["--buildings", "", "--panel-on-wall", "false", "--type-pvpanel", pv_panel],
+            ),
+            progress=progress,
+            progress_steps=1,
         )
 
         workflow1_root = os.path.join(scenario, "outputs", "data")
@@ -2160,22 +2291,27 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
             "solar-radiation",
             "workflow1_metrics",
         )
-        _run_python_module(
-            "cea.resources.radiation.workflow_metrics_report",
-            [
-                "--comparison-root",
-                workflow1_root,
-                "--workflows",
-                "WF1",
-                "--workflow1-root",
-                workflow1_root,
-                "--level",
-                "both",
-                "--pv-panels",
-                pv_panel,
-                "--out-dir",
-                metrics_output_dir,
-            ],
+        _run_stage(
+            "Build workflow1 metrics report",
+            lambda: _run_python_module(
+                "cea.resources.radiation.workflow_metrics_report",
+                [
+                    "--comparison-root",
+                    workflow1_root,
+                    "--workflows",
+                    "WF1",
+                    "--workflow1-root",
+                    workflow1_root,
+                    "--level",
+                    "both",
+                    "--pv-panels",
+                    pv_panel,
+                    "--out-dir",
+                    metrics_output_dir,
+                ],
+            ),
+            progress=progress,
+            progress_steps=1,
         )
 
         locator = InputLocator(scenario)
@@ -2200,16 +2336,26 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
         export_images = bool(getattr(config.ucea, "export_workflow1_images", False))
         images_output_dir = images_output_dir_default if export_images else ""
         viewer_started = False
-        try:
-            viewer_started = _run_workflow1_viewer(
-                zone_pickle_dir=zone_pickle_dir,
-                metadata_dir=metadata_dir,
-                images_output_dir=images_output_dir_default,
-                launch_viewer=launch_viewer,
-                export_images=export_images,
+        if launch_viewer or export_images:
+            def _run_workflow1_viewer_safe() -> bool:
+                try:
+                    return _run_workflow1_viewer(
+                        zone_pickle_dir=zone_pickle_dir,
+                        metadata_dir=metadata_dir,
+                        images_output_dir=images_output_dir_default,
+                        launch_viewer=launch_viewer,
+                        export_images=export_images,
+                    )
+                except Exception as exc:
+                    _log(f"Could not launch interactive workflow1 building viewer: {exc}")
+                    return False
+
+            viewer_started = _run_stage(
+                "Run workflow1 viewer and/or image export",
+                _run_workflow1_viewer_safe,
+                progress=progress,
+                progress_steps=1,
             )
-        except Exception as exc:
-            _log(f"Could not launch interactive workflow1 building viewer: {exc}")
 
         return UceaRuntime(
             scenario=scenario,
@@ -2223,37 +2369,52 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
         )
 
     comparison_root = _resolve_comparison_root(config, scenario)
-    roof_file = _require_roof_file(scenario)
+    roof_file = _run_stage(
+        "Ensure roof surfaces GeoJSON",
+        lambda: _require_roof_file(scenario),
+        progress=progress,
+        progress_steps=1,
+    )
     pv_panel = config.ucea.pv_panel
     _log("Preserving existing geometry and radiance cache files (no clean-first).")
 
-    _run_python_module(
-        "cea.resources.radiation.workflow_comparison",
-        [
-            "--scenario",
-            scenario,
-            "--roof-file",
-            roof_file,
-            "--comparison-root",
-            comparison_root,
-            "--include-geometry-pickles",
-            "--pv-panel",
-            pv_panel,
-            "--harmonise-pv-azimuth-convention",
-        ],
+    _run_stage(
+        "Run workflow comparison",
+        lambda: _run_python_module(
+            "cea.resources.radiation.workflow_comparison",
+            [
+                "--scenario",
+                scenario,
+                "--roof-file",
+                roof_file,
+                "--comparison-root",
+                comparison_root,
+                "--include-geometry-pickles",
+                "--pv-panel",
+                pv_panel,
+                "--harmonise-pv-azimuth-convention",
+            ],
+        ),
+        progress=progress,
+        progress_steps=1,
     )
 
-    _run_python_module(
-        "cea.resources.radiation.workflow_metrics_report",
-        [
-            "--comparison-root",
-            comparison_root,
-            "--level",
-            "both",
-            "--pv-panels",
-            pv_panel,
-            "--undo-pv-azimuth-harmonisation",
-        ],
+    _run_stage(
+        "Build workflow comparison metrics report",
+        lambda: _run_python_module(
+            "cea.resources.radiation.workflow_metrics_report",
+            [
+                "--comparison-root",
+                comparison_root,
+                "--level",
+                "both",
+                "--pv-panels",
+                pv_panel,
+                "--undo-pv-azimuth-harmonisation",
+            ],
+        ),
+        progress=progress,
+        progress_steps=1,
     )
     metrics_output_dir = comparison_root
 
@@ -2263,16 +2424,21 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
     output_figure = ""
     if export_comparison_3d:
         output_figure = os.path.join(comparison_root, f"{building}_workflow_geometry_comparison_3d.png")
-        _run_python_module(
-            "cea.resources.radiation.workflow_geometry_comparison_3d",
-            [
-                "--comparison-root",
-                comparison_root,
-                "--building",
-                building,
-                "--output-figure",
-                output_figure,
-            ],
+        _run_stage(
+            "Export workflow comparison 3D geometry figure",
+            lambda: _run_python_module(
+                "cea.resources.radiation.workflow_geometry_comparison_3d",
+                [
+                    "--comparison-root",
+                    comparison_root,
+                    "--building",
+                    building,
+                    "--output-figure",
+                    output_figure,
+                ],
+            ),
+            progress=progress,
+            progress_steps=1,
         )
     else:
         _log("Workflow comparison 3D geometry figure export is disabled by configuration.")
@@ -2283,16 +2449,26 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaRuntime:
     launch_viewer = bool(getattr(config.ucea, "launch_workflow1_viewer", False))
     export_images = bool(getattr(config.ucea, "export_workflow1_images", False))
     images_output_dir = images_output_dir_default if export_images else ""
-    try:
-        viewer_started = _run_workflow1_viewer(
-            comparison_root=comparison_root,
-            metadata_dir=metadata_dir,
-            images_output_dir=images_output_dir_default,
-            launch_viewer=launch_viewer,
-            export_images=export_images,
+    if launch_viewer or export_images:
+        def _run_comparison_viewer_safe() -> bool:
+            try:
+                return _run_workflow1_viewer(
+                    comparison_root=comparison_root,
+                    metadata_dir=metadata_dir,
+                    images_output_dir=images_output_dir_default,
+                    launch_viewer=launch_viewer,
+                    export_images=export_images,
+                )
+            except Exception as exc:
+                _log(f"Could not launch interactive workflow1 building viewer: {exc}")
+                return False
+
+        viewer_started = _run_stage(
+            "Run workflow1 viewer and/or image export",
+            _run_comparison_viewer_safe,
+            progress=progress,
+            progress_steps=1,
         )
-    except Exception as exc:
-        _log(f"Could not launch interactive workflow1 building viewer: {exc}")
 
     return UceaRuntime(
         scenario=scenario,
@@ -2372,6 +2548,11 @@ def main(config: Configuration) -> None:
     _log(f"Initialising experiment workflow for scenario: {scenario}")
     run_started_epoch = time.time()
     run_started_at = datetime.now()
+    total_steps = 1 + _count_experiment_steps(config) + 1  # init + workflow + report
+    progress = UceaProgressTracker(total_steps=total_steps)
+    progress.start_phase("Initialization", 1)
+    progress.advance("Initialization complete", steps=1)
+    progress.start_phase("Workflow execution", _count_experiment_steps(config))
 
     locator = InputLocator(scenario)
     site_path = locator.get_site_polygon()
@@ -2429,10 +2610,8 @@ def main(config: Configuration) -> None:
     runtime: UceaRuntime | None = None
     caught_error: Exception | None = None
     try:
-        runtime = _run_stage(
-            "Workflow comparison, metrics, and 3D check",
-            lambda: _run_experiments(config, scenario),
-        )
+        runtime = _run_experiments(config, scenario, progress=progress)
+        progress.complete_phase("Workflow execution complete")
 
         _log("Run completed successfully.")
         if runtime.comparison_ran:
@@ -2462,6 +2641,7 @@ def main(config: Configuration) -> None:
         caught_error = exc
         raise
     finally:
+        progress.start_phase("Run report", 1)
         try:
             report_path = _write_run_report(
                 scenario=scenario,
@@ -2471,8 +2651,10 @@ def main(config: Configuration) -> None:
                 runtime=runtime,
                 error=caught_error,
             )
+            progress.advance("Run report written", steps=1)
             _log(f"Run report written: {report_path}")
         except Exception as report_exc:
+            progress.note(f"Run report failed: {report_exc}")
             _log(f"Could not write run report: {report_exc}")
 
 
