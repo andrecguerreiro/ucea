@@ -5,6 +5,7 @@ Run an end-to-end UX workflow for roof-comparison experiments.
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import shutil
 import subprocess
@@ -28,7 +29,10 @@ DEFAULT_INE_HEIGHT_GPKG = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "INE_com_NPAV_norm0.gpkg")
 )
 ROOF_RELATIVE_PATH = os.path.join("inputs", "building-geometry", "roof_surfaces.geojson")
-FIXEDBOX_RELATIVE_PATH = os.path.join("ultralytics", "fixedboxtilingextension_v3.py")
+ROOF_INPUT_SIGNATURE_RELATIVE_PATH = os.path.join(
+    "inputs", "building-geometry", "roof_surfaces.input_signature.json"
+)
+FIXEDBOX_RELATIVE_PATH = os.path.join("ultralytics", "fixedboxtrick.py")
 ZONE_SHP_RELATIVE_PATH = os.path.join("inputs", "building-geometry", "zone.shp")
 DEFAULT_FIXEDBOX_BUILDING_THRESHOLD = 0.15
 DEFAULT_FIXEDBOX_OVERLAP_THRESHOLD = 0.25
@@ -2010,6 +2014,13 @@ def _prepare_missing_radiation_inputs(config: Configuration, scenario: str) -> N
 
     zone_path = locator.get_zone_geometry()
     if not os.path.exists(zone_path):
+        site_path = locator.get_site_polygon()
+        if not os.path.exists(site_path):
+            raise FileNotFoundError(
+                "Cannot run zone-helper because site.shp is missing. "
+                f"Expected: {site_path}. "
+                "Create site.shp first (via UCEA polygon capture / site-helper) and rerun."
+            )
         _log(f"zone.shp missing at {zone_path}. Running zone-helper.")
         _call_api("zone_helper", config)
 
@@ -2056,19 +2067,116 @@ def _normalise_polygon_ring(coordinates: list[tuple[float, float]]) -> list[list
     return ring
 
 
+def _polygon_match_key(coordinates: list[tuple[float, float]], decimals: int = 8) -> tuple[tuple[float, float], ...]:
+    ring = _normalise_polygon_ring(coordinates)
+    points = [
+        (round(float(lon), decimals), round(float(lat), decimals))
+        for lon, lat in ring[:-1]
+    ]
+    if len(points) < 3:
+        raise ValueError("Polygon requires at least three unique points.")
+
+    def _canonical_rotation(seq: list[tuple[float, float]]) -> tuple[tuple[float, float], ...]:
+        return min(tuple(seq[i:] + seq[:i]) for i in range(len(seq)))
+
+    forward = _canonical_rotation(points)
+    backward = _canonical_rotation(list(reversed(points)))
+    return min(forward, backward)
+
+
+def _polygon_hash(coordinates: list[tuple[float, float]]) -> str:
+    key = _polygon_match_key(coordinates)
+    key_json = json.dumps(key, ensure_ascii=True, separators=(",", ":"))
+    return hashlib.sha256(key_json.encode("utf-8")).hexdigest()
+
+
+def _polygon_matches(a: list[tuple[float, float]], b: list[tuple[float, float]]) -> bool:
+    return _polygon_hash(a) == _polygon_hash(b)
+
+
+def _roof_input_signature_path(scenario: str) -> str:
+    return os.path.join(scenario, ROOF_INPUT_SIGNATURE_RELATIVE_PATH)
+
+
+def _read_roof_input_signature_hash(scenario: str) -> str | None:
+    signature_path = _roof_input_signature_path(scenario)
+    if not os.path.exists(signature_path):
+        return None
+
+    try:
+        with open(signature_path, "r", encoding="utf-8") as fp:
+            payload = json.load(fp)
+    except Exception as exc:
+        _log(f"Could not read roof input signature file ({signature_path}): {exc}")
+        return None
+
+    if not isinstance(payload, dict):
+        _log(f"Roof input signature file has invalid format: {signature_path}")
+        return None
+
+    hash_value = payload.get("polygon_hash_sha256")
+    if not isinstance(hash_value, str):
+        return None
+    cleaned = hash_value.strip().lower()
+    return cleaned or None
+
+
+def _write_roof_input_signature(scenario: str, coordinates: list[tuple[float, float]]) -> str:
+    signature_path = _roof_input_signature_path(scenario)
+    os.makedirs(os.path.dirname(signature_path), exist_ok=True)
+    payload = {
+        "schema_version": 1,
+        "generated_by": "cea.resources.radiation.ucea._run_fixedboxtrick",
+        "generated_at_utc": datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+        "polygon_hash_sha256": _polygon_hash(coordinates),
+        "polygon_ring_lon_lat": _normalise_polygon_ring(coordinates),
+    }
+    with open(signature_path, "w", encoding="utf-8") as fp:
+        json.dump(payload, fp, ensure_ascii=True, indent=2)
+        fp.write("\n")
+    return signature_path
+
+
+def _roof_surfaces_match_input(
+    scenario: str,
+    coordinates: list[tuple[float, float]],
+) -> bool:
+    current_hash = _polygon_hash(coordinates)
+    signature_hash = _read_roof_input_signature_hash(scenario)
+
+    if signature_hash is None:
+        _log("No roof input signature found. Existing roof surfaces are treated as stale.")
+        return False
+    return signature_hash == current_hash
+
+
 def _resolve_repo_root() -> str:
     return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 
 
-def _resolve_fixedboxtilingextension_script() -> str:
-    script_path = os.path.join(_resolve_repo_root(), FIXEDBOX_RELATIVE_PATH)
-    if not os.path.exists(script_path):
-        raise FileNotFoundError(f"fixedboxtilingextension script not found: {script_path}")
-    return script_path
+def _resolve_fixedboxtrick_script() -> str:
+    repo_root = _resolve_repo_root()
+    expected_path = os.path.normpath(os.path.join(repo_root, FIXEDBOX_RELATIVE_PATH))
+
+    if not os.path.exists(expected_path):
+        raise FileNotFoundError(
+            "fixedboxtrick script not found inside ucea repository. "
+            f"Expected: {expected_path}"
+        )
+
+    repo_root_real = os.path.realpath(repo_root)
+    script_path_real = os.path.realpath(expected_path)
+    if os.path.commonpath([repo_root_real, script_path_real]) != repo_root_real:
+        raise ValueError(
+            "Resolved fixedboxtrick path is outside ucea repository: "
+            f"{script_path_real}"
+        )
+
+    return expected_path
 
 
-def _run_fixedboxtilingextension(scenario: str, coordinates: list[tuple[float, float]]) -> str:
-    script_path = _resolve_fixedboxtilingextension_script()
+def _run_fixedboxtrick(scenario: str, coordinates: list[tuple[float, float]]) -> str:
+    script_path = _resolve_fixedboxtrick_script()
     script_dir = os.path.dirname(script_path)
     zone_shp_path = os.path.join(scenario, ZONE_SHP_RELATIVE_PATH)
     if not os.path.exists(zone_shp_path):
@@ -2094,7 +2202,17 @@ def _run_fixedboxtilingextension(scenario: str, coordinates: list[tuple[float, f
     ]
     _log("Running command: " + " ".join(command))
     subprocess.run(command, check=True, cwd=script_dir)
+    signature_path = _write_roof_input_signature(scenario, coordinates)
+    _log(f"Updated roof input signature: {signature_path}")
     return roof_file
+
+
+def _resolve_fixedboxtilingextension_script() -> str:
+    return _resolve_fixedboxtrick_script()
+
+
+def _run_fixedboxtilingextension(scenario: str, coordinates: list[tuple[float, float]]) -> str:
+    return _run_fixedboxtrick(scenario, coordinates)
 
 
 def _require_roof_file(scenario: str) -> str:
@@ -2563,49 +2681,91 @@ def main(config: Configuration) -> None:
     has_zone_geometry = os.path.exists(zone_path)
     has_roof_surfaces = os.path.exists(roof_path)
 
-    coordinates: list[tuple[float, float]] | None = None
+    coordinates: list[tuple[float, float]]
 
-    # if has_site_polygon:
-    #     _log(f"Detected existing site polygon: {site_path}")
-    # if has_zone_geometry:
-    #     _log(f"Detected existing building geometry: {zone_path}")
-    # if has_roof_surfaces:
-    #     _log(f"Detected existing roof surfaces: {roof_path}")
+    if has_site_polygon:
+        _log(f"Detected existing site polygon: {site_path}")
+    if has_zone_geometry:
+        _log(f"Detected existing building geometry: {zone_path}")
+    if has_roof_surfaces:
+        _log(f"Detected existing roof surfaces: {roof_path}")
 
-    # if has_roof_surfaces:
-    #     _log("Skipping polygon capture, scenario preparation, and roof generation (outputs already exist).")
-    # elif has_site_polygon and has_zone_geometry:
-    #     _log("Skipping polygon capture and scenario preparation (site + zone already exist).")
-    #     coordinates = _run_stage(
-    #         "Load site polygon coordinates",
-    #         lambda: _load_site_polygon_coordinates(locator),
-    #     )
-    #     _run_stage(
-    #         "Generate roof surfaces via fixedboxtilingextension",
-    #         lambda: _run_fixedboxtilingextension(scenario, coordinates),
-    #     )
-    # else:
-    #     _run_stage("Open geojson.io", lambda: _open_geojson_io(config))
-    #     _log(
-    #         "Draw your polygon in geojson.io, then copy the GeoJSON text from the right panel. "
-    #         "The runner will first try clipboard input and then ask for pasted text if needed."
-    #     )
+    _run_stage("Open geojson.io", lambda: _open_geojson_io(config))
+    _log(
+        "Draw your polygon in geojson.io, then copy the GeoJSON text from the right panel. "
+        "The runner will first try clipboard input and then ask for pasted text if needed."
+    )
+    coordinates = _run_stage(
+        "Polygon coordinate capture",
+        lambda: _capture_polygon_coordinates(config.ucea.polygon_timeout_minutes),
+    )
 
-    #     coordinates = _run_stage(
-    #         "Polygon coordinate capture",
-    #         lambda: _capture_polygon_coordinates(config.ucea.polygon_timeout_minutes),
-    #     )
-    #     _run_stage("Create site polygon", lambda: _prepare_site_polygon(config, coordinates))
-    #     _run_stage("Scenario preparation scripts", lambda: _run_data_preparation(config))
-    #     _run_stage(
-    #         "Generate roof surfaces via fixedboxtilingextension",
-    #         lambda: _run_fixedboxtilingextension(scenario, coordinates),
-    #     )
+    existing_site_coordinates: list[tuple[float, float]] | None = None
+    input_matches_existing_site = False
+    if has_site_polygon:
+        existing_site_coordinates = _run_stage(
+            "Load existing site polygon coordinates",
+            lambda: _load_site_polygon_coordinates(locator),
+        )
+        input_matches_existing_site = _polygon_matches(coordinates, existing_site_coordinates)
+        if input_matches_existing_site:
+            _log("Current polygon input matches the existing site polygon.")
+        else:
+            _log("Current polygon input differs from the existing site polygon.")
 
-    # _run_stage(
-    #     "Ensure required radiation inputs",
-    #     lambda: _prepare_missing_radiation_inputs(config, scenario),
-    # )
+    needs_site_refresh = (not has_site_polygon) or (not input_matches_existing_site)
+    needs_scenario_preparation = needs_site_refresh or (not has_zone_geometry)
+
+    if needs_site_refresh:
+        if has_site_polygon:
+            _log("Replacing site polygon so scenario geometry matches the new input area.")
+        else:
+            _log("site.shp is missing. Creating site polygon from the current input area.")
+        _run_stage("Create site polygon", lambda: _prepare_site_polygon(config, coordinates))
+
+    if needs_scenario_preparation:
+        if has_zone_geometry and needs_site_refresh:
+            _log("Refreshing scenario preparation outputs for the new input area.")
+        elif not has_zone_geometry:
+            _log("zone.shp is missing. Running scenario preparation scripts.")
+        _run_stage("Scenario preparation scripts", lambda: _run_data_preparation(config))
+    else:
+        _log("Skipping scenario preparation (existing site + zone already match current input).")
+
+    has_roof_surfaces = os.path.exists(roof_path)
+    roof_matches_input = False
+    if has_roof_surfaces:
+        roof_matches_input = _roof_surfaces_match_input(
+            scenario=scenario,
+            coordinates=coordinates,
+        )
+
+    regenerate_roof = (
+        (not has_roof_surfaces)
+        or needs_site_refresh
+        or needs_scenario_preparation
+        or (not roof_matches_input)
+    )
+    if regenerate_roof:
+        if not has_roof_surfaces:
+            _log("roof_surfaces.geojson is missing. Generating roof surfaces.")
+        elif needs_site_refresh:
+            _log("Input area changed. Regenerating roof surfaces for consistency.")
+        elif needs_scenario_preparation:
+            _log("Scenario geometry was refreshed. Regenerating roof surfaces.")
+        else:
+            _log("Existing roof surfaces do not match the current input. Regenerating roof surfaces.")
+        _run_stage(
+            "Generate roof surfaces via fixedboxtrick",
+            lambda: _run_fixedboxtrick(scenario, coordinates),
+        )
+    else:
+        _log("Skipping roof regeneration (existing roof surfaces match current input area).")
+
+    _run_stage(
+        "Ensure required radiation inputs",
+        lambda: _prepare_missing_radiation_inputs(config, scenario),
+    )
 
     runtime: UceaRuntime | None = None
     caught_error: Exception | None = None

@@ -1,1 +1,3 @@
 cea/resources/radiation/INE_com_NPAV_norm0.gpkg
+__pycache__/
+*.pyc

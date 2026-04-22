@@ -1,0 +1,13 @@
+Installation Instructions:
+
+1. git clone https://github.com/andrecguerreiro/ucea
+2. conda install --channel=conda-forge --name=base conda-lock
+3. conda-lock install --name cea --file ./CityEnergyAnalyst/conda-lock.yml
+4. conda activate cea
+5. pip install -e ./ucea
+6. Download file https://ulisboa-my.sharepoint.com/:u:/g/personal/ist430732_tecnico_ulisboa_pt/IQDwtF270LdTQodrQA-GoT4iAWj-_D1hl2_y20I4xbNUemU?e=DAkMyY and move it into .\ucea\cea\resources\radiation\INE_com_NPAV_norm0.gpkg
+
+Usage Instructions:
+
+1. Run the command: cea ucea --scenario "" (scenario is optional. default is:)
+2. For roof visualization in HTML, run "python .\ucea\cea\resources\radiation\roof_visualizer.py -- scenario ""

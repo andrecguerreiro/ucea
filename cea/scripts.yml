@@ -583,6 +583,14 @@ default:
     module: cea.resources.radiation.ucea
     parameters: ['general:scenario', ucea]
 
+  - name: ucea-visualization
+    label: UX Visualization Runner
+    short_description: Run roof workflow comparison and open side-by-side building viewer
+    description: Run flat-roof vs custom-roof workflow comparison and launch an interactive side-by-side building visualizer.
+    interfaces: [cli]
+    module: cea.resources.radiation.ucea_visualization
+    parameters: ['general:scenario', ucea]
+
   - name: compile
     label: compile
     short_description: Compile PYD files

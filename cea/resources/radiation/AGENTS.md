@@ -9,7 +9,7 @@
 - `main()` in `workflow_metrics_report.py` - Generates scenario/building metrics (single or dual workflow) and explicit WF deltas when both WF0 and WF1 are selected.
 - `main()` in `solar_capacity_map_3d.py` - Standalone post-CEA visualiser that renders all 3D zone buildings with scalable, clickable solar-capacity bars in one interactive map HTML.
 - `main()` in `fixedboxtilingextension_layered_visualizer.py` - Standalone 3-layer map visualiser (OSM 2D zone, fixedbox satellite image, OSM 3D plus generated roofs) for article-ready roof presentation.
-- `main(config: Configuration)` in `ucea.py` - Runs geojson.io polygon capture, scenario helpers, `ultralytics/fixedboxtilingextension_v3.py` roof export, workflow comparison, metrics report, and 3D check in one CLI command.
+- `main(config: Configuration)` in `ucea.py` - Runs geojson.io polygon capture, scenario helpers, `ultralytics/fixedboxtrick.py` roof export, workflow comparison, metrics report, and 3D check in one CLI command.
 
 ## Key Patterns
 ### DO: Keep `BuildingGeometry` schema stable
@@ -119,7 +119,7 @@ pd.DataFrame({"Xdir": ..., "Ydir": ..., "Zdir": ..., "TYPE": ...})
   - opens geojson.io and captures polygon from clipboard or pasted input
   - runs `create-polygon` (`site.shp`)
   - runs helper scripts (`database/zone/terrain/weather/archetypes`) and runs `surroundings-helper` only when `ucea:run-surroundings-helper` is `true`
-  - runs `ultralytics/fixedboxtilingextension_v3.py` with:
+  - runs `ultralytics/fixedboxtrick.py` with:
     - `--zone-shp-path <scenario>/inputs/building-geometry/zone.shp`
     - `--output-path <scenario>/inputs/building-geometry/roof_surfaces.geojson`
     - fixed thresholds (`building=0.15`, `overlap=0.25`)
@@ -201,7 +201,7 @@ pd.DataFrame({"Xdir": ..., "Ydir": ..., "Zdir": ..., "TYPE": ...})
 - `fixedboxtilingextension_layered_visualizer.py` fetches OSM buildings via multiple Overpass endpoints with retry/backoff (`overpass-api.de`, `lz4.overpass-api.de`, `overpass.kumi.systems`) to reduce 504 timeout failures.
 - `fixedboxtilingextension_layered_visualizer.py` regenerates a scenario-matching WMTS satellite image when the scenario image is missing or older than `roof_surfaces.geojson` (avoids accidental reuse of unrelated global images).
 - `ucea.py` defaults to `ucea:run-surroundings-helper = true`; set it to `false` to preserve manually edited `inputs/geometry/surroundings.shp`.
-- `ucea.py` always attempts to generate `inputs/building-geometry/roof_surfaces.geojson` via `ultralytics/fixedboxtilingextension_v3.py` immediately after scenario helpers.
+- `ucea.py` always attempts to generate `inputs/building-geometry/roof_surfaces.geojson` via `ultralytics/fixedboxtrick.py` immediately after scenario helpers.
 - `ucea.py` auto-creates `inputs/building-geometry/roof_surfaces.geojson` with a temporary default payload if the file is missing.
 - The default hardcoded roof in `ucea.py` is intentionally planar (one corrected vertex Z) to avoid OCC null-face assertions in custom roof loading.
 - `ucea.py` runs `workflow_comparison.py` with `--clean-first` to avoid stale `solar-radiation` / `potentials/solar` artefacts leaking into metrics.

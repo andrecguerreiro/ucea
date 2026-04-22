@@ -542,8 +542,10 @@ cea/resources/radiation/remap_roof_metadata.py
 cea/resources/radiation/roof_visualizer.py
 cea/resources/radiation/solar_capacity_map_3d.py
 cea/resources/radiation/ucea.py
+cea/resources/radiation/ucea_visualization.py
 cea/resources/radiation/workflow1_building_viewer.py
 cea/resources/radiation/workflow_comparison.py
+cea/resources/radiation/workflow_comparison_building_viewer.py
 cea/resources/radiation/workflow_comparison_dashboard.py
 cea/resources/radiation/workflow_geometry_comparison_3d.py
 cea/resources/radiation/workflow_metrics_report.py
