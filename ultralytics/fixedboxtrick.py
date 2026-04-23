@@ -27,6 +27,31 @@ We recreate a rooftop based on the building outline and the model prediction
 We render it
 '''
 
+
+def _normalise_debug_buildings(debug_buildings):
+    if not debug_buildings:
+        return set()
+    if isinstance(debug_buildings, str):
+        candidates = [debug_buildings]
+    else:
+        candidates = list(debug_buildings)
+
+    result = set()
+    for candidate in candidates:
+        for token in str(candidate).split(","):
+            token = token.strip()
+            if token:
+                result.add(token)
+    return result
+
+
+def _debug_topology_enabled_for_building(building_id, debug_topology, debug_building_set):
+    if not debug_topology:
+        return False
+    if not debug_building_set:
+        return True
+    return str(building_id).strip() in debug_building_set
+
 def draw_azimuths_on_satellite(
     satellite_image: np.ndarray,
     buildings,          # list[EstimatedBuilding]
@@ -410,7 +435,7 @@ def get_osm_buildings(top_left_corner, bottom_right_corner):
     s, n = min(tl_lat, br_lat), max(tl_lat, br_lat)
     w, e = min(tl_lon, br_lon), max(tl_lon, br_lon)
     q = f"""[out:json];(way["building"]({s},{w},{n},{e});relation["building"]({s},{w},{n},{e}););out body;>;out skel qt;"""
-    #r = requests.post("https://overpass-api.de/api/interpreter", data=q)
+    #r = requests.post(""https://overpass.kumi.systems/api/interpreter", data=q)
     ## AI suggested solution
     headers = {
         'User-Agent': 'OVEN_Building_Tool/3.0 (https://github.com/Joaopmoliveira/OVEN)',
@@ -726,7 +751,12 @@ def match_vector_to_coordinates(dx, dy, width, height):
     side_names = ["T", "B", "L", "R"]
     return side_names[side_idx]
 
-def topology_converter_mine(roof_prediction, osm_building):
+def topology_converter_mine(
+    roof_prediction,
+    osm_building,
+    debug=False,
+    debug_building_id=None,
+):
     """
     Convert roof predictions to topology with plane intersections.
     
@@ -737,6 +767,12 @@ def topology_converter_mine(roof_prediction, osm_building):
         code: Roof topology code (e.g., "HTRBL")
         face_data: Dictionary of face data including intersections
     """
+    debug_prefix = f"[topology-debug:{debug_building_id or '?'}] "
+
+    def dbg(message):
+        if debug:
+            print(debug_prefix + str(message))
+
     tr = Transformer.from_crs("EPSG:4326", "EPSG:3763", always_xy=True)
     ring = osm_building["geometry"]["coordinates"][0]
     xs, ys = zip(*[tr.transform(lon, lat) for lon, lat in ring])
@@ -751,6 +787,10 @@ def topology_converter_mine(roof_prediction, osm_building):
     points = outline[:2, :].T.astype(np.float32)
     rect = cv2.minAreaRect(points)
     center, (width, height), angle = rect
+    dbg(
+        "bbox centre=(%.3f, %.3f), width=%.3f, height=%.3f, angle=%.3f"
+        % (center[0], center[1], width, height, angle)
+    )
 
     x_min_l = -width / 2.0
     x_max_l = width / 2.0
@@ -791,6 +831,18 @@ def topology_converter_mine(roof_prediction, osm_building):
         "L": {"active": global_probs["L"] > 0.5, "inclination": global_inc["L"], "orientation": global_ori["L"]},
         "H": {"active": probh > 0.5, "inclination": 0.0, "orientation": 0.0},
     }
+    dbg(
+        "probabilities H/T/R/B/L = %.4f / %.4f / %.4f / %.4f / %.4f"
+        % (probh, global_probs["T"], global_probs["R"], global_probs["B"], global_probs["L"])
+    )
+    dbg(
+        "inclinations T/R/B/L = %.4f / %.4f / %.4f / %.4f"
+        % (global_inc["T"], global_inc["R"], global_inc["B"], global_inc["L"])
+    )
+    dbg(
+        "orientations T/R/B/L = %.4f / %.4f / %.4f / %.4f"
+        % (global_ori["T"], global_ori["R"], global_ori["B"], global_ori["L"])
+    )
  
     
     codelocalcoords = []
@@ -799,33 +851,51 @@ def topology_converter_mine(roof_prediction, osm_building):
     # What I suggest is the following: We select the highest probability, and check minus 0.05 percent bellow that maximum
     maximumprob = roof_prediction[0:5].max()
 
-    maximumprob =  0.5*0.8 if maximumprob > 0.5 else maximumprob*0.80   
+    maximumprob =  0.5*0.8 if maximumprob > 0.5 else maximumprob*0.80
+    dbg("selection threshold=%.4f" % maximumprob)
     if probh > maximumprob: 
         codelocalcoords.append(["H","H",probh,face_data["H"]])
+        dbg("accepted face global=H local=H prob=%.4f" % probh)
         #code += "H"
     if global_probs["T"] > maximumprob: 
         vector = convert_azimuth_to_local_vector_in_bounding_box("T",face_data["T"]["orientation"],theta)
         dx,dy = vector
         transformed_face = match_vector_to_coordinates(dx, dy, width, height)
         codelocalcoords.append([transformed_face,"T",global_probs["T"],face_data["T"]])
+        dbg(
+            "accepted face global=T local=%s prob=%.4f vec=(%.4f, %.4f)"
+            % (transformed_face, global_probs["T"], dx, dy)
+        )
         #code += "T"
     if global_probs["R"] > maximumprob: 
         vector = convert_azimuth_to_local_vector_in_bounding_box("R",face_data["R"]["orientation"],theta)
         dx,dy = vector
         transformed_face = match_vector_to_coordinates(dx, dy, width, height)
         codelocalcoords.append([transformed_face,"R",global_probs["R"],face_data["R"]])
+        dbg(
+            "accepted face global=R local=%s prob=%.4f vec=(%.4f, %.4f)"
+            % (transformed_face, global_probs["R"], dx, dy)
+        )
         #code += "R"
     if global_probs["B"] > maximumprob: 
         vector = convert_azimuth_to_local_vector_in_bounding_box("B",face_data["B"]["orientation"],theta)
         dx,dy = vector
         transformed_face = match_vector_to_coordinates(dx, dy, width, height)
         codelocalcoords.append([transformed_face,"B",global_probs["B"],face_data["B"]])
+        dbg(
+            "accepted face global=B local=%s prob=%.4f vec=(%.4f, %.4f)"
+            % (transformed_face, global_probs["B"], dx, dy)
+        )
         #code += "B"
     if global_probs["L"] > maximumprob: 
         vector = convert_azimuth_to_local_vector_in_bounding_box("L",face_data["L"]["orientation"],theta)
         dx,dy = vector
         transformed_face = match_vector_to_coordinates(dx, dy, width, height)
         codelocalcoords.append([transformed_face,"L",global_probs["L"],face_data["L"]])
+        dbg(
+            "accepted face global=L local=%s prob=%.4f vec=(%.4f, %.4f)"
+            % (transformed_face, global_probs["L"], dx, dy)
+        )
         #code += "L" 
 
     #if len(code) == 0: #this is a sanity check
@@ -840,11 +910,14 @@ def topology_converter_mine(roof_prediction, osm_building):
             old_global_face,old_probability,old_data = possible_old_value
             if old_probability < probability:
                 parsed[localface] = [globalface,probability,data]
+    dbg("codelocalcoords=%s" % str([(entry[0], entry[1], round(float(entry[2]), 4)) for entry in codelocalcoords]))
+    dbg("parsed winners=%s" % str({k: [v[0], round(float(v[1]), 4)] for k, v in parsed.items()}))
 
     code = ""
     for key,val in parsed.items():
         code = code + key
     code = "".join(sorted(code))
+    dbg("topology code=%s" % code)
     lines = []
     
     intersections = {}
@@ -859,14 +932,35 @@ def topology_converter_mine(roof_prediction, osm_building):
             normal = planenormal(letter, data["inclination"], data["orientation"],theta)
             facedict[letter] = normal
         if 'H' not in matched_code: # ok in this case the assignment logic works fine
-            for part in parts:
-                centroid = np.mean(part, axis=0)
-                face = determine_face_for_polygon(centroid, corners, matched_code)
+            centroids = [np.mean(part, axis=0) for part in parts]
+            x_min_l, y_min_l = corners[0]
+            x_max_l, y_max_l = corners[2]
+
+            def _edge_dist(face, cx, cy):
+                if face == 'T': return abs(cy - y_max_l)
+                if face == 'B': return abs(cy - y_min_l)
+                if face == 'R': return abs(cx - x_max_l)
+                if face == 'L': return abs(cx - x_min_l)
+                return float('inf')
+
+            unassigned = list(range(len(parts)))
+            face_assignments = {}  # face -> part index
+
+            # Enforce one-to-one assignment so faces cannot overwrite each other.
+            for face in matched_code:
+                if not unassigned:
+                    break
+                best_idx = min(unassigned, key=lambda i: _edge_dist(face, *centroids[i]))
+                face_assignments[face] = best_idx
+                unassigned.remove(best_idx)
+
+
+            for face, idx in face_assignments.items():
                 normal = facedict.get(face)
                 if normal is not None:
-                    intersections[face] = rooftile(part, np.array([0, 0, base_height]), normal)
+                    intersections[face] = rooftile(parts[idx], np.array([0, 0, base_height]), normal)
                 else:
-                    print("failure detected")
+                    print(f"failure detected for face {face}")
         else : # this is the hard case. here we need to match all other faces and only then select the remaining part to be the horizontal tile
             non_h_faces = [f for f in matched_code if f != 'H']
             centroids = [np.mean(part, axis=0) for part in parts]
@@ -892,12 +986,15 @@ def topology_converter_mine(roof_prediction, osm_building):
                 unassigned.remove(best_idx)
             if len(unassigned) != 1:
                 raise NameError('The the unassigned should be one')
-
             face_assignments['H'] = unassigned[0]
 
             for face, idx in face_assignments.items():
                 normal = facedict.get(face)
                 if normal is not None:
+                    dbg(
+                        "H-case assign part #%d -> face=%s centroid=(%.4f, %.4f)"
+                        % (idx, face, centroids[idx][0], centroids[idx][1])
+                    )
                     intersections[face] = rooftile(parts[idx], np.array([0, 0, base_height]), normal)
                 else:
                     print(f"failure detected for face {face}")
@@ -1093,6 +1190,8 @@ def topology_converter_mine(roof_prediction, osm_building):
             ]
             internal_function(code,parsed,data,theta,corners,intersections,base_height,parts)
     
+    dbg("intersections before world transform=%s" % str(list(intersections.keys())))
+
     # Convert lines to world coordinates
     cx, cy = center
     for face in intersections:
@@ -1111,6 +1210,7 @@ def topology_converter_mine(roof_prediction, osm_building):
         return [xw, yw]
  
     lines_world = [[local_to_world(p0), local_to_world(p1)] for p0, p1 in lines]
+    dbg("line split count=%d" % len(lines_world))
  
     return outline, rect, lines_world, code, face_data
 
@@ -1707,6 +1807,8 @@ def use_this_function(
     output_path="roof_surfaces.geojson",
     zone_shp_path=None,
     polygon_ring_lon_lat=None,
+    debug_topology=False,
+    debug_buildings=None,
 ):
     bbox = json.loads(jsonbox)
     north = bbox["north"]
@@ -1781,23 +1883,49 @@ def use_this_function(
     print(f"Computing IOU matrix of size [{len(zone_geojson['features'])},{len(buildings)}]")
     iou_mat = compute_iou_matrix(zone_geojson["features"], buildings)
     print("Done computing IOU matrix!")
+    debug_building_set = _normalise_debug_buildings(debug_buildings)
+    if debug_topology:
+        if debug_building_set:
+            print(f"[topology-debug] enabled for buildings: {sorted(debug_building_set)}")
+        else:
+            print("[topology-debug] enabled for all matched buildings")
     matched_data = []
     n_features = len(zone_geojson["features"])
     for i, zone_feat in enumerate(zone_geojson["features"]):
+        building_id = str(
+            zone_feat.get("properties", {}).get("cea_name")
+            or zone_feat.get("properties", {}).get("name")
+            or zone_feat.get("properties", {}).get("osm_id")
+            or ""
+        ).strip()
+        if not building_id:
+            building_id = f"building_{i}"
+
         best_match_idx = int(np.argmax(iou_mat[i, :]))
         if iou_mat[i, best_match_idx] > 0.3:
             pred = buildings[best_match_idx]
-            outline, orientedbox, lines_world, code, face_data = topology_converter_mine(
-                pred.raw_roof_data, zone_feat
+            debug_this_building = _debug_topology_enabled_for_building(
+                building_id=building_id,
+                debug_topology=debug_topology,
+                debug_building_set=debug_building_set,
             )
-            building_id = str(
-                zone_feat.get("properties", {}).get("cea_name")
-                or zone_feat.get("properties", {}).get("name")
-                or zone_feat.get("properties", {}).get("osm_id")
-                or ""
-            ).strip()
-            if not building_id:
-                building_id = f"building_{i}"
+            if debug_this_building:
+                print(
+                    f"[topology-debug:{building_id}] match index={best_match_idx} "
+                    f"iou={iou_mat[i, best_match_idx]:.4f}"
+                )
+            outline, orientedbox, lines_world, code, face_data = topology_converter_mine(
+                pred.raw_roof_data,
+                zone_feat,
+                debug=debug_this_building,
+                debug_building_id=building_id,
+            )
+            if debug_this_building:
+                dbg_intersections = list(face_data.get("intersections", {}).keys())
+                print(
+                    f"[topology-debug:{building_id}] final code={code} "
+                    f"intersections={dbg_intersections}"
+                )
 
             matched_data.append(
                 {
@@ -1811,6 +1939,17 @@ def use_this_function(
                     "face_data": face_data,
                 }
             )
+        else:
+            debug_this_building = _debug_topology_enabled_for_building(
+                building_id=building_id,
+                debug_topology=debug_topology,
+                debug_building_set=debug_building_set,
+            )
+            if debug_this_building:
+                print(
+                    f"[topology-debug:{building_id}] skipped due to low IoU "
+                    f"({iou_mat[i, best_match_idx]:.4f} <= 0.3000)"
+                )
         if i % 10 == 0 or i == n_features - 1:
             print(f"Matching {i + 1}/{n_features} - {len(matched_data)} matched so far")
 
@@ -1914,6 +2053,8 @@ def run_from_polygon_ring(
     overlap_threshold=0.25,
     output_path="roof_surfaces.geojson",
     zone_shp_path=None,
+    debug_topology=False,
+    debug_buildings=None,
 ):
     ring = _normalise_polygon_ring(polygon_ring_lon_lat)
     lons = [lon for lon, _ in ring[:-1]]
@@ -1935,6 +2076,8 @@ def run_from_polygon_ring(
         output_path=output_path,
         zone_shp_path=zone_shp_path,
         polygon_ring_lon_lat=ring,
+        debug_topology=debug_topology,
+        debug_buildings=debug_buildings,
     )
 
 
@@ -1990,6 +2133,20 @@ def _build_cli_parser():
         default=0.25,
         help="NMS overlap threshold for deduplicating predictions.",
     )
+    parser.add_argument(
+        "--debug-topology",
+        action="store_true",
+        help="Print detailed topology generation trace logs.",
+    )
+    parser.add_argument(
+        "--debug-building",
+        action="append",
+        default=[],
+        help=(
+            "Optional building id(s) to trace (repeat flag or comma-separate values). "
+            "If omitted, traces all matched buildings when --debug-topology is enabled."
+        ),
+    )
     return parser
 
 
@@ -2030,6 +2187,17 @@ def _prompt_polygon_text_from_stdin():
 def main():
     parser = _build_cli_parser()
     args = parser.parse_args()
+    debug_topology = bool(args.debug_topology)
+    debug_buildings = list(args.debug_building or [])
+    env_debug_topology = str(os.environ.get("FIXEDBOX_DEBUG_TOPOLOGY", "")).strip().lower()
+    if env_debug_topology in {"1", "true", "yes", "on"}:
+        debug_topology = True
+    env_debug_buildings = str(os.environ.get("FIXEDBOX_DEBUG_BUILDINGS", "")).strip()
+    if env_debug_buildings:
+        debug_buildings.append(env_debug_buildings)
+    debug_building_set = _normalise_debug_buildings(debug_buildings)
+    if debug_building_set and not debug_topology:
+        debug_topology = True
 
     if not args.zone_shp_path:
         raise ValueError(
@@ -2053,6 +2221,8 @@ def main():
             overlap_threshold=args.overlap_threshold,
             output_path=args.output_path,
             zone_shp_path=args.zone_shp_path,
+            debug_topology=debug_topology,
+            debug_buildings=debug_building_set,
         )
         return
 
@@ -2063,6 +2233,8 @@ def main():
             overlap_threshold=args.overlap_threshold,
             output_path=args.output_path,
             zone_shp_path=args.zone_shp_path,
+            debug_topology=debug_topology,
+            debug_buildings=debug_building_set,
         )
         return
 
@@ -2074,9 +2246,10 @@ def main():
         overlap_threshold=args.overlap_threshold,
         output_path=args.output_path,
         zone_shp_path=args.zone_shp_path,
+        debug_topology=debug_topology,
+        debug_buildings=debug_building_set,
     )
 
 
 if __name__ == "__main__":
     main()
-
