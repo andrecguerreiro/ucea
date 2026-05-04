@@ -1,0 +1,43 @@
+{
+  "type": "FeatureCollection",
+  "name": "EUA_1_Pro_polygon",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "EUA_1_Pro",
+        "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_EUA_1_Pro.tif",
+        "source_crs": "EPSG:3857",
+        "crs": "EPSG:4326",
+        "ucea_compatible": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.151304857377824,
+              38.75415428806047
+            ],
+            [
+              -9.14534004389127,
+              38.75415428806047
+            ],
+            [
+              -9.14534004389127,
+              38.7494885299845
+            ],
+            [
+              -9.151304857377824,
+              38.7494885299845
+            ],
+            [
+              -9.151304857377824,
+              38.75415428806047
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

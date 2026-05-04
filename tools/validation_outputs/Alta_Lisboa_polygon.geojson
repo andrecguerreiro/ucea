@@ -1,0 +1,43 @@
+{
+  "type": "FeatureCollection",
+  "name": "Alta_Lisboa_polygon",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Alta_Lisboa_.tif",
+        "source_crs": "EPSG:3857",
+        "crs": "EPSG:4326",
+        "ucea_compatible": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.157377872942858,
+              38.776621037942185
+            ],
+            [
+              -9.151413059456305,
+              38.776621037942185
+            ],
+            [
+              -9.151413059456305,
+              38.77194974505599
+            ],
+            [
+              -9.157377872942858,
+              38.77194974505599
+            ],
+            [
+              -9.157377872942858,
+              38.776621037942185
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

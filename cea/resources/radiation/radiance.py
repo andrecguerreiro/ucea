@@ -608,11 +608,11 @@ def create_rad_geometry(file_path, geometry_terrain, building_surface_properties
             xyz = (float(point[0]), float(point[1]), float(point[2]))
             if not np.isfinite(xyz).all():
                 continue
-            if cleaned and np.allclose(cleaned[-1], xyz, atol=1e-9):
+            if cleaned and np.allclose(cleaned[-1], xyz, atol=1e-9, rtol=0.0):
                 continue
             cleaned.append(xyz)
 
-        while len(cleaned) >= 2 and np.allclose(cleaned[0], cleaned[-1], atol=1e-9):
+        while len(cleaned) >= 2 and np.allclose(cleaned[0], cleaned[-1], atol=1e-9, rtol=0.0):
             cleaned.pop()
         return cleaned
 

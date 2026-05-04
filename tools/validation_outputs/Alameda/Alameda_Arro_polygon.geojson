@@ -1,0 +1,43 @@
+{
+  "type": "FeatureCollection",
+  "name": "Alameda_Arro_polygon",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alameda_Arro",
+        "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Alameda_Arro.tif",
+        "source_crs": "EPSG:3857",
+        "crs": "EPSG:4326",
+        "ucea_compatible": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.139486440258219,
+              38.7317364375177
+            ],
+            [
+              -9.133530609924508,
+              38.7317364375177
+            ],
+            [
+              -9.133530609924508,
+              38.72706921449744
+            ],
+            [
+              -9.139486440258219,
+              38.72706921449744
+            ],
+            [
+              -9.139486440258219,
+              38.7317364375177
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

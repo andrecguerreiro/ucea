@@ -29,6 +29,8 @@ DEFAULT_BAR_WIDTH_M = 9.0
 DEFAULT_BAR_BASE_OFFSET_M = 0.4
 DEFAULT_COORDINATE_PRECISION = 7
 DEFAULT_FLAT_THRESHOLD_DEG = 10.0
+DEFAULT_BAR_COLOR_SCALE = "log-hist"
+BAR_COLOR_SCALE_CHOICES = ("log-hist", "linear")
 ORIENTATION_ORDER = ("flat", "N", "E", "S", "W")
 
 
@@ -81,6 +83,12 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=DEFAULT_BAR_WIDTH_M,
         help="Solar bar width in metres.",
+    )
+    parser.add_argument(
+        "--bar-color-scale",
+        choices=BAR_COLOR_SCALE_CHOICES,
+        default=DEFAULT_BAR_COLOR_SCALE,
+        help="Color scaling mode for solar bars.",
     )
     parser.add_argument(
         "--coordinate-precision",
@@ -158,6 +166,122 @@ def _map_colour(value: float, value_max: float, low: tuple[int, int, int], high:
         int(low[1] + ratio * (high[1] - low[1])),
         int(low[2] + ratio * (high[2] - low[2])),
     ]
+
+
+def _clamp01(value: float) -> float:
+    return max(0.0, min(1.0, float(value)))
+
+
+def _map_colour_from_ratio(ratio: float, low: tuple[int, int, int], high: tuple[int, int, int]) -> list[int]:
+    ratio = _clamp01(ratio)
+    return [
+        int(low[0] + ratio * (high[0] - low[0])),
+        int(low[1] + ratio * (high[1] - low[1])),
+        int(low[2] + ratio * (high[2] - low[2])),
+    ]
+
+
+def _median(values: list[float]) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(float(v) for v in values)
+    n = len(ordered)
+    mid = n // 2
+    if n % 2 == 1:
+        return ordered[mid]
+    return 0.5 * (ordered[mid - 1] + ordered[mid])
+
+
+def _positive_solar_kwh_by_building(solar_by_building_kwh: dict[str, float]) -> dict[str, float]:
+    positive: dict[str, float] = {}
+    for building, raw_value in solar_by_building_kwh.items():
+        value = _to_non_negative_float(raw_value)
+        if value > 0.0:
+            positive[str(building)] = value
+    return positive
+
+
+def _build_log_hist_cdf_ratios(values_by_building: dict[str, float]) -> tuple[dict[str, float], int]:
+    if not values_by_building:
+        return {}, 0
+
+    entries = [(building, math.log1p(value)) for building, value in values_by_building.items()]
+    log_values = [entry[1] for entry in entries]
+    log_min = min(log_values)
+    log_max = max(log_values)
+    if abs(log_max - log_min) <= 1e-12:
+        return {building: 1.0 for building in values_by_building}, 1
+
+    count = len(log_values)
+    bin_count = max(5, min(30, int(math.sqrt(count))))
+    span = log_max - log_min
+    edges = [log_min + (span * idx / bin_count) for idx in range(bin_count + 1)]
+    counts = [0] * bin_count
+
+    def _bin_index(log_value: float) -> int:
+        raw = int(((log_value - log_min) / span) * bin_count)
+        if raw < 0:
+            return 0
+        if raw >= bin_count:
+            return bin_count - 1
+        return raw
+
+    for _, log_value in entries:
+        counts[_bin_index(log_value)] += 1
+
+    cumulative: list[int] = []
+    running = 0
+    for count_value in counts:
+        running += int(count_value)
+        cumulative.append(running)
+
+    ratios: dict[str, float] = {}
+    for building, log_value in entries:
+        idx = _bin_index(log_value)
+        previous_count = cumulative[idx - 1] if idx > 0 else 0
+        in_bin_count = counts[idx]
+        if in_bin_count <= 0:
+            cdf = cumulative[idx] / float(count)
+        else:
+            left = edges[idx]
+            right = edges[idx + 1]
+            fraction = 0.0 if right <= left else _clamp01((log_value - left) / (right - left))
+            cdf = (previous_count + fraction * in_bin_count) / float(count)
+        ratios[building] = _clamp01(cdf)
+    return ratios, bin_count
+
+
+def _build_bar_color_ratios(
+    solar_by_building_kwh: dict[str, float],
+    bar_color_scale: str,
+) -> tuple[dict[str, float], dict[str, Any]]:
+    positive_values_by_building = _positive_solar_kwh_by_building(solar_by_building_kwh)
+    positive_values = list(positive_values_by_building.values())
+    stats: dict[str, Any] = {
+        "scale": str(bar_color_scale),
+        "count_positive": len(positive_values),
+        "min_kwh": _round_or_none(min(positive_values), 2) if positive_values else None,
+        "median_kwh": _round_or_none(_median(positive_values), 2),
+        "max_kwh": _round_or_none(max(positive_values), 2) if positive_values else None,
+    }
+
+    if bar_color_scale == "linear":
+        max_value = max(positive_values, default=0.0)
+        stats["histogram_bins"] = None
+        if max_value <= 0.0:
+            return {}, stats
+        ratios = {
+            building: _clamp01(value / max_value)
+            for building, value in positive_values_by_building.items()
+        }
+        return ratios, stats
+
+    if bar_color_scale == "log-hist":
+        ratios, bin_count = _build_log_hist_cdf_ratios(positive_values_by_building)
+        stats["histogram_bins"] = int(bin_count) if bin_count > 0 else None
+        return ratios, stats
+
+    raise ValueError(f"Unsupported bar color scale: {bar_color_scale}")
 
 
 def _first_positive_number(*values: Any) -> float | None:
@@ -779,12 +903,16 @@ def _build_solar_bars(
     zone_centroids: dict[str, list[float]],
     zone_heights_by_building: dict[str, float],
     solar_by_building_kwh: dict[str, float],
+    bar_color_scale: str,
     bar_scale_m_per_mwh: float,
     min_bar_height_m: float,
     bar_width_m: float,
     precision: int,
 ) -> list[dict[str, Any]]:
-    max_solar_kwh = max((float(value) for value in solar_by_building_kwh.values()), default=0.0)
+    bar_color_ratio_by_building, _ = _build_bar_color_ratios(
+        solar_by_building_kwh=solar_by_building_kwh,
+        bar_color_scale=bar_color_scale,
+    )
     bars: list[dict[str, Any]] = []
     for building, solar_kwh_raw in solar_by_building_kwh.items():
         solar_kwh = float(solar_kwh_raw)
@@ -809,6 +937,7 @@ def _build_solar_bars(
             )
 
         bar_height = round(max(min_bar_height_m, solar_mwh * bar_scale_m_per_mwh), 2)
+        color_ratio = float(bar_color_ratio_by_building.get(str(building), 0.0))
         bars.append(
             {
                 "building": str(building),
@@ -819,7 +948,8 @@ def _build_solar_bars(
                 "bar_width_m": float(bar_width_m),
                 "source_position": [lon, lat, base_height],
                 "target_position": [lon, lat, round(base_height + bar_height, 2)],
-                "bar_colour": _map_colour(solar_kwh, max_solar_kwh, (255, 204, 102), (226, 71, 23)),
+                "bar_colour_ratio": round(color_ratio, 4),
+                "bar_colour": _map_colour_from_ratio(color_ratio, (255, 204, 102), (226, 71, 23)),
             }
         )
     return bars
@@ -1150,8 +1280,8 @@ def render_html(output_path: str, payload: dict[str, Any]) -> None:
         }}));
         result.push(new deck.PolygonLayer({{
           id: "roofs", data: payload.roofs || [], pickable: true, stroked: true, filled: true,
-          getPolygon: d => d.polygon, getFillColor: d => d.fill_colour || [255, 140, 40, 220],
-          getLineColor: [255, 255, 255, 170], lineWidthMinPixels: 1
+          getPolygon: d => d.polygon, getFillColor: [75, 95, 125, 130],
+          getLineColor: [45, 65, 95, 235], lineWidthMinPixels: 1
         }}));
       }}
       if (state.zone3dOnly) {{
@@ -1190,13 +1320,30 @@ def render_html(output_path: str, payload: dict[str, Any]) -> None:
       return bestValue > 0 ? bestKey : null;
     }}
 
-    function roofOrientationFromSummary(roof) {{
+    function orientationLabel(key) {{
+      const match = orientationOrder.find(([itemKey]) => itemKey === key);
+      return match ? match[1] : key;
+    }}
+
+    function roofOrientationKey(roof) {{
+      const geometryOrientation = String((roof && roof.orientation) || "").trim();
+      const validGeometryOrientation = orientationOrder.some(([key]) => key === geometryOrientation);
+      if (validGeometryOrientation) return geometryOrientation;
+
       const buildingName = normaliseBuildingName((roof && roof.building) || "");
       const bm = buildingName ? (buildingMetrics[buildingName] || null) : null;
-      const summaryOrientation = dominantOrientationFromValues((bm && bm.available_by_orientation_m2) || null);
-      if (summaryOrientation) return summaryOrientation;
-      const geometryOrientation = String((roof && roof.orientation) || "").trim();
-      return geometryOrientation || "-";
+      return dominantOrientationFromValues((bm && bm.available_by_orientation_m2) || null);
+    }}
+
+    function roofOrientationAreaM2(roof, orientationKey) {{
+      if (!orientationKey) return null;
+      const buildingName = normaliseBuildingName((roof && roof.building) || "");
+      if (!buildingName) return null;
+      const bm = buildingMetrics[buildingName];
+      if (!bm) return null;
+      const values = bm.available_by_orientation_m2 || {{}};
+      const area = Number(values[orientationKey]);
+      return Number.isFinite(area) ? area : null;
     }}
 
     function formatBuildingDetails(buildingName, fallbackHeight = null) {{
@@ -1232,7 +1379,10 @@ def render_html(output_path: str, payload: dict[str, Any]) -> None:
       getTooltip: info => {{
         if (!info.object) return null;
         if (info.layer.id === "roofs") {{
-          return `Roof\\nBuilding: ${{info.object.building}}\\nRoof: ${{info.object.roof_id}}\\nArea: ${{n(info.object.area_m2)}} m2\\nOrientation: ${{roofOrientationFromSummary(info.object)}}`;
+          const key = roofOrientationKey(info.object);
+          const label = key ? orientationLabel(key) : "-";
+          const areaByOrientation = roofOrientationAreaM2(info.object, key);
+          return `Roof\\nBuilding: ${{info.object.building}}\\nRoof: ${{info.object.roof_id}}\\nArea: ${{n(info.object.area_m2)}} m2\\nOrientation: ${{label}}\\nBuilding area in this orientation: ${{n(areaByOrientation)}} m2`;
         }}
         if (info.layer.id === "solar-bars") {{
           const bm = buildingMetrics[info.object.building] || {{}};
@@ -1320,10 +1470,15 @@ def main() -> None:
         zone_centroids=zone_centroids,
         zone_heights_by_building=zone_heights_by_building,
         solar_by_building_kwh=solar_by_building,
+        bar_color_scale=str(args.bar_color_scale),
         bar_scale_m_per_mwh=float(args.bar_scale_m_per_mwh),
         min_bar_height_m=float(args.min_bar_height_m),
         bar_width_m=float(args.bar_width_m),
         precision=args.coordinate_precision,
+    )
+    _, bar_color_distribution = _build_bar_color_ratios(
+        solar_by_building_kwh=solar_by_building,
+        bar_color_scale=str(args.bar_color_scale),
     )
     kpis, building_metrics = _build_decision_metrics(
         zone_buildings=zone_buildings,
@@ -1344,6 +1499,8 @@ def main() -> None:
         "pv_panel_code": pv_panel_code,
         "pv_panel_efficiency": pv_panel_efficiency,
         "flat_threshold_deg": float(args.flat_threshold_deg),
+        "bar_color_scale": str(args.bar_color_scale),
+        "bar_color_distribution": bar_color_distribution,
         "map_style": args.map_style,
         "zone": zone,
         "roofs": roofs,
@@ -1365,6 +1522,7 @@ def main() -> None:
     print(f"Buildings loaded: {len(zone.get('features', []))}")
     print(f"Roofs loaded: {len(roofs)}")
     print(f"Solar bars loaded: {len(bars)}")
+    print(f"Bar color scale: {args.bar_color_scale}")
     print(f"PV source: {pv_source_path or '(not found)'}")
     print(f"Roof availability source: {roof_availability_source_path or '(not found)'}")
     print(f"PV panel efficiency (PV_n): {pv_panel_efficiency if pv_panel_efficiency is not None else '(not found)'}")

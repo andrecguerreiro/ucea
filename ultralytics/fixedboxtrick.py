@@ -13,6 +13,7 @@ import json
 import gradio as gr
 import os
 import hashlib
+import time
 import rasterio
 from rasterio.transform import from_bounds
 from rasterio.warp import calculate_default_transform, reproject, Resampling
@@ -26,31 +27,6 @@ Then we match these buildings.
 We recreate a rooftop based on the building outline and the model prediction 
 We render it
 '''
-
-
-def _normalise_debug_buildings(debug_buildings):
-    if not debug_buildings:
-        return set()
-    if isinstance(debug_buildings, str):
-        candidates = [debug_buildings]
-    else:
-        candidates = list(debug_buildings)
-
-    result = set()
-    for candidate in candidates:
-        for token in str(candidate).split(","):
-            token = token.strip()
-            if token:
-                result.add(token)
-    return result
-
-
-def _debug_topology_enabled_for_building(building_id, debug_topology, debug_building_set):
-    if not debug_topology:
-        return False
-    if not debug_building_set:
-        return True
-    return str(building_id).strip() in debug_building_set
 
 def draw_azimuths_on_satellite(
     satellite_image: np.ndarray,
@@ -170,16 +146,49 @@ def retrieve_satelite_image(top_left_corner, bottom_right_corner,progress_cb = N
     for row in range(row_min, row_max + 1):
         for col in range(col_min, col_max + 1):
             tile_filename = f"cache/tiles/tile_{zoom_level}_{row}_{col}.png"
-            if os.path.exists(tile_filename):
-                img_array = np.array(Image.open(tile_filename).convert("RGB"))
-            else:
-                tile = wmts.gettile(
-                    layer=layer, tilematrixset=tile_matrix_set,
-                    tilematrix=zoom_level, row=row, column=col, format="image/png",
-                )
-                img = Image.open(io.BytesIO(tile.read())).convert("RGB")
-                img.save(tile_filename) # Save to cache
-                img_array = np.array(img)
+            attempt = 0
+            while True:
+                attempt += 1
+                try:
+                    if os.path.exists(tile_filename):
+                        try:
+                            img_array = np.array(Image.open(tile_filename).convert("RGB"))
+                            break
+                        except Exception as cache_exc:
+                            print(
+                                f"Corrupted cached tile detected ({row},{col}) at "
+                                f"{tile_filename}: {cache_exc}. Re-downloading."
+                            )
+                            try:
+                                os.remove(tile_filename)
+                            except OSError:
+                                pass
+
+                    tile = wmts.gettile(
+                        layer=layer, tilematrixset=tile_matrix_set,
+                        tilematrix=zoom_level, row=row, column=col, format="image/png",
+                    )
+                    tile_bytes = tile.read()
+                    if not tile_bytes:
+                        raise RuntimeError("empty tile payload")
+
+                    img = Image.open(io.BytesIO(tile_bytes)).convert("RGB")
+                    img.save(tile_filename) # Save to cache
+                    img_array = np.array(img)
+                    break
+                except Exception as exc:
+                    wait_s = min(60.0, 1.5 * (2 ** min(attempt - 1, 6)))
+                    print(
+                        f"Tile download failed for row={row}, col={col} (attempt {attempt}): {exc}. "
+                        f"Retrying in {wait_s:.1f}s..."
+                    )
+                    if attempt % 4 == 0:
+                        try:
+                            wmts = WebMapTileService(wmts_url)
+                            print("WMTS session refreshed.")
+                        except Exception as refresh_exc:
+                            print(f"WMTS session refresh failed: {refresh_exc}")
+                    time.sleep(wait_s)
             processed_blocks[row - row_min, col - col_min] = {"img": img_array}
             done += 1
             if progress_cb:
@@ -211,7 +220,8 @@ def sigmoid(x):
 
 class CachedModel:
     def __init__(self):
-        self.model = YOLO("best.pt")
+        weights_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "best.pt")
+        self.model = YOLO(weights_path)
         self.model.to("cpu")
         self.model.eval()
 
@@ -434,40 +444,72 @@ def get_osm_buildings(top_left_corner, bottom_right_corner):
     br_lon, br_lat = tr.transform(*bottom_right_corner)
     s, n = min(tl_lat, br_lat), max(tl_lat, br_lat)
     w, e = min(tl_lon, br_lon), max(tl_lon, br_lon)
-    q = f"""[out:json];(way["building"]({s},{w},{n},{e});relation["building"]({s},{w},{n},{e}););out body;>;out skel qt;"""
-    #r = requests.post(""https://overpass.kumi.systems/api/interpreter", data=q)
-    ## AI suggested solution
+    q = f"""[out:json][timeout:180];(way["building"]({s},{w},{n},{e});relation["building"]({s},{w},{n},{e}););out body;>;out skel qt;"""
+
     headers = {
         'User-Agent': 'OVEN_Building_Tool/3.0 (https://github.com/Joaopmoliveira/OVEN)',
     }
     payload = {'data': q}
 
-    r = requests.post(
-        "https://overpass-api.de/api/interpreter", 
-        data=payload, 
-        headers=headers
-    )
-    #r = requests.post("https://overpass-api.de/api/interpreter", data={"data": q})
-    #r = requests.post(
-    #    "https://overpass-api.de/api/interpreter",
-    #    data={"data": q},          # <-- the fix
-    #    timeout=60                 # good practice for external APIs
-    #)
+    endpoints = [
+        "https://overpass-api.de/api/interpreter",
+        "https://lz4.overpass-api.de/api/interpreter",
+        "https://z.overpass-api.de/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter",
+    ]
+
     print("Query sent:\n", q)
-    print("Status:", r.status_code)
-    print("Response:", r.text[:500])  # Overpass usually returns an error message
-    r.raise_for_status()
-    data  = r.json()
-    nodes = {el["id"]: (el["lon"], el["lat"]) for el in data["elements"] if el["type"]=="node"}
-    features = []
-    for el in data["elements"]:
-        if el["type"] != "way": continue
-        coords = [nodes[nid] for nid in el["nodes"] if nid in nodes]
-        if len(coords) < 3: continue
-        features.append({"type":"Feature",
-                          "properties":{"osm_id":el["id"], **el.get("tags",{})},
-                          "geometry":{"type":"Polygon","coordinates":[coords]}})
-    return {"type":"FeatureCollection","features":features}
+    last_errors = []
+    for endpoint in endpoints:
+        for attempt in range(1, 3):
+            try:
+                print(f"Trying Overpass endpoint: {endpoint} (attempt {attempt}/2)")
+                r = requests.post(
+                    endpoint,
+                    data=payload,
+                    headers=headers,
+                    timeout=(10, 120),
+                )
+                print("Status:", r.status_code)
+                print("Response:", r.text[:500])  # Overpass usually returns an error message
+
+                if r.status_code >= 500 or r.status_code == 429:
+                    raise requests.HTTPError(
+                        f"HTTP {r.status_code} from {endpoint}",
+                        response=r,
+                    )
+
+                r.raise_for_status()
+                data = r.json()
+
+                nodes = {el["id"]: (el["lon"], el["lat"]) for el in data["elements"] if el["type"] == "node"}
+                features = []
+                for el in data["elements"]:
+                    if el["type"] != "way":
+                        continue
+                    coords = [nodes[nid] for nid in el["nodes"] if nid in nodes]
+                    if len(coords) < 3:
+                        continue
+                    features.append(
+                        {
+                            "type": "Feature",
+                            "properties": {"osm_id": el["id"], **el.get("tags", {})},
+                            "geometry": {"type": "Polygon", "coordinates": [coords]},
+                        }
+                    )
+                print(f"Overpass success via {endpoint}: {len(features)} footprint(s)")
+                return {"type": "FeatureCollection", "features": features}
+
+            except (requests.RequestException, ValueError) as exc:
+                error_message = f"{endpoint} attempt {attempt}/2 failed: {exc}"
+                print(error_message)
+                last_errors.append(error_message)
+                if attempt < 2:
+                    time.sleep(1.5 * attempt)
+
+    raise RuntimeError(
+        "All Overpass endpoints failed. Last errors:\n" + "\n".join(last_errors[-8:])
+    )
 
 def get_osm_buildings_cached(top_left, bottom_right):
     '''
@@ -640,20 +682,40 @@ def planenormal(face_id, inc, ori,axis_aligned_bounding_box_rotation):
     return [nx, ny, nz],azimuth
  
 def split_with_lines(corners, lines):
-    """Split a polygon defined by corners using a list of lines"""
+    """Split a polygon defined by corners using a list of lines."""
     polys = [Polygon(corners)]
-    for line in lines:
-        new_polys = []
-        splitter = LineString(line)
- 
-        for poly in polys:
+    pending_lines = list(lines)
+
+    def _apply_split(current_polys, split_line):
+        splitter = LineString(split_line)
+        updated = []
+        for poly in current_polys:
             result = split(poly, splitter)
- 
             if len(result.geoms) > 1:
-                new_polys.extend(result.geoms)
+                updated.extend(result.geoms)
             else:
-                new_polys.append(poly)
-        polys = new_polys
+                updated.append(poly)
+        return updated
+
+    # Some split segments only work after another split already happened
+    # (for example, center-to-corner cuts). Apply lines in the order that
+    # maximizes the number of resulting polygons at each step.
+    while pending_lines:
+        best_idx = 0
+        best_polys = None
+        best_count = -1
+
+        for idx, line in enumerate(pending_lines):
+            candidate = _apply_split(polys, line)
+            candidate_count = len(candidate)
+            if candidate_count > best_count:
+                best_idx = idx
+                best_polys = candidate
+                best_count = candidate_count
+
+        polys = best_polys if best_polys is not None else polys
+        pending_lines.pop(best_idx)
+
     return [np.array(p.exterior.coords[:-1]) for p in polys]
 
 def determine_face_for_polygon(poly_centroid, corners, code):
@@ -751,12 +813,7 @@ def match_vector_to_coordinates(dx, dy, width, height):
     side_names = ["T", "B", "L", "R"]
     return side_names[side_idx]
 
-def topology_converter_mine(
-    roof_prediction,
-    osm_building,
-    debug=False,
-    debug_building_id=None,
-):
+def topology_converter_mine(roof_prediction, osm_building):
     """
     Convert roof predictions to topology with plane intersections.
     
@@ -767,12 +824,6 @@ def topology_converter_mine(
         code: Roof topology code (e.g., "HTRBL")
         face_data: Dictionary of face data including intersections
     """
-    debug_prefix = f"[topology-debug:{debug_building_id or '?'}] "
-
-    def dbg(message):
-        if debug:
-            print(debug_prefix + str(message))
-
     tr = Transformer.from_crs("EPSG:4326", "EPSG:3763", always_xy=True)
     ring = osm_building["geometry"]["coordinates"][0]
     xs, ys = zip(*[tr.transform(lon, lat) for lon, lat in ring])
@@ -787,10 +838,6 @@ def topology_converter_mine(
     points = outline[:2, :].T.astype(np.float32)
     rect = cv2.minAreaRect(points)
     center, (width, height), angle = rect
-    dbg(
-        "bbox centre=(%.3f, %.3f), width=%.3f, height=%.3f, angle=%.3f"
-        % (center[0], center[1], width, height, angle)
-    )
 
     x_min_l = -width / 2.0
     x_max_l = width / 2.0
@@ -831,18 +878,6 @@ def topology_converter_mine(
         "L": {"active": global_probs["L"] > 0.5, "inclination": global_inc["L"], "orientation": global_ori["L"]},
         "H": {"active": probh > 0.5, "inclination": 0.0, "orientation": 0.0},
     }
-    dbg(
-        "probabilities H/T/R/B/L = %.4f / %.4f / %.4f / %.4f / %.4f"
-        % (probh, global_probs["T"], global_probs["R"], global_probs["B"], global_probs["L"])
-    )
-    dbg(
-        "inclinations T/R/B/L = %.4f / %.4f / %.4f / %.4f"
-        % (global_inc["T"], global_inc["R"], global_inc["B"], global_inc["L"])
-    )
-    dbg(
-        "orientations T/R/B/L = %.4f / %.4f / %.4f / %.4f"
-        % (global_ori["T"], global_ori["R"], global_ori["B"], global_ori["L"])
-    )
  
     
     codelocalcoords = []
@@ -851,51 +886,33 @@ def topology_converter_mine(
     # What I suggest is the following: We select the highest probability, and check minus 0.05 percent bellow that maximum
     maximumprob = roof_prediction[0:5].max()
 
-    maximumprob =  0.5*0.8 if maximumprob > 0.5 else maximumprob*0.80
-    dbg("selection threshold=%.4f" % maximumprob)
+    maximumprob =  0.5*0.8 if maximumprob > 0.5 else maximumprob*0.80   
     if probh > maximumprob: 
         codelocalcoords.append(["H","H",probh,face_data["H"]])
-        dbg("accepted face global=H local=H prob=%.4f" % probh)
         #code += "H"
     if global_probs["T"] > maximumprob: 
         vector = convert_azimuth_to_local_vector_in_bounding_box("T",face_data["T"]["orientation"],theta)
         dx,dy = vector
         transformed_face = match_vector_to_coordinates(dx, dy, width, height)
         codelocalcoords.append([transformed_face,"T",global_probs["T"],face_data["T"]])
-        dbg(
-            "accepted face global=T local=%s prob=%.4f vec=(%.4f, %.4f)"
-            % (transformed_face, global_probs["T"], dx, dy)
-        )
         #code += "T"
     if global_probs["R"] > maximumprob: 
         vector = convert_azimuth_to_local_vector_in_bounding_box("R",face_data["R"]["orientation"],theta)
         dx,dy = vector
         transformed_face = match_vector_to_coordinates(dx, dy, width, height)
         codelocalcoords.append([transformed_face,"R",global_probs["R"],face_data["R"]])
-        dbg(
-            "accepted face global=R local=%s prob=%.4f vec=(%.4f, %.4f)"
-            % (transformed_face, global_probs["R"], dx, dy)
-        )
         #code += "R"
     if global_probs["B"] > maximumprob: 
         vector = convert_azimuth_to_local_vector_in_bounding_box("B",face_data["B"]["orientation"],theta)
         dx,dy = vector
         transformed_face = match_vector_to_coordinates(dx, dy, width, height)
         codelocalcoords.append([transformed_face,"B",global_probs["B"],face_data["B"]])
-        dbg(
-            "accepted face global=B local=%s prob=%.4f vec=(%.4f, %.4f)"
-            % (transformed_face, global_probs["B"], dx, dy)
-        )
         #code += "B"
     if global_probs["L"] > maximumprob: 
         vector = convert_azimuth_to_local_vector_in_bounding_box("L",face_data["L"]["orientation"],theta)
         dx,dy = vector
         transformed_face = match_vector_to_coordinates(dx, dy, width, height)
         codelocalcoords.append([transformed_face,"L",global_probs["L"],face_data["L"]])
-        dbg(
-            "accepted face global=L local=%s prob=%.4f vec=(%.4f, %.4f)"
-            % (transformed_face, global_probs["L"], dx, dy)
-        )
         #code += "L" 
 
     #if len(code) == 0: #this is a sanity check
@@ -910,14 +927,24 @@ def topology_converter_mine(
             old_global_face,old_probability,old_data = possible_old_value
             if old_probability < probability:
                 parsed[localface] = [globalface,probability,data]
-    dbg("codelocalcoords=%s" % str([(entry[0], entry[1], round(float(entry[2]), 4)) for entry in codelocalcoords]))
-    dbg("parsed winners=%s" % str({k: [v[0], round(float(v[1]), 4)] for k, v in parsed.items()}))
+
+    # Keep a compact record of the selected winning face assignment per local face.
+    # This is consumed later by export_roof_surfaces_geojson to populate
+    # roof_confidence / roof_face_global properties.
+    selected_faces = {}
+    for localface, (globalface, probability, data) in parsed.items():
+        selected_faces[str(localface)] = {
+            "global_face": str(globalface),
+            "probability": float(probability),
+            "inclination": float(data.get("inclination", 0.0)),
+            "orientation": float(data.get("orientation", 0.0)),
+        }
+    face_data["selected_faces"] = selected_faces
 
     code = ""
     for key,val in parsed.items():
         code = code + key
     code = "".join(sorted(code))
-    dbg("topology code=%s" % code)
     lines = []
     
     intersections = {}
@@ -932,35 +959,14 @@ def topology_converter_mine(
             normal = planenormal(letter, data["inclination"], data["orientation"],theta)
             facedict[letter] = normal
         if 'H' not in matched_code: # ok in this case the assignment logic works fine
-            centroids = [np.mean(part, axis=0) for part in parts]
-            x_min_l, y_min_l = corners[0]
-            x_max_l, y_max_l = corners[2]
-
-            def _edge_dist(face, cx, cy):
-                if face == 'T': return abs(cy - y_max_l)
-                if face == 'B': return abs(cy - y_min_l)
-                if face == 'R': return abs(cx - x_max_l)
-                if face == 'L': return abs(cx - x_min_l)
-                return float('inf')
-
-            unassigned = list(range(len(parts)))
-            face_assignments = {}  # face -> part index
-
-            # Enforce one-to-one assignment so faces cannot overwrite each other.
-            for face in matched_code:
-                if not unassigned:
-                    break
-                best_idx = min(unassigned, key=lambda i: _edge_dist(face, *centroids[i]))
-                face_assignments[face] = best_idx
-                unassigned.remove(best_idx)
-
-
-            for face, idx in face_assignments.items():
+            for part in parts:
+                centroid = np.mean(part, axis=0)
+                face = determine_face_for_polygon(centroid, corners, matched_code)
                 normal = facedict.get(face)
                 if normal is not None:
-                    intersections[face] = rooftile(parts[idx], np.array([0, 0, base_height]), normal)
+                    intersections[face] = rooftile(part, np.array([0, 0, base_height]), normal)
                 else:
-                    print(f"failure detected for face {face}")
+                    print("failure detected")
         else : # this is the hard case. here we need to match all other faces and only then select the remaining part to be the horizontal tile
             non_h_faces = [f for f in matched_code if f != 'H']
             centroids = [np.mean(part, axis=0) for part in parts]
@@ -986,15 +992,12 @@ def topology_converter_mine(
                 unassigned.remove(best_idx)
             if len(unassigned) != 1:
                 raise NameError('The the unassigned should be one')
+
             face_assignments['H'] = unassigned[0]
 
             for face, idx in face_assignments.items():
                 normal = facedict.get(face)
                 if normal is not None:
-                    dbg(
-                        "H-case assign part #%d -> face=%s centroid=(%.4f, %.4f)"
-                        % (idx, face, centroids[idx][0], centroids[idx][1])
-                    )
                     intersections[face] = rooftile(parts[idx], np.array([0, 0, base_height]), normal)
                 else:
                     print(f"failure detected for face {face}")
@@ -1190,8 +1193,6 @@ def topology_converter_mine(
             ]
             internal_function(code,parsed,data,theta,corners,intersections,base_height,parts)
     
-    dbg("intersections before world transform=%s" % str(list(intersections.keys())))
-
     # Convert lines to world coordinates
     cx, cy = center
     for face in intersections:
@@ -1210,7 +1211,6 @@ def topology_converter_mine(
         return [xw, yw]
  
     lines_world = [[local_to_world(p0), local_to_world(p1)] for p0, p1 in lines]
-    dbg("line split count=%d" % len(lines_world))
  
     return outline, rect, lines_world, code, face_data
 
@@ -1292,6 +1292,29 @@ def _ordered_ring_from_points(points_3d):
     return ring
 
 
+def _polygon_ring_area_3d(ring_3d):
+    """
+    Compute planar polygon area in 3D from a closed ring using Newell's method.
+    """
+    if ring_3d is None or len(ring_3d) < 4:
+        return None
+
+    pts = np.asarray(ring_3d, dtype=float)
+    if pts.ndim != 2 or pts.shape[1] < 3:
+        return None
+    if not np.allclose(pts[0], pts[-1]):
+        pts = np.vstack([pts, pts[0]])
+
+    cross_sum = np.zeros(3, dtype=float)
+    for i in range(len(pts) - 1):
+        cross_sum += np.cross(pts[i], pts[i + 1])
+
+    area = 0.5 * float(np.linalg.norm(cross_sum))
+    if not np.isfinite(area):
+        return None
+    return area
+
+
 def export_roof_surfaces_geojson(
     matched_data,
     output_path="roof_surfaces.geojson",
@@ -1313,9 +1336,10 @@ def export_roof_surfaces_geojson(
     for entry in matched_data:
         building_id = _entry_building_id(entry, fallback="unknown")
         intersections = entry.get("face_data", {}).get("intersections", {})
+        selected_faces = entry.get("face_data", {}).get("selected_faces", {})
         roof_counter = 1
 
-        for _, tile_obj in intersections.items():
+        for local_face, tile_obj in intersections.items():
             tile_mesh = tile_obj
             if isinstance(tile_obj, (tuple, list)) and len(tile_obj) > 0:
                 tile_mesh = tile_obj[0]
@@ -1330,6 +1354,19 @@ def export_roof_surfaces_geojson(
             ring_3d_src = _ordered_ring_from_points(points)
             if ring_3d_src is None or len(ring_3d_src) < 4:
                 continue
+            roof_area_m2 = _polygon_ring_area_3d(ring_3d_src)
+
+            selected_face = selected_faces.get(str(local_face), {}) if isinstance(selected_faces, dict) else {}
+            roof_confidence = selected_face.get("probability") if isinstance(selected_face, dict) else None
+            try:
+                roof_confidence = None if roof_confidence is None else float(roof_confidence)
+            except (TypeError, ValueError):
+                roof_confidence = None
+
+            roof_face_global = selected_face.get("global_face") if isinstance(selected_face, dict) else None
+            roof_face_global = str(roof_face_global).strip() if roof_face_global is not None else None
+            if roof_face_global == "":
+                roof_face_global = None
 
             ring_3d_dst = []
             for x, y, z in ring_3d_src:
@@ -1342,6 +1379,10 @@ def export_roof_surfaces_geojson(
                     "properties": {
                         "building": building_id,
                         "roof_id": str(roof_counter),
+                        "roof_face_local": str(local_face),
+                        "roof_face_global": roof_face_global,
+                        "roof_confidence": roof_confidence,
+                        "roof_area_m2": roof_area_m2,
                     },
                     "geometry": {
                         "type": "Polygon",
@@ -1807,8 +1848,6 @@ def use_this_function(
     output_path="roof_surfaces.geojson",
     zone_shp_path=None,
     polygon_ring_lon_lat=None,
-    debug_topology=False,
-    debug_buildings=None,
 ):
     bbox = json.loads(jsonbox)
     north = bbox["north"]
@@ -1829,8 +1868,12 @@ def use_this_function(
     # Stage 2 — OSM
     print("Fetching OSM buildings…")
     print("🗺   Querying Overpass API…")
-    geojson = get_osm_buildings((tl_x, tl_y), (br_x, br_y))
-    print(f"✅  OSM done — {len(geojson['features'])} footprint(s)")
+    try:
+        geojson = get_osm_buildings((tl_x, tl_y), (br_x, br_y))
+        print(f"✅  OSM done — {len(geojson['features'])} footprint(s)")
+    except Exception as exc:
+        print(f"⚠️  OSM query failed ({exc}). Continuing without OSM footprints.")
+        geojson = {"type": "FeatureCollection", "features": []}
 
     # Stage 3 — WMTS connect
     print("Connecting to WMTS…")
@@ -1861,8 +1904,25 @@ def use_this_function(
     print(f"✅  {len(buildings)} building(s)")
 
     from PIL import Image
+    raw_satellite_image = Image.fromarray(satellite_image)
     annotated_image = draw_azimuths_on_satellite(satellite_image, buildings, (tl_x, tl_y), res)
-    Image.fromarray(annotated_image).save("satellite_image.png")
+    annotated_satellite_image = Image.fromarray(annotated_image)
+
+    raw_satellite_repo_path = os.path.abspath("satellite_image_raw.png")
+    annotated_satellite_repo_path = os.path.abspath("satellite_image.png")
+    raw_satellite_image.save(raw_satellite_repo_path)
+    annotated_satellite_image.save(annotated_satellite_repo_path)
+
+    output_parent = os.path.dirname(os.path.abspath(output_path)) if output_path else ""
+    if output_parent:
+        os.makedirs(output_parent, exist_ok=True)
+        raw_satellite_scenario_path = os.path.join(output_parent, "satellite_image_raw.png")
+        annotated_satellite_scenario_path = os.path.join(output_parent, "satellite_image_annotated.png")
+        raw_satellite_image.save(raw_satellite_scenario_path)
+        annotated_satellite_image.save(annotated_satellite_scenario_path)
+        print(f"✅  Raw satellite image saved: {raw_satellite_scenario_path}")
+        print(f"✅  Annotated satellite image saved: {annotated_satellite_scenario_path}")
+
     print(f"✅  Satellite image ready  ({w}×{h} px, {res:.3f} m/px)")
 
     # Matching source for IDs: authoritative scenario zone.shp
@@ -1883,12 +1943,6 @@ def use_this_function(
     print(f"Computing IOU matrix of size [{len(zone_geojson['features'])},{len(buildings)}]")
     iou_mat = compute_iou_matrix(zone_geojson["features"], buildings)
     print("Done computing IOU matrix!")
-    debug_building_set = _normalise_debug_buildings(debug_buildings)
-    if debug_topology:
-        if debug_building_set:
-            print(f"[topology-debug] enabled for buildings: {sorted(debug_building_set)}")
-        else:
-            print("[topology-debug] enabled for all matched buildings")
     matched_data = []
     n_features = len(zone_geojson["features"])
     for i, zone_feat in enumerate(zone_geojson["features"]):
@@ -1904,28 +1958,10 @@ def use_this_function(
         best_match_idx = int(np.argmax(iou_mat[i, :]))
         if iou_mat[i, best_match_idx] > 0.3:
             pred = buildings[best_match_idx]
-            debug_this_building = _debug_topology_enabled_for_building(
-                building_id=building_id,
-                debug_topology=debug_topology,
-                debug_building_set=debug_building_set,
-            )
-            if debug_this_building:
-                print(
-                    f"[topology-debug:{building_id}] match index={best_match_idx} "
-                    f"iou={iou_mat[i, best_match_idx]:.4f}"
-                )
             outline, orientedbox, lines_world, code, face_data = topology_converter_mine(
                 pred.raw_roof_data,
                 zone_feat,
-                debug=debug_this_building,
-                debug_building_id=building_id,
             )
-            if debug_this_building:
-                dbg_intersections = list(face_data.get("intersections", {}).keys())
-                print(
-                    f"[topology-debug:{building_id}] final code={code} "
-                    f"intersections={dbg_intersections}"
-                )
 
             matched_data.append(
                 {
@@ -1939,17 +1975,6 @@ def use_this_function(
                     "face_data": face_data,
                 }
             )
-        else:
-            debug_this_building = _debug_topology_enabled_for_building(
-                building_id=building_id,
-                debug_topology=debug_topology,
-                debug_building_set=debug_building_set,
-            )
-            if debug_this_building:
-                print(
-                    f"[topology-debug:{building_id}] skipped due to low IoU "
-                    f"({iou_mat[i, best_match_idx]:.4f} <= 0.3000)"
-                )
         if i % 10 == 0 or i == n_features - 1:
             print(f"Matching {i + 1}/{n_features} - {len(matched_data)} matched so far")
 
@@ -2053,8 +2078,6 @@ def run_from_polygon_ring(
     overlap_threshold=0.25,
     output_path="roof_surfaces.geojson",
     zone_shp_path=None,
-    debug_topology=False,
-    debug_buildings=None,
 ):
     ring = _normalise_polygon_ring(polygon_ring_lon_lat)
     lons = [lon for lon, _ in ring[:-1]]
@@ -2076,8 +2099,6 @@ def run_from_polygon_ring(
         output_path=output_path,
         zone_shp_path=zone_shp_path,
         polygon_ring_lon_lat=ring,
-        debug_topology=debug_topology,
-        debug_buildings=debug_buildings,
     )
 
 
@@ -2133,20 +2154,6 @@ def _build_cli_parser():
         default=0.25,
         help="NMS overlap threshold for deduplicating predictions.",
     )
-    parser.add_argument(
-        "--debug-topology",
-        action="store_true",
-        help="Print detailed topology generation trace logs.",
-    )
-    parser.add_argument(
-        "--debug-building",
-        action="append",
-        default=[],
-        help=(
-            "Optional building id(s) to trace (repeat flag or comma-separate values). "
-            "If omitted, traces all matched buildings when --debug-topology is enabled."
-        ),
-    )
     return parser
 
 
@@ -2187,17 +2194,6 @@ def _prompt_polygon_text_from_stdin():
 def main():
     parser = _build_cli_parser()
     args = parser.parse_args()
-    debug_topology = bool(args.debug_topology)
-    debug_buildings = list(args.debug_building or [])
-    env_debug_topology = str(os.environ.get("FIXEDBOX_DEBUG_TOPOLOGY", "")).strip().lower()
-    if env_debug_topology in {"1", "true", "yes", "on"}:
-        debug_topology = True
-    env_debug_buildings = str(os.environ.get("FIXEDBOX_DEBUG_BUILDINGS", "")).strip()
-    if env_debug_buildings:
-        debug_buildings.append(env_debug_buildings)
-    debug_building_set = _normalise_debug_buildings(debug_buildings)
-    if debug_building_set and not debug_topology:
-        debug_topology = True
 
     if not args.zone_shp_path:
         raise ValueError(
@@ -2221,8 +2217,6 @@ def main():
             overlap_threshold=args.overlap_threshold,
             output_path=args.output_path,
             zone_shp_path=args.zone_shp_path,
-            debug_topology=debug_topology,
-            debug_buildings=debug_building_set,
         )
         return
 
@@ -2233,8 +2227,6 @@ def main():
             overlap_threshold=args.overlap_threshold,
             output_path=args.output_path,
             zone_shp_path=args.zone_shp_path,
-            debug_topology=debug_topology,
-            debug_buildings=debug_building_set,
         )
         return
 
@@ -2246,8 +2238,6 @@ def main():
         overlap_threshold=args.overlap_threshold,
         output_path=args.output_path,
         zone_shp_path=args.zone_shp_path,
-        debug_topology=debug_topology,
-        debug_buildings=debug_building_set,
     )
 
 

@@ -1,0 +1,43 @@
+{
+  "type": "FeatureCollection",
+  "name": "Baixa_Alfama_polygon",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Baixa_Alfama",
+        "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Baixa_Alfama.tif",
+        "source_crs": "EPSG:3857",
+        "crs": "EPSG:4326",
+        "ucea_compatible": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.133485880974124,
+              38.713771878623625
+            ],
+            [
+              -9.127530050640413,
+              38.713771878623625
+            ],
+            [
+              -9.127530050640413,
+              38.70910348218507
+            ],
+            [
+              -9.133485880974124,
+              38.70910348218507
+            ],
+            [
+              -9.133485880974124,
+              38.713771878623625
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

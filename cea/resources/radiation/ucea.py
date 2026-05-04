@@ -4,8 +4,11 @@ Run an end-to-end UX workflow for roof-comparison experiments.
 
 from __future__ import annotations
 
+import csv
+import glob
 import json
 import hashlib
+import math
 import os
 import shutil
 import subprocess
@@ -24,6 +27,10 @@ from cea.inputlocator import InputLocator
 
 DEFAULT_BUILDING_FALLBACK = "B1000"
 DEFAULT_UCEA_SCENARIO = r"C:\Users\Andre\cea-scenarios\test-tilt"
+DEFAULT_UCEA_WEATHER_FILE = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "..", "solterm_weather_file.epw")
+)
+DEFAULT_UCEA_WEATHER_SOURCE = "climate.onebuilding.org"
 DEFAULT_GEOJSON_URL = "https://geojson.io/#map=18.2/38.708267/-9.138085"
 DEFAULT_INE_HEIGHT_GPKG = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "INE_com_NPAV_norm0.gpkg")
@@ -36,6 +43,7 @@ FIXEDBOX_RELATIVE_PATH = os.path.join("ultralytics", "fixedboxtrick.py")
 ZONE_SHP_RELATIVE_PATH = os.path.join("inputs", "building-geometry", "zone.shp")
 DEFAULT_FIXEDBOX_BUILDING_THRESHOLD = 0.15
 DEFAULT_FIXEDBOX_OVERLAP_THRESHOLD = 0.25
+ROOFTOP_RADIATION_SUMMARY_FILENAME = "building_rooftop_radiation_annual_kWh.csv"
 DEFAULT_ROOF_SURFACES_GEOJSON = {
   "type": "FeatureCollection",
   "name": "roof",
@@ -1978,7 +1986,7 @@ def _prepare_site_polygon(config: Configuration, coordinates: list[tuple[float, 
     _call_api("create_polygon", config, filename="site", coordinates=coordinates)
 
 
-def _run_data_preparation(config: Configuration) -> None:
+def _run_data_preparation(config: Configuration, scenario: str) -> None:
     _configure_height_enrichment_paths(config)
     _call_api("database_helper", config, databases_path=config.ucea.database_path)
     _call_api("zone_helper", config)
@@ -1990,7 +1998,11 @@ def _run_data_preparation(config: Configuration) -> None:
             "inputs/geometry/surroundings.shp."
         )
     _call_api("terrain_helper", config, buffer=config.ucea.terrain_buffer_m)
-    _call_api("weather_helper", config, weather=config.ucea.weather_source)
+    weather_target = _ensure_weather_target_directory(scenario)
+    _log(f"Ensured weather destination folder exists: {os.path.dirname(weather_target)}")
+    weather_source = _resolve_weather_source(config)
+    _log(f"Running weather-helper with weather source: {weather_source}")
+    _call_api("weather_helper", config, weather=weather_source)
     _call_api("archetypes_mapper", config)
 
 
@@ -2029,8 +2041,11 @@ def _prepare_missing_radiation_inputs(config: Configuration, scenario: str) -> N
         _call_api("terrain_helper", config, buffer=config.ucea.terrain_buffer_m)
 
     if missing["weather"]:
-        _log("weather.epw missing. Running weather-helper.")
-        _call_api("weather_helper", config, weather=config.ucea.weather_source)
+        weather_target = _ensure_weather_target_directory(scenario)
+        _log(f"Ensured weather destination folder exists: {os.path.dirname(weather_target)}")
+        weather_source = _resolve_weather_source(config)
+        _log(f"weather.epw missing. Running weather-helper with source: {weather_source}")
+        _call_api("weather_helper", config, weather=weather_source)
 
     if missing["envelope"]:
         _log("envelope.csv missing. Running archetypes-mapper.")
@@ -2049,6 +2064,227 @@ def _configure_height_enrichment_paths(config: Configuration) -> None:
             if not surroundings_height_gpkg:
                 config.surroundings_helper.building_height_gpkg = DEFAULT_INE_HEIGHT_GPKG
                 _log(f"Using default INE height GeoPackage for surroundings-helper: {DEFAULT_INE_HEIGHT_GPKG}")
+
+
+def _ensure_weather_target_directory(scenario: str) -> str:
+    locator = InputLocator(scenario)
+    weather_target = locator.get_weather_file()
+    weather_target_dir = os.path.dirname(weather_target)
+    if weather_target_dir:
+        os.makedirs(weather_target_dir, exist_ok=True)
+    return weather_target
+
+
+def _resolve_weather_source(config: Configuration) -> str:
+    configured_source = str(getattr(config.ucea, "weather_source", "")).strip()
+    if configured_source and configured_source != DEFAULT_UCEA_WEATHER_SOURCE:
+        return configured_source
+
+    if os.path.exists(DEFAULT_UCEA_WEATHER_FILE):
+        return DEFAULT_UCEA_WEATHER_FILE
+
+    return configured_source or DEFAULT_UCEA_WEATHER_SOURCE
+
+
+def _to_float_or_none(value: Any) -> float | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    try:
+        return float(text)
+    except ValueError:
+        return None
+
+
+def _roof_surfaces_have_oven_confidence(roof_path: str) -> bool:
+    if not os.path.exists(roof_path):
+        return False
+
+    try:
+        with open(roof_path, "r", encoding="utf-8") as fp:
+            payload = json.load(fp)
+    except Exception as exc:
+        _log(f"Could not read roof surfaces file ({roof_path}): {exc}")
+        return False
+
+    features = payload.get("features", []) if isinstance(payload, dict) else []
+    if not isinstance(features, list) or not features:
+        return False
+
+    for feature in features:
+        if not isinstance(feature, dict):
+            return False
+        properties = feature.get("properties", {})
+        if not isinstance(properties, dict):
+            return False
+        if "roof_confidence" not in properties or "roof_area_m2" not in properties:
+            return False
+        confidence = _to_float_or_none(properties.get("roof_confidence"))
+        area_m2 = _to_float_or_none(properties.get("roof_area_m2"))
+        if confidence is None or area_m2 is None:
+            return False
+    return True
+
+
+def _load_oven_confidence_metrics_by_building(scenario: str) -> dict[str, dict[str, float | int | None]]:
+    roof_path = os.path.join(scenario, ROOF_RELATIVE_PATH)
+    if not os.path.exists(roof_path):
+        return {}
+
+    try:
+        with open(roof_path, "r", encoding="utf-8") as fp:
+            payload = json.load(fp)
+    except Exception as exc:
+        _log(f"Could not read roof surfaces file for OVEN confidence ({roof_path}): {exc}")
+        return {}
+
+    features = payload.get("features", []) if isinstance(payload, dict) else []
+    if not isinstance(features, list) or not features:
+        return {}
+
+    by_building: dict[str, list[tuple[float, float | None]]] = {}
+    for feature in features:
+        if not isinstance(feature, dict):
+            continue
+        properties = feature.get("properties", {})
+        if not isinstance(properties, dict):
+            continue
+
+        building = str(properties.get("building") or "").strip()
+        if not building:
+            continue
+
+        confidence = _to_float_or_none(properties.get("roof_confidence"))
+        if confidence is None or not math.isfinite(confidence):
+            continue
+
+        area_m2 = _to_float_or_none(properties.get("roof_area_m2"))
+        if area_m2 is None or (not math.isfinite(area_m2)) or area_m2 <= 0:
+            area_m2 = None
+
+        by_building.setdefault(building, []).append((float(confidence), area_m2))
+
+    metrics_by_building: dict[str, dict[str, float | int | None]] = {}
+    for building, values in by_building.items():
+        confidences = [confidence for confidence, _ in values if math.isfinite(confidence)]
+        if not confidences:
+            continue
+
+        weighted_values = [
+            (confidence, area_m2)
+            for confidence, area_m2 in values
+            if area_m2 is not None and math.isfinite(area_m2) and area_m2 > 0
+        ]
+        weighted_mean = None
+        if weighted_values:
+            total_area = sum(area_m2 for _, area_m2 in weighted_values)
+            if total_area > 0:
+                weighted_mean = sum(confidence * area_m2 for confidence, area_m2 in weighted_values) / total_area
+
+        metrics_by_building[building] = {
+            "oven_confidence_face_count": int(len(confidences)),
+            "oven_confidence_mean": float(sum(confidences) / len(confidences)),
+            "oven_confidence_area_weighted_mean": weighted_mean,
+            "oven_confidence_min": float(min(confidences)),
+            "oven_confidence_max": float(max(confidences)),
+        }
+
+    return metrics_by_building
+
+
+def _read_rooftop_radiation_annual_kwh(path: str) -> tuple[float, float | None, int, str] | None:
+    with open(path, newline="", encoding="utf-8") as fp:
+        reader = csv.DictReader(fp)
+        if not reader.fieldnames:
+            return None
+
+        source_column = ""
+        if "roofs_top_kW" in reader.fieldnames:
+            source_column = "roofs_top_kW"
+        elif "roofs_top_kWh" in reader.fieldnames:
+            source_column = "roofs_top_kWh"
+        else:
+            return None
+
+        annual_rooftop_radiation_kwh = 0.0
+        roof_area_m2: float | None = None
+        timesteps = 0
+
+        for row in reader:
+            timesteps += 1
+            radiation_value = _to_float_or_none(row.get(source_column))
+            if radiation_value is not None:
+                annual_rooftop_radiation_kwh += radiation_value
+
+            if roof_area_m2 is None:
+                roof_area_value = _to_float_or_none(row.get("roofs_top_m2"))
+                if roof_area_value is not None:
+                    roof_area_m2 = roof_area_value
+
+    return annual_rooftop_radiation_kwh, roof_area_m2, timesteps, source_column
+
+
+def _write_rooftop_radiation_summary(scenario: str) -> str:
+    locator = InputLocator(scenario)
+    solar_radiation_dir = locator.get_solar_radiation_folder()
+    os.makedirs(solar_radiation_dir, exist_ok=True)
+
+    output_path = os.path.join(solar_radiation_dir, ROOFTOP_RADIATION_SUMMARY_FILENAME)
+    building_radiation_paths = sorted(glob.glob(os.path.join(solar_radiation_dir, "*_radiation.csv")))
+    oven_confidence_by_building = _load_oven_confidence_metrics_by_building(scenario)
+
+    rows: list[dict[str, Any]] = []
+    for building_radiation_path in building_radiation_paths:
+        building_name = os.path.basename(building_radiation_path).replace("_radiation.csv", "")
+        summary = _read_rooftop_radiation_annual_kwh(building_radiation_path)
+        if summary is None:
+            _log(
+                f"Skipping rooftop annual summary for {building_name}: "
+                "missing roofs_top_kW/roofs_top_kWh column."
+            )
+            continue
+
+        annual_rooftop_radiation_kwh, roof_area_m2, timesteps, source_column = summary
+        confidence_metrics = oven_confidence_by_building.get(building_name, {})
+        rows.append(
+            {
+                "name": building_name,
+                "rooftop_radiation_kWh_year": annual_rooftop_radiation_kwh,
+                "roofs_top_m2": roof_area_m2,
+                "timesteps": timesteps,
+                "source_column": source_column,
+                "oven_confidence_face_count": confidence_metrics.get("oven_confidence_face_count"),
+                "oven_confidence_mean": confidence_metrics.get("oven_confidence_mean"),
+                "oven_confidence_area_weighted_mean": confidence_metrics.get("oven_confidence_area_weighted_mean"),
+                "oven_confidence_min": confidence_metrics.get("oven_confidence_min"),
+                "oven_confidence_max": confidence_metrics.get("oven_confidence_max"),
+            }
+        )
+
+    rows.sort(key=lambda row: str(row["name"]))
+    with open(output_path, "w", newline="", encoding="utf-8") as fp:
+        writer = csv.DictWriter(
+            fp,
+            fieldnames=[
+                "name",
+                "rooftop_radiation_kWh_year",
+                "roofs_top_m2",
+                "timesteps",
+                "source_column",
+                "oven_confidence_face_count",
+                "oven_confidence_mean",
+                "oven_confidence_area_weighted_mean",
+                "oven_confidence_min",
+                "oven_confidence_max",
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(rows)
+
+    _log(f"Wrote rooftop annual radiation summary: {output_path} ({len(rows)} buildings)")
+    return output_path
 
 
 def _resolve_comparison_root(config: Configuration, scenario: str) -> str:
@@ -2147,7 +2383,17 @@ def _roof_surfaces_match_input(
     if signature_hash is None:
         _log("No roof input signature found. Existing roof surfaces are treated as stale.")
         return False
-    return signature_hash == current_hash
+    if signature_hash != current_hash:
+        return False
+
+    roof_path = os.path.join(scenario, ROOF_RELATIVE_PATH)
+    if not _roof_surfaces_have_oven_confidence(roof_path):
+        _log(
+            "Existing roof surfaces are missing OVEN confidence metadata "
+            "(roof_confidence / roof_area_m2). Regeneration required."
+        )
+        return False
+    return True
 
 
 def _resolve_repo_root() -> str:
@@ -2348,6 +2594,8 @@ def _count_experiment_steps(config: Configuration) -> int:
         if bool(getattr(config.ucea, "export_workflow_comparison_3d_figure", False)):
             steps += 1
 
+    steps += 1  # Build per-building rooftop annual radiation summary CSV.
+
     if bool(getattr(config.ucea, "launch_workflow1_viewer", False)) or bool(
         getattr(config.ucea, "export_workflow1_images", False)
     ):
@@ -2475,6 +2723,13 @@ def _run_experiments(
                 progress_steps=1,
             )
 
+        _run_stage(
+            "Build annual rooftop radiation summary",
+            lambda: _write_rooftop_radiation_summary(scenario),
+            progress=progress,
+            progress_steps=1,
+        )
+
         return UceaRuntime(
             scenario=scenario,
             comparison_root="",
@@ -2587,6 +2842,13 @@ def _run_experiments(
             progress=progress,
             progress_steps=1,
         )
+
+    _run_stage(
+        "Build annual rooftop radiation summary",
+        lambda: _write_rooftop_radiation_summary(scenario),
+        progress=progress,
+        progress_steps=1,
+    )
 
     return UceaRuntime(
         scenario=scenario,
@@ -2728,7 +2990,7 @@ def main(config: Configuration) -> None:
             _log("Refreshing scenario preparation outputs for the new input area.")
         elif not has_zone_geometry:
             _log("zone.shp is missing. Running scenario preparation scripts.")
-        _run_stage("Scenario preparation scripts", lambda: _run_data_preparation(config))
+        _run_stage("Scenario preparation scripts", lambda: _run_data_preparation(config, scenario))
     else:
         _log("Skipping scenario preparation (existing site + zone already match current input).")
 

@@ -27,10 +27,10 @@ WORKFLOW_0 = "workflow0_normal_flat_roofs"
 WORKFLOW_1 = "workflow1_geometry_generator"
 WORKFLOWS = [WORKFLOW_0, WORKFLOW_1]
 
-DEFAULT_SCENARIO = r"C:\Users\Andre\cea-scenarios\test-case"
-DEFAULT_COMPARISON_ROOT = r"C:\Users\Andre\cea-scenarios\test-case\outputs\data\roof-workflow-comparison"
-DEFAULT_OUTPUT_FIGURE = r"C:\Users\Andre\cea-scenarios\test-case\outputs\data\roof-workflow-comparison\output.png"
-DEFAULT_BUILDING = "B1000"
+DEFAULT_SCENARIO = r"C:\Users\Andre\cea-scenarios\Validation\Alameda"
+DEFAULT_COMPARISON_ROOT = r"C:\Users\Andre\cea-scenarios\Validation\Alameda\outputs\data\roof-workflow-comparison"
+DEFAULT_OUTPUT_FIGURE = r"C:\Users\Andre\cea-scenarios\vis\outputs\data\roof-workflow-comparison\output.png"
+DEFAULT_BUILDING = "B1065"
 DEFAULT_MAX_METADATA_ARROWS = 300
 DEFAULT_SHOW = True
 
@@ -340,8 +340,8 @@ def create_figure(
     axes = [fig.add_subplot(1, len(WORKFLOWS), i + 1, projection="3d") for i in range(len(WORKFLOWS))]
 
     titles = {
-        WORKFLOW_0: "Workflow 0 - Normal flat roofs",
-        WORKFLOW_1: "Workflow 1 - Geometry generator",
+        WORKFLOW_0: "CEA Building + Roof",
+        WORKFLOW_1: "CEA Building + OVEN Generated Roof",
     }
 
     for ax, workflow in zip(axes, WORKFLOWS):
@@ -352,8 +352,7 @@ def create_figure(
         Line2D([0], [0], color="black", lw=8, alpha=0.25, label="Walls"),
         Line2D([0], [0], color="steelblue", lw=8, alpha=0.45, label="Roofs"),
         Line2D([0], [0], color="goldenrod", lw=8, alpha=0.35, label="Windows"),
-        Line2D([0], [0], color="royalblue", lw=2, label="Roof normals (geometry)"),
-        Line2D([0], [0], color="crimson", lw=2, label="Roof normals (metadata)"),
+        Line2D([0], [0], color="crimson", lw=2, label="Roof normals"),
     ]
 
     fig.suptitle(f"3D workflow geometry comparison - {building}", fontsize=14)
