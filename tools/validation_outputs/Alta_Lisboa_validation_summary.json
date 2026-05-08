@@ -1,10 +1,10 @@
 {
   "area_id": "Alta_Lisboa",
-  "zone_buildings_total": 81,
+  "zone_buildings_total": 80,
   "raster_edge_buffer_m": 12.0,
-  "removed_outside_raster_extent_buildings_count": 10,
-  "residential_before_zero_radiation_filter": 71,
+  "removed_outside_raster_extent_buildings_count": 11,
+  "residential_before_zero_radiation_filter": 70,
   "removed_zero_radiation_buildings_count": 0,
   "removed_zero_radiation_buildings": [],
-  "residential_kept_after_zero_radiation_filter": 71
+  "residential_kept_after_zero_radiation_filter": 70
 }

@@ -2783,7 +2783,6 @@ def _run_experiments(
                 "both",
                 "--pv-panels",
                 pv_panel,
-                "--undo-pv-azimuth-harmonisation",
             ],
         ),
         progress=progress,

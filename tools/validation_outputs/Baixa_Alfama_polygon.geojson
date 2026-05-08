@@ -6,8 +6,8 @@
       "type": "Feature",
       "properties": {
         "area_id": "Baixa_Alfama",
-        "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Baixa_Alfama.tif",
-        "source_crs": "EPSG:3857",
+        "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Baixa_Alfama_utm29n_aligned_from_georef.tif",
+        "source_crs": "EPSG:32629",
         "crs": "EPSG:4326",
         "ucea_compatible": true
       },

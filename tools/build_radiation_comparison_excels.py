@@ -348,6 +348,14 @@ def _safe_divide(numerator: float | None, denominator: float | None) -> float | 
     return numerator / denominator
 
 
+def _ratio_to_percentage(value: float | None) -> float | None:
+    if value is None:
+        return None
+    if not math.isfinite(value):
+        return None
+    return value * 100.0
+
+
 def _safe_subtract(lhs: float | None, rhs: float | None) -> float | None:
     if lhs is None or rhs is None:
         return None
@@ -528,8 +536,10 @@ def _build_area_comparison(
         if ucea_timesteps is None:
             ucea_timesteps = u.get("ucea_timesteps")
         workflow0_radiation_kwh = wf0.get("workflow0_rooftop_radiation_kwh_year")
-        error_cea = _safe_subtract(workflow0_radiation_kwh, validation_radiation_kwh)
-        error_cea_oven = _safe_subtract(ucea_radiation_kwh, validation_radiation_kwh)
+        workflow0_minus_validation = _safe_subtract(workflow0_radiation_kwh, validation_radiation_kwh)
+        ucea_minus_validation = _safe_subtract(ucea_radiation_kwh, validation_radiation_kwh)
+        error_cea = _safe_divide(workflow0_minus_validation, validation_radiation_kwh)
+        error_cea_oven = _safe_divide(ucea_minus_validation, validation_radiation_kwh)
 
         row = {
             "area_id": area_id,
@@ -610,20 +620,48 @@ def _build_area_comparison(
                 total += float(value)
         return total
 
+    def _is_oven_identified(row: dict[str, Any]) -> bool:
+        value = row.get("ucea_oven_confidence_face_count")
+        if not isinstance(value, (int, float)):
+            return False
+        value_f = float(value)
+        return math.isfinite(value_f) and value_f > 0.0
+
     matched_rows = [r for r in comparison_rows if r["status"] == "matched"]
     total_validation_buildings_with_custom_roofs = sum(
         1
         for row in comparison_rows
-        if isinstance(row.get("ucea_oven_confidence_face_count"), (int, float))
-        and math.isfinite(float(row["ucea_oven_confidence_face_count"]))
-        and float(row["ucea_oven_confidence_face_count"]) > 0.0
+        if _is_oven_identified(row)
     )
     total_validation_area_m2 = _sum_key(comparison_rows, "validation_area_m2")
+    total_validation_area_identified_by_oven_m2 = _sum_key(
+        [row for row in comparison_rows if _is_oven_identified(row)],
+        "validation_area_m2",
+    )
+    oven_coverage_area_percentage = _ratio_to_percentage(
+        _safe_divide(
+            total_validation_area_identified_by_oven_m2,
+            total_validation_area_m2,
+        )
+    )
     total_ucea_area_m2 = _sum_key(matched_rows, "ucea_roofs_top_m2")
     total_workflow0_area_m2 = _sum_key(matched_rows, "workflow0_roofs_top_m2")
     total_validation_radiation_kwh = _sum_key(comparison_rows, "validation_radiation_kwh_year")
+    total_validation_radiation_kwh_matched = _sum_key(matched_rows, "validation_radiation_kwh_year")
     total_ucea_radiation_kwh = _sum_key(matched_rows, "ucea_radiation_kwh_year")
     total_workflow0_radiation_kwh = _sum_key(matched_rows, "workflow0_radiation_kwh_year")
+    oven_identified_error_percentage = _ratio_to_percentage(
+        _safe_divide(
+            total_ucea_radiation_kwh - total_validation_radiation_kwh_matched,
+            total_validation_radiation_kwh_matched,
+        )
+    )
+    overall_error_percentage = _ratio_to_percentage(
+        _safe_divide(
+            total_workflow0_radiation_kwh - total_validation_radiation_kwh_matched,
+            total_validation_radiation_kwh_matched,
+        )
+    )
 
     summary_rows = [
         {"metric": "area_id", "value": area_id},
@@ -646,11 +684,18 @@ def _build_area_comparison(
         {"metric": "validation_missing_in_ucea", "value": len(validation_missing_in_ucea_rows)},
         {"metric": "ucea_only_buildings", "value": len(ucea_only_rows)},
         {"metric": "total_validation_area_m2", "value": total_validation_area_m2},
+        {
+            "metric": "total_validation_area_identified_by_oven_m2",
+            "value": total_validation_area_identified_by_oven_m2,
+        },
+        {"metric": "oven_coverage_area_percentage", "value": oven_coverage_area_percentage},
         {"metric": "total_ucea_roofs_top_m2_matched", "value": total_ucea_area_m2},
         {"metric": "total_workflow0_roofs_top_m2_matched", "value": total_workflow0_area_m2},
         {"metric": "total_validation_radiation_kwh_year", "value": total_validation_radiation_kwh},
         {"metric": "total_ucea_radiation_kwh_year_matched", "value": total_ucea_radiation_kwh},
         {"metric": "total_workflow0_radiation_kwh_year_matched", "value": total_workflow0_radiation_kwh},
+        {"metric": "oven_identified_error_percentage", "value": oven_identified_error_percentage},
+        {"metric": "overall_error_percentage", "value": overall_error_percentage},
     ]
 
     return AreaComparison(
@@ -908,9 +953,17 @@ def _write_overall_workbook(output_path: Path, area_comparisons: list[AreaCompar
                 "total_workflow0_radiation_kwh_year_matched": summary_dict.get(
                     "total_workflow0_radiation_kwh_year_matched"
                 ),
+                "total_validation_area_m2": summary_dict.get("total_validation_area_m2"),
+                "total_validation_area_identified_by_oven_m2": summary_dict.get(
+                    "total_validation_area_identified_by_oven_m2"
+                ),
+                "oven_coverage_area_percentage": summary_dict.get("oven_coverage_area_percentage"),
+                "oven_identified_error_percentage": summary_dict.get("oven_identified_error_percentage"),
+                "overall_error_percentage": summary_dict.get("overall_error_percentage"),
             }
         )
         all_comparison_rows.extend(area.comparison_rows)
+    matched_all_comparison_rows = [row for row in all_comparison_rows if row.get("status") == "matched"]
 
     def _sum_numeric(rows: list[dict[str, Any]], key: str) -> float:
         total = 0.0
@@ -942,6 +995,25 @@ def _write_overall_workbook(output_path: Path, area_comparisons: list[AreaCompar
             "value": _sum_numeric(all_comparison_rows, "validation_area_m2"),
         },
         {
+            "metric": "total_validation_area_identified_by_oven_m2",
+            "value": _sum_numeric(
+                [r for r in all_comparison_rows if isinstance(r.get("ucea_oven_confidence_face_count"), (int, float)) and math.isfinite(float(r["ucea_oven_confidence_face_count"])) and float(r["ucea_oven_confidence_face_count"]) > 0.0],
+                "validation_area_m2",
+            ),
+        },
+        {
+            "metric": "oven_coverage_area_percentage",
+            "value": _ratio_to_percentage(
+                _safe_divide(
+                    _sum_numeric(
+                        [r for r in all_comparison_rows if isinstance(r.get("ucea_oven_confidence_face_count"), (int, float)) and math.isfinite(float(r["ucea_oven_confidence_face_count"])) and float(r["ucea_oven_confidence_face_count"]) > 0.0],
+                        "validation_area_m2",
+                    ),
+                    _sum_numeric(all_comparison_rows, "validation_area_m2"),
+                )
+            ),
+        },
+        {
             "metric": "total_ucea_roofs_top_m2_matched",
             "value": _sum_numeric(all_comparison_rows, "ucea_roofs_top_m2"),
         },
@@ -961,6 +1033,26 @@ def _write_overall_workbook(output_path: Path, area_comparisons: list[AreaCompar
             "metric": "total_workflow0_radiation_kwh_year_matched",
             "value": _sum_numeric(all_comparison_rows, "workflow0_radiation_kwh_year"),
         },
+        {
+            "metric": "oven_identified_error_percentage",
+            "value": _ratio_to_percentage(
+                _safe_divide(
+                    _sum_numeric(matched_all_comparison_rows, "ucea_radiation_kwh_year")
+                    - _sum_numeric(matched_all_comparison_rows, "validation_radiation_kwh_year"),
+                    _sum_numeric(matched_all_comparison_rows, "validation_radiation_kwh_year"),
+                )
+            ),
+        },
+        {
+            "metric": "overall_error_percentage",
+            "value": _ratio_to_percentage(
+                _safe_divide(
+                    _sum_numeric(matched_all_comparison_rows, "workflow0_radiation_kwh_year")
+                    - _sum_numeric(matched_all_comparison_rows, "validation_radiation_kwh_year"),
+                    _sum_numeric(matched_all_comparison_rows, "validation_radiation_kwh_year"),
+                )
+            ),
+        },
     ]
 
     sheets = [
@@ -977,8 +1069,13 @@ def _write_overall_workbook(output_path: Path, area_comparisons: list[AreaCompar
                     "matched_buildings",
                     "validation_missing_in_ucea",
                     "ucea_only_buildings",
+                    "total_validation_area_m2",
+                    "total_validation_area_identified_by_oven_m2",
+                    "oven_coverage_area_percentage",
                     "total_workflow0_roofs_top_m2_matched",
                     "total_workflow0_radiation_kwh_year_matched",
+                    "oven_identified_error_percentage",
+                    "overall_error_percentage",
                     "validation_csv_path",
                     "ucea_summary_csv_path",
                 ],

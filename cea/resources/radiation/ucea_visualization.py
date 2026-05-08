@@ -60,7 +60,6 @@ def _run_experiments(config: Configuration, scenario: str) -> UceaVisualizationR
             "both",
             "--pv-panels",
             pv_panel,
-            "--undo-pv-azimuth-harmonisation",
         ],
     )
     metrics_output_dir = comparison_root

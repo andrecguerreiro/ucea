@@ -2027,8 +2027,8 @@ def _read_text_file(path):
 
 def run_from_polygon_ring(
     polygon_ring_lon_lat,
-    building_threshold=0.15,
-    overlap_threshold=0.25,
+    building_threshold=0.05,
+    overlap_threshold=0.1,
     output_path="roof_surfaces.geojson",
     zone_shp_path=None,
 ):
@@ -2098,13 +2098,13 @@ def _build_cli_parser():
     parser.add_argument(
         "--building-threshold",
         type=float,
-        default=0.15,
+        default=0.1,
         help="Detection confidence threshold for buildings.",
     )
     parser.add_argument(
         "--overlap-threshold",
         type=float,
-        default=0.25,
+        default=0.2,
         help="NMS overlap threshold for deduplicating predictions.",
     )
     return parser

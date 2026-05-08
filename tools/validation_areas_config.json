@@ -1,37 +1,30 @@
 [
   {
     "area_id": "Alameda_Arro",
-    "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Alameda_Arro.tif",
+    "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Alameda_Arro_utm29n_aligned_from_georef.tif",
     "polygon_geojson_path": "C:\\Documents\\Doutoramento\\CEA Projects\\ucea\\tools\\Alameda_Arro_polygon.geojson",
     "zone_shp_path": "C:/Users/Andre/cea-scenarios/Validation/Alameda/inputs/building-geometry/zone.shp",
     "cea_name_field": "name"
   },
     {
     "area_id": "Alta_Lisboa",
-    "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Alta_Lisboa_.tif",
+    "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Alta_Lisboa__utm29n_aligned_from_georef.tif",
     "polygon_geojson_path": "C:\\Documents\\Doutoramento\\CEA Projects\\ucea\\tools\\Alta_Lisboa_polygon.geojson",
     "zone_shp_path": "C:\\Users\\Andre\\cea-scenarios\\Validation\\Alta Lisboa\\inputs\\building-geometry\\zone.shp",
     "cea_name_field": "name"
   },
   {
     "area_id": "Baixa_Alfama",
-    "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Baixa_Alfama.tif",
+    "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Baixa_Alfama_utm29n_aligned_from_georef.tif",
     "polygon_geojson_path": "C:\\Documents\\Doutoramento\\CEA Projects\\ucea\\tools\\Baixa_Alfama_polygon.geojson",
     "zone_shp_path": "C:\\Users\\Andre\\cea-scenarios\\Validation\\Alfama\\inputs\\building-geometry\\zone.shp",
     "cea_name_field": "name"
   },
     {
     "area_id": "EUA_1_Pro",
-    "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_EUA_1_Pro.tif",
+    "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_EUA_1_Pro_utm29n_aligned_from_georef.tif",
     "polygon_geojson_path": "C:\\Documents\\Doutoramento\\CEA Projects\\ucea\\tools\\EUA_1_Pro_polygon.geojson",
     "zone_shp_path": "C:\\Users\\Andre\\cea-scenarios\\Validation\\EUA\\inputs\\building-geometry\\zone.shp",
-    "cea_name_field": "name"
-  },
-    {
-    "area_id": "Parque_das_N",
-    "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Parque_das_N.tif",
-    "polygon_geojson_path": "C:\\Documents\\Doutoramento\\CEA Projects\\ucea\\tools\\Parque_das_N_polygon.geojson",
-    "zone_shp_path": "C:\\Users\\Andre\\cea-scenarios\\Validation\\Parque das N\\inputs\\building-geometry\\zone.shp",
     "cea_name_field": "name"
   }
 ]

@@ -1,10 +1,10 @@
 {
   "area_id": "EUA_1_Pro",
-  "zone_buildings_total": 200,
+  "zone_buildings_total": 198,
   "raster_edge_buffer_m": 12.0,
-  "removed_outside_raster_extent_buildings_count": 23,
-  "residential_before_zero_radiation_filter": 194,
+  "removed_outside_raster_extent_buildings_count": 25,
+  "residential_before_zero_radiation_filter": 192,
   "removed_zero_radiation_buildings_count": 0,
   "removed_zero_radiation_buildings": [],
-  "residential_kept_after_zero_radiation_filter": 194
+  "residential_kept_after_zero_radiation_filter": 192
 }

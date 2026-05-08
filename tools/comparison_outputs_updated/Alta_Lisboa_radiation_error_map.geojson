@@ -1,0 +1,5424 @@
+{
+  "type": "FeatureCollection",
+  "name": "Alta_Lisboa_radiation_error_map",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/1",
+        "osmid": "1",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1001",
+        "intersection_area_m2": 1694.1833177501749,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 3626073.48915625,
+        "radiation_sum": 3626073.48915625,
+        "radiation_point_count": 2794.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 3626073.48915625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 1694.1833177501749,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1515327,
+              38.77492299999999
+            ],
+            [
+              -9.151585200000001,
+              38.77479579999999
+            ],
+            [
+              -9.1520312,
+              38.774907599999985
+            ],
+            [
+              -9.152206899999998,
+              38.7744819
+            ],
+            [
+              -9.152293799999999,
+              38.77450369999998
+            ],
+            [
+              -9.1523041,
+              38.7744789
+            ],
+            [
+              -9.1523983,
+              38.7745026
+            ],
+            [
+              -9.1521599,
+              38.775080299999985
+            ],
+            [
+              -9.1515327,
+              38.77492299999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/3",
+        "osmid": "3",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1003",
+        "intersection_area_m2": 316.63596337502787,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 673715.56003125,
+        "radiation_sum": 673715.56003125,
+        "radiation_point_count": 522.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 673715.56003125,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 316.63596337502787,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.152926,
+              38.77306699999999
+            ],
+            [
+              -9.1528595,
+              38.77323679999999
+            ],
+            [
+              -9.1527173,
+              38.77320289999999
+            ],
+            [
+              -9.1526826,
+              38.773194600000004
+            ],
+            [
+              -9.152749099999998,
+              38.773024799999995
+            ],
+            [
+              -9.1527886,
+              38.7730342
+            ],
+            [
+              -9.152926,
+              38.77306699999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/5",
+        "osmid": "5",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1005",
+        "intersection_area_m2": 3044.282509224441,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 6229377.702179688,
+        "radiation_sum": 6229377.702179688,
+        "radiation_point_count": 5014.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 6229377.702179688,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 3044.282509224441,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.153683599999999,
+              38.7740659
+            ],
+            [
+              -9.153498599999999,
+              38.77406649999999
+            ],
+            [
+              -9.153645799999998,
+              38.773712
+            ],
+            [
+              -9.1536734,
+              38.77364469999999
+            ],
+            [
+              -9.1535574,
+              38.773617099999996
+            ],
+            [
+              -9.1533414,
+              38.77356600000002
+            ],
+            [
+              -9.153109,
+              38.77410789999998
+            ],
+            [
+              -9.1528976,
+              38.7741128
+            ],
+            [
+              -9.1532079,
+              38.7733496
+            ],
+            [
+              -9.1534004,
+              38.7733996
+            ],
+            [
+              -9.153384999999998,
+              38.77343559999999
+            ],
+            [
+              -9.153609899999998,
+              38.773490800000005
+            ],
+            [
+              -9.1537326,
+              38.773520999999995
+            ],
+            [
+              -9.153736,
+              38.77351029999999
+            ],
+            [
+              -9.153743599999999,
+              38.7734866
+            ],
+            [
+              -9.1539103,
+              38.7735267
+            ],
+            [
+              -9.1538872,
+              38.77357729999999
+            ],
+            [
+              -9.1539419,
+              38.773590299999995
+            ],
+            [
+              -9.153905799999999,
+              38.77368469999999
+            ],
+            [
+              -9.153852299999999,
+              38.773672899999994
+            ],
+            [
+              -9.153683599999999,
+              38.7740659
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/6",
+        "osmid": "6",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1006",
+        "intersection_area_m2": 1104.2171986477667,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1851864.0273203126,
+        "radiation_sum": 1851864.0273203126,
+        "radiation_point_count": 1821.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1851864.0273203126,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 1104.2171986477667,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.154024,
+              38.7732561
+            ],
+            [
+              -9.1540034,
+              38.77330619999999
+            ],
+            [
+              -9.1538336,
+              38.7732639
+            ],
+            [
+              -9.153855599999998,
+              38.773210199999994
+            ],
+            [
+              -9.1538036,
+              38.77319719999999
+            ],
+            [
+              -9.1538001,
+              38.7732059
+            ],
+            [
+              -9.1537746,
+              38.77319949999998
+            ],
+            [
+              -9.15377,
+              38.77321059999999
+            ],
+            [
+              -9.1537306,
+              38.77320069999999
+            ],
+            [
+              -9.153596,
+              38.77316720000001
+            ],
+            [
+              -9.1536007,
+              38.773155799999984
+            ],
+            [
+              -9.153565499999997,
+              38.773147099999996
+            ],
+            [
+              -9.1535698,
+              38.77313649999999
+            ],
+            [
+              -9.1535115,
+              38.77312200000001
+            ],
+            [
+              -9.1535017,
+              38.7731457
+            ],
+            [
+              -9.1533386,
+              38.77310509999999
+            ],
+            [
+              -9.1534069,
+              38.7729385
+            ],
+            [
+              -9.1535732,
+              38.77297989999999
+            ],
+            [
+              -9.1535525,
+              38.77303049999999
+            ],
+            [
+              -9.1536085,
+              38.77304439999998
+            ],
+            [
+              -9.1536106,
+              38.77303919999999
+            ],
+            [
+              -9.1536248,
+              38.77304279999999
+            ],
+            [
+              -9.153780199999998,
+              38.77308150000001
+            ],
+            [
+              -9.153844299999998,
+              38.7730975
+            ],
+            [
+              -9.1538413,
+              38.77310470000001
+            ],
+            [
+              -9.1538889,
+              38.7731166
+            ],
+            [
+              -9.153910699999999,
+              38.773063499999985
+            ],
+            [
+              -9.1539184,
+              38.77306539999999
+            ],
+            [
+              -9.1540801,
+              38.773105699999995
+            ],
+            [
+              -9.1540576,
+              38.77316049999999
+            ],
+            [
+              -9.154118399999998,
+              38.773175699999996
+            ],
+            [
+              -9.1540798,
+              38.77326999999999
+            ],
+            [
+              -9.154024,
+              38.7732561
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/15",
+        "osmid": "15",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1015",
+        "intersection_area_m2": 183.52575815737313,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 351168.4384375,
+        "radiation_sum": 351168.4384375,
+        "radiation_point_count": 305.0,
+        "use_type1": "SINGLE_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 351168.4384375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 183.52575815737313,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1568671,
+              38.77469969999999
+            ],
+            [
+              -9.1567634,
+              38.77470280000001
+            ],
+            [
+              -9.1567411,
+              38.774614
+            ],
+            [
+              -9.1567672,
+              38.7746137
+            ],
+            [
+              -9.1567657,
+              38.7745821
+            ],
+            [
+              -9.1567083,
+              38.7745806
+            ],
+            [
+              -9.1566975,
+              38.77451849999999
+            ],
+            [
+              -9.1567573,
+              38.77451670000001
+            ],
+            [
+              -9.1567679,
+              38.77456769999999
+            ],
+            [
+              -9.1568694,
+              38.774564999999996
+            ],
+            [
+              -9.1568776,
+              38.774643299999994
+            ],
+            [
+              -9.1568613,
+              38.7746442
+            ],
+            [
+              -9.1568671,
+              38.77469969999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/16",
+        "osmid": "16",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1016",
+        "intersection_area_m2": 515.4783622463749,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 875034.74315625,
+        "radiation_sum": 875034.74315625,
+        "radiation_point_count": 848.0,
+        "use_type1": "SINGLE_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 875034.74315625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 515.4783622463749,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1564939,
+              38.77437989999999
+            ],
+            [
+              -9.1560747,
+              38.7744733
+            ],
+            [
+              -9.1560637,
+              38.77444259999999
+            ],
+            [
+              -9.1560302,
+              38.7743527
+            ],
+            [
+              -9.1564521,
+              38.7742647
+            ],
+            [
+              -9.1564939,
+              38.77437989999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/17",
+        "osmid": "17",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1017",
+        "intersection_area_m2": 170.520331279709,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 311720.9159375,
+        "radiation_sum": 311720.9159375,
+        "radiation_point_count": 280.0,
+        "use_type1": "SINGLE_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 311720.9159375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 170.520331279709,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1559517,
+              38.7743018
+            ],
+            [
+              -9.1558605,
+              38.77436029999999
+            ],
+            [
+              -9.1557921,
+              38.77429230000001
+            ],
+            [
+              -9.1557652,
+              38.7743091
+            ],
+            [
+              -9.1557398,
+              38.774272499999995
+            ],
+            [
+              -9.1557545,
+              38.77420029999999
+            ],
+            [
+              -9.155876599999997,
+              38.774235899999994
+            ],
+            [
+              -9.1559517,
+              38.7743018
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/20",
+        "osmid": "20",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1020",
+        "intersection_area_m2": 4380.109525835609,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 10414303.75825,
+        "radiation_sum": 10414303.75825,
+        "radiation_point_count": 7223.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 10414303.75825,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 4380.109525835609,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1565503,
+              38.7745588
+            ],
+            [
+              -9.1567297,
+              38.775086599999995
+            ],
+            [
+              -9.155996,
+              38.7752324
+            ],
+            [
+              -9.1559889,
+              38.775213099999995
+            ],
+            [
+              -9.155900399999998,
+              38.774972099999985
+            ],
+            [
+              -9.1557244,
+              38.77449319999999
+            ],
+            [
+              -9.1558851,
+              38.7744606
+            ],
+            [
+              -9.155953999999998,
+              38.77467330000001
+            ],
+            [
+              -9.1565503,
+              38.7745588
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/22",
+        "osmid": "22",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1022",
+        "intersection_area_m2": 417.3871285856169,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1019369.598,
+        "radiation_sum": 1019369.598,
+        "radiation_point_count": 683.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1019369.598,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 417.3871285856169,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.155286699999998,
+              38.7763418
+            ],
+            [
+              -9.1552833,
+              38.77624329999999
+            ],
+            [
+              -9.1555915,
+              38.776236799999985
+            ],
+            [
+              -9.1555938,
+              38.7763914
+            ],
+            [
+              -9.155362199999999,
+              38.7763963
+            ],
+            [
+              -9.1553603,
+              38.7763402
+            ],
+            [
+              -9.155286699999998,
+              38.7763418
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/26",
+        "osmid": "26",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1026",
+        "intersection_area_m2": 1667.5706794638463,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 3340821.5243984377,
+        "radiation_sum": 3340821.5243984377,
+        "radiation_point_count": 2757.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 3340821.5243984377,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 1667.5706794638463,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.154013299999999,
+              38.77606009999999
+            ],
+            [
+              -9.153873799999998,
+              38.7760484
+            ],
+            [
+              -9.1539168,
+              38.775697099999995
+            ],
+            [
+              -9.1545262,
+              38.7757339
+            ],
+            [
+              -9.1545583,
+              38.775749
+            ],
+            [
+              -9.154573399999999,
+              38.7757741
+            ],
+            [
+              -9.1545648,
+              38.775797499999996
+            ],
+            [
+              -9.154536899999998,
+              38.775884500000004
+            ],
+            [
+              -9.1545176,
+              38.775906199999994
+            ],
+            [
+              -9.1545176,
+              38.775932999999995
+            ],
+            [
+              -9.1545176,
+              38.77597309999999
+            ],
+            [
+              -9.154504699999999,
+              38.7760116
+            ],
+            [
+              -9.154481099999998,
+              38.7760417
+            ],
+            [
+              -9.1544596,
+              38.776173899999996
+            ],
+            [
+              -9.154431699999998,
+              38.7761923
+            ],
+            [
+              -9.154169999999999,
+              38.77615209999999
+            ],
+            [
+              -9.1541936,
+              38.77603999999999
+            ],
+            [
+              -9.154350199999998,
+              38.7760618
+            ],
+            [
+              -9.1544038,
+              38.7758544
+            ],
+            [
+              -9.154384499999999,
+              38.775839299999994
+            ],
+            [
+              -9.1540884,
+              38.7758209
+            ],
+            [
+              -9.1540476,
+              38.77583599999999
+            ],
+            [
+              -9.154013299999999,
+              38.77606009999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/31",
+        "osmid": "31",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1031",
+        "intersection_area_m2": 741.4124896180284,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1228701.8498984375,
+        "radiation_sum": 1228701.8498984375,
+        "radiation_point_count": 1230.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1228701.8498984375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 741.4124896180284,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.152533299999998,
+              38.774145499999996
+            ],
+            [
+              -9.152412,
+              38.7741549
+            ],
+            [
+              -9.152405399999997,
+              38.7741022
+            ],
+            [
+              -9.1523403,
+              38.77410720000001
+            ],
+            [
+              -9.1523469,
+              38.77415979999999
+            ],
+            [
+              -9.152122099999998,
+              38.7741772
+            ],
+            [
+              -9.1521155,
+              38.77412379999999
+            ],
+            [
+              -9.1520516,
+              38.774128700000006
+            ],
+            [
+              -9.1520582,
+              38.7741821
+            ],
+            [
+              -9.1519469,
+              38.77419069999999
+            ],
+            [
+              -9.1519355,
+              38.774098800000004
+            ],
+            [
+              -9.1519999,
+              38.77409400000001
+            ],
+            [
+              -9.1519883,
+              38.774000699999995
+            ],
+            [
+              -9.1521448,
+              38.77398889999998
+            ],
+            [
+              -9.1521563,
+              38.774081900000006
+            ],
+            [
+              -9.152287599999998,
+              38.7740719
+            ],
+            [
+              -9.152275999999999,
+              38.77397889999999
+            ],
+            [
+              -9.152433899999998,
+              38.77396679999998
+            ],
+            [
+              -9.1524456,
+              38.774059900000005
+            ],
+            [
+              -9.152521999999998,
+              38.77405389999999
+            ],
+            [
+              -9.152533299999998,
+              38.774145499999996
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/33",
+        "osmid": "33",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1033",
+        "intersection_area_m2": 378.38995699688985,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 880467.477890625,
+        "radiation_sum": 880467.477890625,
+        "radiation_point_count": 623.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 880467.477890625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 378.38995699688985,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.154508299999998,
+              38.77367459999999
+            ],
+            [
+              -9.1544797,
+              38.77366749999999
+            ],
+            [
+              -9.154343699999998,
+              38.77363369999998
+            ],
+            [
+              -9.154432099999998,
+              38.773417499999994
+            ],
+            [
+              -9.1545974,
+              38.7734594
+            ],
+            [
+              -9.154508299999998,
+              38.77367459999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/34",
+        "osmid": "34",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1034",
+        "intersection_area_m2": 694.9341439901845,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1415326.329546875,
+        "radiation_sum": 1415326.329546875,
+        "radiation_point_count": 1148.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1415326.329546875,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 694.9341439901845,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1544797,
+              38.77366749999999
+            ],
+            [
+              -9.1543305,
+              38.7740025
+            ],
+            [
+              -9.1541354,
+              38.7740175
+            ],
+            [
+              -9.1541869,
+              38.77389709999998
+            ],
+            [
+              -9.1541779,
+              38.7738948
+            ],
+            [
+              -9.1542526,
+              38.77371459999999
+            ],
+            [
+              -9.1542616,
+              38.773716900000004
+            ],
+            [
+              -9.1543014,
+              38.773623599999986
+            ],
+            [
+              -9.154343699999998,
+              38.77363369999998
+            ],
+            [
+              -9.1544797,
+              38.77366749999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/35",
+        "osmid": "35",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1035",
+        "intersection_area_m2": 735.2452728248661,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1410786.6916328126,
+        "radiation_sum": 1410786.6916328126,
+        "radiation_point_count": 1216.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1410786.6916328126,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 735.2452728248661,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.154386499999998,
+              38.77340590000001
+            ],
+            [
+              -9.1544071,
+              38.7733565
+            ],
+            [
+              -9.154351099999998,
+              38.77334229999999
+            ],
+            [
+              -9.154393599999999,
+              38.773240799999996
+            ],
+            [
+              -9.1545127,
+              38.773271099999995
+            ],
+            [
+              -9.1545603,
+              38.77315729999999
+            ],
+            [
+              -9.1546188,
+              38.77317209999999
+            ],
+            [
+              -9.1546282,
+              38.77314940000001
+            ],
+            [
+              -9.1546907,
+              38.77316529999999
+            ],
+            [
+              -9.1546766,
+              38.77319909999999
+            ],
+            [
+              -9.154697,
+              38.773204299999996
+            ],
+            [
+              -9.154674299999998,
+              38.7732587
+            ],
+            [
+              -9.154772,
+              38.773283499999984
+            ],
+            [
+              -9.154708699999999,
+              38.773435299999996
+            ],
+            [
+              -9.154617099999998,
+              38.77341199999999
+            ],
+            [
+              -9.1545974,
+              38.7734594
+            ],
+            [
+              -9.154432099999998,
+              38.773417499999994
+            ],
+            [
+              -9.154386499999998,
+              38.77340590000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/37",
+        "osmid": "37",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1037",
+        "intersection_area_m2": 483.60073633411224,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1141347.0878437501,
+        "radiation_sum": 1141347.0878437501,
+        "radiation_point_count": 797.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1141347.0878437501,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 483.60073633411224,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.154124699999999,
+              38.77283319999999
+            ],
+            [
+              -9.1541856,
+              38.77284839999999
+            ],
+            [
+              -9.1540801,
+              38.773105699999995
+            ],
+            [
+              -9.1539184,
+              38.77306539999999
+            ],
+            [
+              -9.153952499999999,
+              38.77298219999999
+            ],
+            [
+              -9.153944599999999,
+              38.772980299999986
+            ],
+            [
+              -9.153992099999998,
+              38.7728646
+            ],
+            [
+              -9.1539995,
+              38.77286639999999
+            ],
+            [
+              -9.154035499999999,
+              38.77277860000001
+            ],
+            [
+              -9.154122199999998,
+              38.77280019999999
+            ],
+            [
+              -9.1541367,
+              38.77280379999999
+            ],
+            [
+              -9.154124699999999,
+              38.77283319999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/38",
+        "osmid": "38",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1038",
+        "intersection_area_m2": 503.4881674734263,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1057462.0822109375,
+        "radiation_sum": 1057462.0822109375,
+        "radiation_point_count": 833.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1057462.0822109375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 503.4881674734263,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.154281599999997,
+              38.77258599999999
+            ],
+            [
+              -9.1543395,
+              38.772600399999995
+            ],
+            [
+              -9.1543323,
+              38.772617899999986
+            ],
+            [
+              -9.1543479,
+              38.772621799999996
+            ],
+            [
+              -9.154335400000003,
+              38.77265219999999
+            ],
+            [
+              -9.154345,
+              38.7726546
+            ],
+            [
+              -9.154334199999997,
+              38.7726809
+            ],
+            [
+              -9.154404099999999,
+              38.7726984
+            ],
+            [
+              -9.1543934,
+              38.7727246
+            ],
+            [
+              -9.1544154,
+              38.77273009999998
+            ],
+            [
+              -9.154403,
+              38.77276029999999
+            ],
+            [
+              -9.154411100000003,
+              38.772762300000004
+            ],
+            [
+              -9.1543965,
+              38.77279789999999
+            ],
+            [
+              -9.1543736,
+              38.772792199999984
+            ],
+            [
+              -9.1543544,
+              38.772839000000005
+            ],
+            [
+              -9.1543151,
+              38.77282919999999
+            ],
+            [
+              -9.1543051,
+              38.77285359999999
+            ],
+            [
+              -9.1542138,
+              38.772830799999994
+            ],
+            [
+              -9.154211099999998,
+              38.772837300000006
+            ],
+            [
+              -9.1541921,
+              38.772832599999994
+            ],
+            [
+              -9.1541856,
+              38.77284839999999
+            ],
+            [
+              -9.154124699999999,
+              38.77283319999999
+            ],
+            [
+              -9.1541367,
+              38.77280379999999
+            ],
+            [
+              -9.154122199999998,
+              38.77280019999999
+            ],
+            [
+              -9.1542001,
+              38.772610099999994
+            ],
+            [
+              -9.1542167,
+              38.77261419999998
+            ],
+            [
+              -9.1542294,
+              38.77258309999999
+            ],
+            [
+              -9.154277899999999,
+              38.77259509999999
+            ],
+            [
+              -9.154281599999997,
+              38.77258599999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/39",
+        "osmid": "39",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1039",
+        "intersection_area_m2": 554.508292101786,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1140396.1570078125,
+        "radiation_sum": 1140396.1570078125,
+        "radiation_point_count": 913.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1140396.1570078125,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 554.508292101786,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1538287,
+              38.772357000000014
+            ],
+            [
+              -9.1537646,
+              38.772341
+            ],
+            [
+              -9.153776699999998,
+              38.7723115
+            ],
+            [
+              -9.1537587,
+              38.77230699999999
+            ],
+            [
+              -9.153835899999999,
+              38.7721188
+            ],
+            [
+              -9.153854199999998,
+              38.7721234
+            ],
+            [
+              -9.1538675,
+              38.77209119999999
+            ],
+            [
+              -9.153916,
+              38.77210329999999
+            ],
+            [
+              -9.153919799999999,
+              38.772093999999996
+            ],
+            [
+              -9.1539793,
+              38.7721088
+            ],
+            [
+              -9.153973,
+              38.772124
+            ],
+            [
+              -9.153986,
+              38.7721273
+            ],
+            [
+              -9.1539729,
+              38.77215929999999
+            ],
+            [
+              -9.1539862,
+              38.77216260000001
+            ],
+            [
+              -9.153975599999999,
+              38.7721885
+            ],
+            [
+              -9.1540461,
+              38.772206
+            ],
+            [
+              -9.1540403,
+              38.77222009999999
+            ],
+            [
+              -9.154094299999999,
+              38.77223349999999
+            ],
+            [
+              -9.1540558,
+              38.77232739999999
+            ],
+            [
+              -9.154009699999998,
+              38.772315899999995
+            ],
+            [
+              -9.153995599999998,
+              38.7723504
+            ],
+            [
+              -9.1539535,
+              38.7723399
+            ],
+            [
+              -9.1539424,
+              38.772366999999996
+            ],
+            [
+              -9.1538355,
+              38.7723404
+            ],
+            [
+              -9.1538287,
+              38.772357000000014
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/40",
+        "osmid": "40",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1040",
+        "intersection_area_m2": 409.8525790272137,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 938017.342109375,
+        "radiation_sum": 938017.342109375,
+        "radiation_point_count": 674.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 938017.342109375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 409.8525790272137,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1535263,
+              38.77264719999999
+            ],
+            [
+              -9.1535381,
+              38.772650099999986
+            ],
+            [
+              -9.1536087,
+              38.772478099999994
+            ],
+            [
+              -9.153597499999998,
+              38.7724753
+            ],
+            [
+              -9.1536128,
+              38.772437899999986
+            ],
+            [
+              -9.1537786,
+              38.7724792
+            ],
+            [
+              -9.1536784,
+              38.7727234
+            ],
+            [
+              -9.1535121,
+              38.772682
+            ],
+            [
+              -9.1535263,
+              38.77264719999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/41",
+        "osmid": "41",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1041",
+        "intersection_area_m2": 247.22561700996837,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 544955.57646875,
+        "radiation_sum": 544955.57646875,
+        "radiation_point_count": 409.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 544955.57646875,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 247.22561700996837,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.153674999999998,
+              38.7722861
+            ],
+            [
+              -9.1537587,
+              38.77230699999999
+            ],
+            [
+              -9.153776699999998,
+              38.7723115
+            ],
+            [
+              -9.1537646,
+              38.772341
+            ],
+            [
+              -9.1538287,
+              38.772357000000014
+            ],
+            [
+              -9.1537786,
+              38.7724792
+            ],
+            [
+              -9.1536128,
+              38.772437899999986
+            ],
+            [
+              -9.153674999999998,
+              38.7722861
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/42",
+        "osmid": "42",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1042",
+        "intersection_area_m2": 453.16461369242427,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1113595.6709375,
+        "radiation_sum": 1113595.6709375,
+        "radiation_point_count": 751.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1113595.6709375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 453.16461369242427,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1535732,
+              38.77297989999999
+            ],
+            [
+              -9.1534069,
+              38.7729385
+            ],
+            [
+              -9.1535121,
+              38.772682
+            ],
+            [
+              -9.1536784,
+              38.7727234
+            ],
+            [
+              -9.1535732,
+              38.77297989999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/43",
+        "osmid": "43",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1043",
+        "intersection_area_m2": 370.47287369398555,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 701489.609890625,
+        "radiation_sum": 701489.609890625,
+        "radiation_point_count": 613.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 701489.609890625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 370.47287369398555,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.152107,
+              38.77273029999999
+            ],
+            [
+              -9.1521894,
+              38.772750699999996
+            ],
+            [
+              -9.1521432,
+              38.77286389999998
+            ],
+            [
+              -9.1519169,
+              38.77280780000001
+            ],
+            [
+              -9.151989399999998,
+              38.77263009999999
+            ],
+            [
+              -9.152133399999999,
+              38.7726658
+            ],
+            [
+              -9.152107,
+              38.77273029999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/44",
+        "osmid": "44",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1044",
+        "intersection_area_m2": 236.53398952913864,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 563281.8781875,
+        "radiation_sum": 563281.8781875,
+        "radiation_point_count": 390.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 563281.8781875,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 236.53398952913864,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.151989399999998,
+              38.77263009999999
+            ],
+            [
+              -9.1520526,
+              38.7724753
+            ],
+            [
+              -9.1521965,
+              38.772511
+            ],
+            [
+              -9.152133399999999,
+              38.7726658
+            ],
+            [
+              -9.151989399999998,
+              38.77263009999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/45",
+        "osmid": "45",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1045",
+        "intersection_area_m2": 366.5435176578728,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 833995.7813515625,
+        "radiation_sum": 833995.7813515625,
+        "radiation_point_count": 604.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 833995.7813515625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 366.5435176578728,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1521965,
+              38.772511
+            ],
+            [
+              -9.1520526,
+              38.7724753
+            ],
+            [
+              -9.1521245,
+              38.7722992
+            ],
+            [
+              -9.1523504,
+              38.772355199999986
+            ],
+            [
+              -9.152304699999998,
+              38.7724672
+            ],
+            [
+              -9.152222699999998,
+              38.77244689999999
+            ],
+            [
+              -9.1521965,
+              38.772511
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/46",
+        "osmid": "46",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1046",
+        "intersection_area_m2": 234.33676148704424,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 419237.2501796875,
+        "radiation_sum": 419237.2501796875,
+        "radiation_point_count": 386.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 419237.2501796875,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 234.33676148704424,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1523504,
+              38.772355199999986
+            ],
+            [
+              -9.152547499999999,
+              38.772404099999996
+            ],
+            [
+              -9.1525018,
+              38.7725161
+            ],
+            [
+              -9.152304699999998,
+              38.7724672
+            ],
+            [
+              -9.1523504,
+              38.772355199999986
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/47",
+        "osmid": "47",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1047",
+        "intersection_area_m2": 369.2005635828266,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 838283.1327421875,
+        "radiation_sum": 838283.1327421875,
+        "radiation_point_count": 610.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 838283.1327421875,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 369.2005635828266,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1527039,
+              38.77263649999999
+            ],
+            [
+              -9.1525594,
+              38.77260069999999
+            ],
+            [
+              -9.152585399999998,
+              38.7725368
+            ],
+            [
+              -9.1525018,
+              38.7725161
+            ],
+            [
+              -9.152547499999999,
+              38.772404099999996
+            ],
+            [
+              -9.152775699999998,
+              38.7724607
+            ],
+            [
+              -9.1527039,
+              38.77263649999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/48",
+        "osmid": "48",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1048",
+        "intersection_area_m2": 239.06366887064294,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 585334.7185,
+        "radiation_sum": 585334.7185,
+        "radiation_point_count": 395.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 585334.7185,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 239.06366887064294,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1524958,
+              38.77275649999999
+            ],
+            [
+              -9.1525594,
+              38.77260069999999
+            ],
+            [
+              -9.1527039,
+              38.77263649999999
+            ],
+            [
+              -9.152640299999998,
+              38.772792399999986
+            ],
+            [
+              -9.1524958,
+              38.77275649999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/49",
+        "osmid": "49",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1049",
+        "intersection_area_m2": 371.1067151006221,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 735606.3704921876,
+        "radiation_sum": 735606.3704921876,
+        "radiation_point_count": 614.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 735606.3704921876,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 371.1067151006221,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1525678,
+              38.772970099999995
+            ],
+            [
+              -9.1523414,
+              38.77291389999999
+            ],
+            [
+              -9.1523877,
+              38.77280059999998
+            ],
+            [
+              -9.1524695,
+              38.772820900000006
+            ],
+            [
+              -9.1524958,
+              38.77275649999999
+            ],
+            [
+              -9.152640299999998,
+              38.772792399999986
+            ],
+            [
+              -9.1525678,
+              38.772970099999995
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/50",
+        "osmid": "50",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1050",
+        "intersection_area_m2": 370.7444376004047,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 841388.059640625,
+        "radiation_sum": 841388.059640625,
+        "radiation_point_count": 612.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 841388.059640625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 370.7444376004047,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1518443,
+              38.772984899999976
+            ],
+            [
+              -9.152071299999998,
+              38.77304109999999
+            ],
+            [
+              -9.152025099999998,
+              38.77315459999999
+            ],
+            [
+              -9.1519427,
+              38.7731342
+            ],
+            [
+              -9.1519168,
+              38.7731976
+            ],
+            [
+              -9.151772199999998,
+              38.7731618
+            ],
+            [
+              -9.1518443,
+              38.772984899999976
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/51",
+        "osmid": "51",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1051",
+        "intersection_area_m2": 237.23200376810422,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 583179.328375,
+        "radiation_sum": 583179.328375,
+        "radiation_point_count": 392.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 583179.328375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 237.23200376810422,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1517092,
+              38.7733164
+            ],
+            [
+              -9.151772199999998,
+              38.7731618
+            ],
+            [
+              -9.1519168,
+              38.7731976
+            ],
+            [
+              -9.1518538,
+              38.77335219999999
+            ],
+            [
+              -9.1517092,
+              38.7733164
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/52",
+        "osmid": "52",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1052",
+        "intersection_area_m2": 372.25901245316396,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 766199.57140625,
+        "radiation_sum": 766199.57140625,
+        "radiation_point_count": 611.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 766199.57140625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 372.25901245316396,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.151908999999998,
+              38.77343789999998
+            ],
+            [
+              -9.151863,
+              38.773551
+            ],
+            [
+              -9.151636499999999,
+              38.77349499999999
+            ],
+            [
+              -9.1517092,
+              38.7733164
+            ],
+            [
+              -9.1518538,
+              38.77335219999999
+            ],
+            [
+              -9.1518272,
+              38.77341759999999
+            ],
+            [
+              -9.151908999999998,
+              38.77343789999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/53",
+        "osmid": "53",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1053",
+        "intersection_area_m2": 235.89975493456654,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 451117.05615625,
+        "radiation_sum": 451117.05615625,
+        "radiation_point_count": 389.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 451117.05615625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 235.89975493456654,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.152059499999998,
+              38.773599699999984
+            ],
+            [
+              -9.151863,
+              38.773551
+            ],
+            [
+              -9.151908999999998,
+              38.77343789999998
+            ],
+            [
+              -9.1521056,
+              38.773486599999984
+            ],
+            [
+              -9.152059499999998,
+              38.773599699999984
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/54",
+        "osmid": "54",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1054",
+        "intersection_area_m2": 372.87641404951376,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 754922.39365625,
+        "radiation_sum": 754922.39365625,
+        "radiation_point_count": 613.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 754922.39365625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 372.87641404951376,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.152059499999998,
+              38.773599699999984
+            ],
+            [
+              -9.1521056,
+              38.773486599999984
+            ],
+            [
+              -9.152188799999998,
+              38.7735072
+            ],
+            [
+              -9.1522149,
+              38.773443199999996
+            ],
+            [
+              -9.152360099999997,
+              38.77347919999999
+            ],
+            [
+              -9.152288,
+              38.7736563
+            ],
+            [
+              -9.152059499999998,
+              38.773599699999984
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/55",
+        "osmid": "55",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1055",
+        "intersection_area_m2": 238.60140604129373,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 585779.227875,
+        "radiation_sum": 585779.227875,
+        "radiation_point_count": 394.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 585779.227875,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 238.60140604129373,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1522149,
+              38.773443199999996
+            ],
+            [
+              -9.152278,
+              38.7732884
+            ],
+            [
+              -9.152423199999998,
+              38.77332429999999
+            ],
+            [
+              -9.152360099999997,
+              38.77347919999999
+            ],
+            [
+              -9.1522149,
+              38.773443199999996
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/56",
+        "osmid": "56",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1056",
+        "intersection_area_m2": 369.61348279181516,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 855669.69303125,
+        "radiation_sum": 855669.69303125,
+        "radiation_point_count": 611.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 855669.69303125,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 369.61348279181516,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1524952,
+              38.7731476
+            ],
+            [
+              -9.152423199999998,
+              38.77332429999999
+            ],
+            [
+              -9.152278,
+              38.7732884
+            ],
+            [
+              -9.152303899999998,
+              38.77322469999999
+            ],
+            [
+              -9.1522228,
+              38.7732046
+            ],
+            [
+              -9.1522688,
+              38.77309160000001
+            ],
+            [
+              -9.1524952,
+              38.7731476
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/57",
+        "osmid": "57",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1057",
+        "intersection_area_m2": 1996.1700056317245,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 5404929.7555,
+        "radiation_sum": 5404929.7555,
+        "radiation_point_count": 3289.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 5404929.7555,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 1996.1700056317245,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1569944,
+              38.77607119999998
+            ],
+            [
+              -9.157079499999998,
+              38.776320899999995
+            ],
+            [
+              -9.1570876,
+              38.77635460000001
+            ],
+            [
+              -9.157083599999998,
+              38.7763799
+            ],
+            [
+              -9.157068699999998,
+              38.776404199999995
+            ],
+            [
+              -9.157041699999999,
+              38.776419999999995
+            ],
+            [
+              -9.157009199999997,
+              38.7764295
+            ],
+            [
+              -9.1569619,
+              38.77643260000001
+            ],
+            [
+              -9.156455,
+              38.7764253
+            ],
+            [
+              -9.1564592,
+              38.7762502
+            ],
+            [
+              -9.156463099999998,
+              38.77608490000001
+            ],
+            [
+              -9.1567753,
+              38.7760769
+            ],
+            [
+              -9.1569944,
+              38.77607119999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/61",
+        "osmid": "61",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1061",
+        "intersection_area_m2": 124.26560305683645,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 182856.72184375,
+        "radiation_sum": 182856.72184375,
+        "radiation_point_count": 203.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 182856.72184375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 124.26560305683645,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.152898599999999,
+              38.77472310000001
+            ],
+            [
+              -9.1528555,
+              38.774750999999995
+            ],
+            [
+              -9.1527585,
+              38.774660299999994
+            ],
+            [
+              -9.152842399999999,
+              38.774605799999996
+            ],
+            [
+              -9.1529393,
+              38.7746966
+            ],
+            [
+              -9.152898599999999,
+              38.77472310000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/62",
+        "osmid": "62",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1062",
+        "intersection_area_m2": 123.18186977450087,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 201118.711375,
+        "radiation_sum": 201118.711375,
+        "radiation_point_count": 203.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 201118.711375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 123.18186977450087,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1529393,
+              38.7746966
+            ],
+            [
+              -9.1529835,
+              38.7746679
+            ],
+            [
+              -9.153078399999998,
+              38.77475669999998
+            ],
+            [
+              -9.1529935,
+              38.774811899999996
+            ],
+            [
+              -9.152898599999999,
+              38.77472310000001
+            ],
+            [
+              -9.1529393,
+              38.7746966
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/63",
+        "osmid": "63",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1063",
+        "intersection_area_m2": 123.35449520521844,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 207750.69015625,
+        "radiation_sum": 207750.69015625,
+        "radiation_point_count": 204.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 207750.69015625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 123.35449520521844,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1529935,
+              38.774811899999996
+            ],
+            [
+              -9.153078399999998,
+              38.77475669999998
+            ],
+            [
+              -9.1531735,
+              38.7748456
+            ],
+            [
+              -9.1530886,
+              38.7749008
+            ],
+            [
+              -9.1529935,
+              38.774811899999996
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/64",
+        "osmid": "64",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1064",
+        "intersection_area_m2": 122.91209748219146,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 168064.639015625,
+        "radiation_sum": 168064.639015625,
+        "radiation_point_count": 201.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 168064.639015625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 122.91209748219146,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.153183199999999,
+              38.7749894
+            ],
+            [
+              -9.1530886,
+              38.7749008
+            ],
+            [
+              -9.1531735,
+              38.7748456
+            ],
+            [
+              -9.153268199999998,
+              38.774934200000004
+            ],
+            [
+              -9.153183199999999,
+              38.7749894
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/65",
+        "osmid": "65",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1065",
+        "intersection_area_m2": 121.72871093484056,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 184110.0953125,
+        "radiation_sum": 184110.0953125,
+        "radiation_point_count": 200.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 184110.0953125,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 121.72871093484056,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1524374,
+              38.77591969999999
+            ],
+            [
+              -9.1523675,
+              38.7758556
+            ],
+            [
+              -9.152481999999997,
+              38.775779799999995
+            ],
+            [
+              -9.1525518,
+              38.77584379999999
+            ],
+            [
+              -9.1524374,
+              38.77591969999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/66",
+        "osmid": "66",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1066",
+        "intersection_area_m2": 120.87717554136132,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 233059.40540625,
+        "radiation_sum": 233059.40540625,
+        "radiation_point_count": 201.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 233059.40540625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 120.87717554136132,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1526655,
+              38.775768400000004
+            ],
+            [
+              -9.1525518,
+              38.77584379999999
+            ],
+            [
+              -9.152481999999997,
+              38.775779799999995
+            ],
+            [
+              -9.1525956,
+              38.77570440000001
+            ],
+            [
+              -9.1526655,
+              38.775768400000004
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/67",
+        "osmid": "67",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1067",
+        "intersection_area_m2": 120.0414937883839,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 231558.52409375,
+        "radiation_sum": 231558.52409375,
+        "radiation_point_count": 197.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 231558.52409375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 120.0414937883839,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1526655,
+              38.775768400000004
+            ],
+            [
+              -9.1525956,
+              38.77570440000001
+            ],
+            [
+              -9.152708599999999,
+              38.77562960000001
+            ],
+            [
+              -9.152778399999999,
+              38.77569359999999
+            ],
+            [
+              -9.1526655,
+              38.775768400000004
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/68",
+        "osmid": "68",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1068",
+        "intersection_area_m2": 121.04616705044249,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 235315.61106250001,
+        "radiation_sum": 235315.61106250001,
+        "radiation_point_count": 199.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 235315.61106250001,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 121.04616705044249,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.152892299999998,
+              38.77561809999999
+            ],
+            [
+              -9.152778399999999,
+              38.77569359999999
+            ],
+            [
+              -9.152708599999999,
+              38.77562960000001
+            ],
+            [
+              -9.1528224,
+              38.7755541
+            ],
+            [
+              -9.1528599,
+              38.775588500000005
+            ],
+            [
+              -9.152892299999998,
+              38.77561809999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/69",
+        "osmid": "69",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1069",
+        "intersection_area_m2": 125.47070361249024,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 251390.657828125,
+        "radiation_sum": 251390.657828125,
+        "radiation_point_count": 208.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 251390.657828125,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 125.47070361249024,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.152974299999999,
+              38.7755126
+            ],
+            [
+              -9.1528599,
+              38.775588500000005
+            ],
+            [
+              -9.1528224,
+              38.7755541
+            ],
+            [
+              -9.1527879,
+              38.77552239999999
+            ],
+            [
+              -9.152902299999997,
+              38.77544659999999
+            ],
+            [
+              -9.1529388,
+              38.7754801
+            ],
+            [
+              -9.152974299999999,
+              38.7755126
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/70",
+        "osmid": "70",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1070",
+        "intersection_area_m2": 116.75256223313664,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 250564.03903125,
+        "radiation_sum": 250564.03903125,
+        "radiation_point_count": 194.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 250564.03903125,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 116.75256223313664,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1530513,
+              38.775405500000005
+            ],
+            [
+              -9.1529388,
+              38.7754801
+            ],
+            [
+              -9.152902299999997,
+              38.77544659999999
+            ],
+            [
+              -9.1528707,
+              38.775417600000004
+            ],
+            [
+              -9.1529831,
+              38.77534300000001
+            ],
+            [
+              -9.1530201,
+              38.775376899999976
+            ],
+            [
+              -9.1530513,
+              38.775405500000005
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/71",
+        "osmid": "71",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1071",
+        "intersection_area_m2": 124.10312756987287,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 262935.11865625,
+        "radiation_sum": 262935.11865625,
+        "radiation_point_count": 205.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 262935.11865625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 124.10312756987287,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1531341,
+              38.775301399999975
+            ],
+            [
+              -9.1530201,
+              38.775376899999976
+            ],
+            [
+              -9.1529831,
+              38.77534300000001
+            ],
+            [
+              -9.1529486,
+              38.775311399999985
+            ],
+            [
+              -9.1530626,
+              38.77523579999999
+            ],
+            [
+              -9.153101200000002,
+              38.7752712
+            ],
+            [
+              -9.1531341,
+              38.775301399999975
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/72",
+        "osmid": "72",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1072",
+        "intersection_area_m2": 130.9085264508188,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 281591.344,
+        "radiation_sum": 281591.344,
+        "radiation_point_count": 217.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 281591.344,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 130.9085264508188,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1532159,
+              38.7751952
+            ],
+            [
+              -9.153101200000002,
+              38.7752712
+            ],
+            [
+              -9.1530626,
+              38.77523579999999
+            ],
+            [
+              -9.1530263,
+              38.775202499999985
+            ],
+            [
+              -9.153141,
+              38.775126399999984
+            ],
+            [
+              -9.1531831,
+              38.775165099999995
+            ],
+            [
+              -9.1532159,
+              38.7751952
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/73",
+        "osmid": "73",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1073",
+        "intersection_area_m2": 118.41081365152584,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 249276.57103125,
+        "radiation_sum": 249276.57103125,
+        "radiation_point_count": 193.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 249276.57103125,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 118.41081365152584,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1531831,
+              38.775165099999995
+            ],
+            [
+              -9.153141,
+              38.775126399999984
+            ],
+            [
+              -9.153112000000002,
+              38.77509989999999
+            ],
+            [
+              -9.1532214,
+              38.7750274
+            ],
+            [
+              -9.1532925,
+              38.775092599999994
+            ],
+            [
+              -9.1531831,
+              38.775165099999995
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/74",
+        "osmid": "74",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1074",
+        "intersection_area_m2": 112.27774131099156,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 131818.98642187502,
+        "radiation_sum": 131818.98642187502,
+        "radiation_point_count": 181.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 131818.98642187502,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 112.27774131099156,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1529176,
+              38.77640329999999
+            ],
+            [
+              -9.1529116,
+              38.77646339999999
+            ],
+            [
+              -9.1527192,
+              38.7764517
+            ],
+            [
+              -9.1527252,
+              38.776391499999995
+            ],
+            [
+              -9.1527841,
+              38.77639509999999
+            ],
+            [
+              -9.152837099999998,
+              38.77639830000001
+            ],
+            [
+              -9.1529176,
+              38.77640329999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/75",
+        "osmid": "75",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1075",
+        "intersection_area_m2": 57.314386881618,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 139452.1359375,
+        "radiation_sum": 139452.1359375,
+        "radiation_point_count": 97.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 139452.1359375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 57.314386881618,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.152841499999997,
+              38.7763549
+            ],
+            [
+              -9.152837099999998,
+              38.77639830000001
+            ],
+            [
+              -9.1527841,
+              38.77639509999999
+            ],
+            [
+              -9.1527932,
+              38.776304800000005
+            ],
+            [
+              -9.1528702,
+              38.776309499999996
+            ],
+            [
+              -9.152865499999999,
+              38.776356299999996
+            ],
+            [
+              -9.152841499999997,
+              38.7763549
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/76",
+        "osmid": "76",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1076",
+        "intersection_area_m2": 110.62788457108744,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 235285.17587500002,
+        "radiation_sum": 235285.17587500002,
+        "radiation_point_count": 181.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 235285.17587500002,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 110.62788457108744,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1528702,
+              38.776309499999996
+            ],
+            [
+              -9.1527932,
+              38.776304800000005
+            ],
+            [
+              -9.1528081,
+              38.7761567
+            ],
+            [
+              -9.1528851,
+              38.77616139999999
+            ],
+            [
+              -9.152880399999999,
+              38.7762085
+            ],
+            [
+              -9.152876399999998,
+              38.7762482
+            ],
+            [
+              -9.1528702,
+              38.776309499999996
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/77",
+        "osmid": "77",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1077",
+        "intersection_area_m2": 58.5967501938149,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 67786.96169531251,
+        "radiation_sum": 67786.96169531251,
+        "radiation_point_count": 99.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 67786.96169531251,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 58.5967501938149,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1529303,
+              38.776274900000004
+            ],
+            [
+              -9.152932599999998,
+              38.7762517
+            ],
+            [
+              -9.152876399999998,
+              38.7762482
+            ],
+            [
+              -9.152880399999999,
+              38.7762085
+            ],
+            [
+              -9.1529971,
+              38.77621559999999
+            ],
+            [
+              -9.1529907,
+              38.7762786
+            ],
+            [
+              -9.1529303,
+              38.776274900000004
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/78",
+        "osmid": "78",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1078",
+        "intersection_area_m2": 119.07112961905189,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 164543.363234375,
+        "radiation_sum": 164543.363234375,
+        "radiation_point_count": 196.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 164543.363234375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 119.07112961905189,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1531856,
+              38.77629049999999
+            ],
+            [
+              -9.1529907,
+              38.7762786
+            ],
+            [
+              -9.1529971,
+              38.77621559999999
+            ],
+            [
+              -9.1530578,
+              38.776219299999994
+            ],
+            [
+              -9.153110399999997,
+              38.7762225
+            ],
+            [
+              -9.1531919,
+              38.77622749999998
+            ],
+            [
+              -9.1531856,
+              38.77629049999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/79",
+        "osmid": "79",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1079",
+        "intersection_area_m2": 168.56033444445646,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 342660.32071875,
+        "radiation_sum": 342660.32071875,
+        "radiation_point_count": 276.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 342660.32071875,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 168.56033444445646,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.153138999999998,
+              38.77618069999999
+            ],
+            [
+              -9.153114799999999,
+              38.77617919999999
+            ],
+            [
+              -9.153110399999997,
+              38.7762225
+            ],
+            [
+              -9.1530578,
+              38.776219299999994
+            ],
+            [
+              -9.1530819,
+              38.7759794
+            ],
+            [
+              -9.1531587,
+              38.77598409999999
+            ],
+            [
+              -9.153153799999998,
+              38.7760331
+            ],
+            [
+              -9.1531499,
+              38.7760717
+            ],
+            [
+              -9.153138999999998,
+              38.77618069999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/80",
+        "osmid": "80",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1080",
+        "intersection_area_m2": 56.743204455406456,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 57873.2223359375,
+        "radiation_sum": 57873.2223359375,
+        "radiation_point_count": 93.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 57873.2223359375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 56.743204455406456,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.153206,
+              38.77609619999999
+            ],
+            [
+              -9.153208099999999,
+              38.7760752
+            ],
+            [
+              -9.1531499,
+              38.7760717
+            ],
+            [
+              -9.153153799999998,
+              38.7760331
+            ],
+            [
+              -9.153272499999998,
+              38.7760403
+            ],
+            [
+              -9.1532665,
+              38.77609989999999
+            ],
+            [
+              -9.153206,
+              38.77609619999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/81",
+        "osmid": "81",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1081",
+        "intersection_area_m2": 55.444514960964774,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 52518.1471171875,
+        "radiation_sum": 52518.1471171875,
+        "radiation_point_count": 91.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 52518.1471171875,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 55.444514960964774,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.153477899999999,
+              38.77593220000001
+            ],
+            [
+              -9.153480099999998,
+              38.77590999999999
+            ],
+            [
+              -9.1534227,
+              38.7759065
+            ],
+            [
+              -9.1534265,
+              38.77586919999999
+            ],
+            [
+              -9.153543899999999,
+              38.77587629999999
+            ],
+            [
+              -9.153537899999998,
+              38.77593590000001
+            ],
+            [
+              -9.153477899999999,
+              38.77593220000001
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/82",
+        "osmid": "82",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1082",
+        "intersection_area_m2": 168.7324221607141,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 267729.331890625,
+        "radiation_sum": 267729.331890625,
+        "radiation_point_count": 276.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 267729.331890625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 168.7324221607141,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1536799,
+              38.77588459999998
+            ],
+            [
+              -9.153736,
+              38.775888
+            ],
+            [
+              -9.1537301,
+              38.77594759999999
+            ],
+            [
+              -9.153537899999998,
+              38.77593590000001
+            ],
+            [
+              -9.153543899999999,
+              38.77587629999999
+            ],
+            [
+              -9.1536041,
+              38.775879999999994
+            ],
+            [
+              -9.153612,
+              38.7758015
+            ],
+            [
+              -9.1536878,
+              38.77580609999998
+            ],
+            [
+              -9.1536799,
+              38.77588459999998
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/83",
+        "osmid": "83",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1083",
+        "intersection_area_m2": 168.60523585324364,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 283567.41364843753,
+        "radiation_sum": 283567.41364843753,
+        "radiation_point_count": 278.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 283567.41364843753,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 168.60523585324364,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1534646,
+              38.776052099999994
+            ],
+            [
+              -9.1534586,
+              38.77611160000001
+            ],
+            [
+              -9.1532665,
+              38.77609989999999
+            ],
+            [
+              -9.153272499999998,
+              38.7760403
+            ],
+            [
+              -9.1533327,
+              38.776043999999985
+            ],
+            [
+              -9.1533406,
+              38.77596549999999
+            ],
+            [
+              -9.1534163,
+              38.775970099999995
+            ],
+            [
+              -9.1534084,
+              38.7760486
+            ],
+            [
+              -9.1534646,
+              38.776052099999994
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/84",
+        "osmid": "84",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1084",
+        "intersection_area_m2": 111.8848157134316,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 235455.580125,
+        "radiation_sum": 235455.580125,
+        "radiation_point_count": 184.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 235455.580125,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 111.8848157134316,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1534163,
+              38.775970099999995
+            ],
+            [
+              -9.1533406,
+              38.77596549999999
+            ],
+            [
+              -9.1533559,
+              38.77581309999999
+            ],
+            [
+              -9.1534316,
+              38.7758178
+            ],
+            [
+              -9.1534265,
+              38.77586919999999
+            ],
+            [
+              -9.1534227,
+              38.7759065
+            ],
+            [
+              -9.1534163,
+              38.775970099999995
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/85",
+        "osmid": "85",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1085",
+        "intersection_area_m2": 109.86903584095278,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 251359.76537500002,
+        "radiation_sum": 251359.76537500002,
+        "radiation_point_count": 180.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 251359.76537500002,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 109.86903584095278,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1534316,
+              38.7758178
+            ],
+            [
+              -9.1533559,
+              38.77581309999999
+            ],
+            [
+              -9.1533709,
+              38.77566349999999
+            ],
+            [
+              -9.1534466,
+              38.77566809999999
+            ],
+            [
+              -9.1534316,
+              38.7758178
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/86",
+        "osmid": "86",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1086",
+        "intersection_area_m2": 451.4562124773123,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 831375.4134062501,
+        "radiation_sum": 831375.4134062501,
+        "radiation_point_count": 744.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 831375.4134062501,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 451.4562124773123,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1526971,
+              38.7737482
+            ],
+            [
+              -9.152516000000002,
+              38.77370399999999
+            ],
+            [
+              -9.1526104,
+              38.773469
+            ],
+            [
+              -9.1527919,
+              38.7735121
+            ],
+            [
+              -9.1526971,
+              38.7737482
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/87",
+        "osmid": "87",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1087",
+        "intersection_area_m2": 509.8186953937832,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1115532.40621875,
+        "radiation_sum": 1115532.40621875,
+        "radiation_point_count": 841.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1115532.40621875,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 509.8186953937832,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1527173,
+              38.77320289999999
+            ],
+            [
+              -9.1528595,
+              38.77323679999999
+            ],
+            [
+              -9.152898699999998,
+              38.77324629999999
+            ],
+            [
+              -9.1527919,
+              38.7735121
+            ],
+            [
+              -9.1526104,
+              38.773469
+            ],
+            [
+              -9.1527173,
+              38.77320289999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/88",
+        "osmid": "88",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1088",
+        "intersection_area_m2": 499.23426278892276,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1056202.90434375,
+        "radiation_sum": 1056202.90434375,
+        "radiation_point_count": 824.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1056202.90434375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 499.23426278892276,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1528951,
+              38.772771399999996
+            ],
+            [
+              -9.153074799999999,
+              38.7728158
+            ],
+            [
+              -9.152967999999998,
+              38.77307829999999
+            ],
+            [
+              -9.152926,
+              38.77306699999999
+            ],
+            [
+              -9.1527886,
+              38.7730342
+            ],
+            [
+              -9.1528951,
+              38.772771399999996
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/89",
+        "osmid": "89",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1089",
+        "intersection_area_m2": 471.0500449089885,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1043132.6328125,
+        "radiation_sum": 1043132.6328125,
+        "radiation_point_count": 778.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1043132.6328125,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 471.0500449089885,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.152995699999998,
+              38.772524299999986
+            ],
+            [
+              -9.153175399999999,
+              38.7725688
+            ],
+            [
+              -9.153074799999999,
+              38.7728158
+            ],
+            [
+              -9.1528951,
+              38.772771399999996
+            ],
+            [
+              -9.152995699999998,
+              38.772524299999986
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/91",
+        "osmid": "91",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1091",
+        "intersection_area_m2": 828.1598578775572,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 2256728.2558750003,
+        "radiation_sum": 2256728.2558750003,
+        "radiation_point_count": 1367.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 2256728.2558750003,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 828.1598578775572,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1569258,
+              38.7758886
+            ],
+            [
+              -9.156396299999999,
+              38.77590599999999
+            ],
+            [
+              -9.1563683,
+              38.7757399
+            ],
+            [
+              -9.156863899999998,
+              38.775722499999986
+            ],
+            [
+              -9.1569258,
+              38.7758886
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/95",
+        "osmid": "95",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1095",
+        "intersection_area_m2": 703.5313294888409,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 1909926.74325,
+        "radiation_sum": 1909926.74325,
+        "radiation_point_count": 1162.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 1909926.74325,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 703.5313294888409,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1563683,
+              38.7757399
+            ],
+            [
+              -9.156396299999999,
+              38.77590599999999
+            ],
+            [
+              -9.156317899999998,
+              38.7759223
+            ],
+            [
+              -9.156256299999999,
+              38.7759632
+            ],
+            [
+              -9.1562162,
+              38.7760484
+            ],
+            [
+              -9.1560108,
+              38.77602709999998
+            ],
+            [
+              -9.156018699999999,
+              38.775979199999995
+            ],
+            [
+              -9.1560387,
+              38.7759064
+            ],
+            [
+              -9.156126799999997,
+              38.7758137
+            ],
+            [
+              -9.1562334,
+              38.7757567
+            ],
+            [
+              -9.1563683,
+              38.7757399
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/97",
+        "osmid": "97",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1097",
+        "intersection_area_m2": 15.575723734124185,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 36320.829625,
+        "radiation_sum": 36320.829625,
+        "radiation_point_count": 26.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 36320.829625,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 15.575723734124185,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.156740400000002,
+              38.773836199999984
+            ],
+            [
+              -9.1566952,
+              38.77383759999998
+            ],
+            [
+              -9.1566933,
+              38.77380200000001
+            ],
+            [
+              -9.1567386,
+              38.77380049999999
+            ],
+            [
+              -9.156740400000002,
+              38.773836199999984
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/98",
+        "osmid": "98",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1098",
+        "intersection_area_m2": 10.045666343431867,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 20000.4769375,
+        "radiation_sum": 20000.4769375,
+        "radiation_point_count": 18.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 20000.4769375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 10.045666343431867,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1568925,
+              38.773832
+            ],
+            [
+              -9.156844,
+              38.7738355
+            ],
+            [
+              -9.1568414,
+              38.7738142
+            ],
+            [
+              -9.1568899,
+              38.77381069999999
+            ],
+            [
+              -9.1568925,
+              38.773832
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/99",
+        "osmid": "99",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1099",
+        "intersection_area_m2": 493.172912851294,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 975541.649109375,
+        "radiation_sum": 975541.649109375,
+        "radiation_point_count": 813.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 975541.649109375,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 493.172912851294,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.155730899999998,
+              38.77268409999999
+            ],
+            [
+              -9.1556546,
+              38.77238379999999
+            ],
+            [
+              -9.1558185,
+              38.7723585
+            ],
+            [
+              -9.155894899999998,
+              38.772658699999994
+            ],
+            [
+              -9.155730899999998,
+              38.77268409999999
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/100",
+        "osmid": "100",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1100",
+        "intersection_area_m2": 68.06694684477773,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 130285.482875,
+        "radiation_sum": 130285.482875,
+        "radiation_point_count": 113.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 130285.482875,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 68.06694684477773,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1540693,
+              38.7754981
+            ],
+            [
+              -9.154012,
+              38.7754698
+            ],
+            [
+              -9.154092,
+              38.77537139999999
+            ],
+            [
+              -9.1541341,
+              38.775392199999985
+            ],
+            [
+              -9.1541021,
+              38.77543159999998
+            ],
+            [
+              -9.1541172,
+              38.77543909999999
+            ],
+            [
+              -9.1540693,
+              38.7754981
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "Alta_Lisboa",
+        "osm_uid": "cea/101",
+        "osmid": "101",
+        "element_type": "cea_zone",
+        "building": "yes",
+        "cea_name": "B1101",
+        "intersection_area_m2": 31.893622505005403,
+        "is_residential": true,
+        "residential_source": "cea",
+        "radiation_sum_kwh_year": 42033.007125000004,
+        "radiation_sum": 42033.007125000004,
+        "radiation_point_count": 50.0,
+        "use_type1": "MULTI_RES",
+        "use_type2": "NONE",
+        "use_type3": "NONE",
+        "resi_type": null,
+        "comparison_status": "missing_in_ucea",
+        "validation_radiation_kwh_year": 42033.007125000004,
+        "ucea_radiation_kwh_year": null,
+        "workflow0_radiation_kwh_year": null,
+        "validation_area_m2": 31.893622505005403,
+        "ucea_roofs_top_m2": null,
+        "err_ucea_minus_validation_kwh_year": null,
+        "err_ucea_abs_kwh_year": null,
+        "err_ucea_pct_of_validation": null,
+        "err_ucea_area_minus_validation_m2": null,
+        "err_ucea_area_pct_of_validation": null,
+        "err_workflow0_minus_validation_kwh_year": null,
+        "err_workflow0_abs_kwh_year": null,
+        "err_workflow0_pct_of_validation": null
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.1538135,
+              38.774492399999986
+            ],
+            [
+              -9.153762100000002,
+              38.774490699999994
+            ],
+            [
+              -9.1537204,
+              38.77448939999999
+            ],
+            [
+              -9.153722299999998,
+              38.77445389999999
+            ],
+            [
+              -9.1538154,
+              38.77445689999999
+            ],
+            [
+              -9.1538135,
+              38.774492399999986
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -206,5 +206,5 @@ pd.DataFrame({"Xdir": ..., "Ydir": ..., "Zdir": ..., "TYPE": ...})
 - The default hardcoded roof in `ucea.py` is intentionally planar (one corrected vertex Z) to avoid OCC null-face assertions in custom roof loading.
 - `ucea.py` runs `workflow_comparison.py` with `--clean-first` to avoid stale `solar-radiation` / `potentials/solar` artefacts leaking into metrics.
 - `ucea.py` passes `--harmonise-pv-azimuth-convention` to `workflow_comparison.py` for PV-convention diagnostics while keeping snapshot/3D metadata restored.
-- `ucea.py` passes `--undo-pv-azimuth-harmonisation` to `workflow_metrics_report.py` so WF panel-direction metrics reflect physical roof orientation after harmonised PV runs.
+- `ucea.py` does not force `--undo-pv-azimuth-harmonisation` when running `workflow_metrics_report.py`; pass that flag manually only when you explicitly want the 180° convention rotation in reported direction bins.
 - Keep Matplotlib keyword tokens API-valid (example: `loc="lower center"`).

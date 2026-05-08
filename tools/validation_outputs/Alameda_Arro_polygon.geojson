@@ -6,8 +6,8 @@
       "type": "Feature",
       "properties": {
         "area_id": "Alameda_Arro",
-        "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Alameda_Arro.tif",
-        "source_crs": "EPSG:3857",
+        "raster_path": "C:\\Documents\\Doutoramento\\CEA Projects\\global_anual_Lisboa-5_tiles\\global_anual_Alameda_Arro_utm29n_aligned_from_georef.tif",
+        "source_crs": "EPSG:32629",
         "crs": "EPSG:4326",
         "ucea_compatible": true
       },
