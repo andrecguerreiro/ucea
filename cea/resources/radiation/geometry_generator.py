@@ -15,6 +15,8 @@ from itertools import repeat
 import geopandas as gpd
 import numpy as np
 import pandas as pd
+from shapely.geometry import Polygon as ShapelyPolygon
+from shapely.ops import triangulate as shapely_triangulate
 import py4design.py3dmodel.calculate as calculate
 import py4design.py3dmodel.construct as construct
 import py4design.py3dmodel.fetch as fetch
@@ -312,47 +314,182 @@ def _project_points_to_best_fit_plane(points: list[tuple[float, float, float]]) 
     return [tuple(float(v) for v in point) for point in projected]
 
 
-def _polygon_to_occ_face(poly):
-    """Convert a shapely Polygon with 3D coords to OCC face. Returns None if invalid."""
-    coords = list(poly.exterior.coords)
-    if len(coords) < 4:
+def _best_fit_plane_frame(points: list[tuple[float, float, float]]) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray] | None:
+    """
+    Return a best-fit plane frame (centroid, axis_u, axis_v, normal) for 3D points.
+    """
+    if len(points) < 3:
+        return None
+    points_array = np.asarray(points, dtype=float)
+    if points_array.ndim != 2 or points_array.shape[1] != 3:
+        return None
+    centroid = points_array.mean(axis=0)
+    centered = points_array - centroid
+    _, singular_values, vh = np.linalg.svd(centered, full_matrices=False)
+    if len(singular_values) < 3:
         return None
 
-    # Require XYZ input for roof tilt/orientation
-    if len(coords[0]) < 3:
+    axis_u = vh[0]
+    normal = vh[-1]
+    axis_v = np.cross(normal, axis_u)
+
+    norm_u = float(np.linalg.norm(axis_u))
+    norm_v = float(np.linalg.norm(axis_v))
+    norm_n = float(np.linalg.norm(normal))
+    if norm_u <= 1e-12 or norm_v <= 1e-12 or norm_n <= 1e-12:
         return None
+    axis_u = axis_u / norm_u
+    axis_v = axis_v / norm_v
+    normal = normal / norm_n
+    return centroid, axis_u, axis_v, normal
 
-    raw_points = [(float(x), float(y), float(z)) for x, y, z, *_ in coords]
 
-    # Remove ring closure point before geometric processing.
-    if raw_points[0] == raw_points[-1]:
-        raw_points = raw_points[:-1]
-    if len(raw_points) < 3:
+def _remove_duplicate_vertices(points: list[tuple[float, float, float]], tol: float = 1e-7) -> list[tuple[float, float, float]]:
+    """
+    Remove consecutive duplicate points (and repeated closure point) from an xyz ring.
+    """
+    if not points:
+        return []
+    deduped: list[tuple[float, float, float]] = []
+    for point in points:
+        if not deduped:
+            deduped.append(point)
+            continue
+        prev = deduped[-1]
+        if (
+            abs(point[0] - prev[0]) <= tol
+            and abs(point[1] - prev[1]) <= tol
+            and abs(point[2] - prev[2]) <= tol
+        ):
+            continue
+        deduped.append(point)
+    if len(deduped) >= 2:
+        first, last = deduped[0], deduped[-1]
+        if (
+            abs(first[0] - last[0]) <= tol
+            and abs(first[1] - last[1]) <= tol
+            and abs(first[2] - last[2]) <= tol
+        ):
+            deduped = deduped[:-1]
+    return deduped
+
+
+def _build_occ_face_from_points(points_xyz: list[tuple[float, float, float]]):
+    """
+    Build one OCC face from ordered xyz ring vertices (without closure point).
+    Returns None if OCC rejects geometry.
+    """
+    if len(points_xyz) < 3:
         return None
-
-    planar_points = _project_points_to_best_fit_plane(raw_points)
-    if planar_points is None or len(planar_points) < 3:
-        return None
-
-    points = planar_points + [planar_points[0]]
+    closed = list(points_xyz) + [points_xyz[0]]
     try:
-        face = construct.make_polygon(points)
+        face = construct.make_polygon(closed)
     except Exception:
         return None
 
-    # Ensure normal points upward; flip winding if needed
     try:
         n = calculate.face_normal(face)
     except Exception:
         return None
     if n[2] < 0:
-        points = list(reversed(points))
+        closed = list(reversed(closed))
         try:
-            face = construct.make_polygon(points)
+            face = construct.make_polygon(closed)
         except Exception:
             return None
 
+    try:
+        area = float(calculate.face_area(face))
+    except Exception:
+        return None
+    if not math.isfinite(area) or area <= 1e-9:
+        return None
     return face
+
+
+def _triangulate_complex_roof(points_xyz: list[tuple[float, float, float]]) -> list:
+    """
+    Fallback for complex / OCC-failing roof polygons:
+    triangulate in a local 2D best-fit plane and lift triangles back to 3D.
+    """
+    frame = _best_fit_plane_frame(points_xyz)
+    if frame is None:
+        return []
+    centroid, axis_u, axis_v, _ = frame
+
+    def to_uv(point_xyz):
+        p = np.asarray(point_xyz, dtype=float) - centroid
+        return float(np.dot(p, axis_u)), float(np.dot(p, axis_v))
+
+    uv_points = [to_uv(point) for point in points_xyz]
+    polygon_2d = ShapelyPolygon(uv_points)
+    if polygon_2d.is_empty or polygon_2d.area <= 1e-9:
+        return []
+    if not polygon_2d.is_valid:
+        polygon_2d = polygon_2d.buffer(0)
+    if polygon_2d.is_empty or polygon_2d.area <= 1e-9:
+        return []
+
+    faces = []
+    for tri in shapely_triangulate(polygon_2d):
+        if tri.is_empty or tri.area <= 1e-9:
+            continue
+        # Keep only triangles truly inside the source polygon.
+        intersection_area = tri.intersection(polygon_2d).area
+        if intersection_area <= 1e-9:
+            continue
+        if intersection_area / tri.area < 0.99:
+            continue
+
+        tri_uv = list(tri.exterior.coords)
+        if len(tri_uv) < 4:
+            continue
+        tri_uv = tri_uv[:-1]  # remove closure
+        tri_xyz = []
+        for u, v in tri_uv:
+            xyz = centroid + axis_u * float(u) + axis_v * float(v)
+            tri_xyz.append((float(xyz[0]), float(xyz[1]), float(xyz[2])))
+
+        face = _build_occ_face_from_points(tri_xyz)
+        if face is not None:
+            faces.append(face)
+
+    return faces
+
+
+def _polygon_to_occ_faces(poly):
+    """
+    Convert a shapely Polygon with 3D coords to one or more OCC faces.
+    Returns (faces, mode) where mode is one of: direct, triangulated, skipped.
+    """
+    coords = list(poly.exterior.coords)
+    if len(coords) < 4:
+        return [], "skipped"
+
+    # Require XYZ input for roof tilt/orientation
+    if len(coords[0]) < 3:
+        return [], "skipped"
+
+    raw_points = [(float(x), float(y), float(z)) for x, y, z, *_ in coords]
+
+    # Remove ring closure point before geometric processing.
+    raw_points = _remove_duplicate_vertices(raw_points)
+    if len(raw_points) < 3:
+        return [], "skipped"
+
+    planar_points = _project_points_to_best_fit_plane(raw_points)
+    if planar_points is None or len(planar_points) < 3:
+        return [], "skipped"
+
+    face = _build_occ_face_from_points(planar_points)
+    if face is not None:
+        return [face], "direct"
+
+    triangles = _triangulate_complex_roof(planar_points)
+    if triangles:
+        return triangles, "triangulated"
+
+    return [], "skipped"
 
 def load_custom_roof_faces(config, target_crs):
     """
@@ -385,6 +522,9 @@ def load_custom_roof_faces(config, target_crs):
 
     roofs_by_building = defaultdict(list)
     skipped = 0
+    loaded_direct = 0
+    loaded_triangulated = 0
+    triangulated_source_polygons = 0
 
     for _, row in roof_gdf.iterrows():
         bname = row["building"]
@@ -393,13 +533,25 @@ def load_custom_roof_faces(config, target_crs):
             continue
 
         for poly in _iter_polygons(row.geometry):
-            face = _polygon_to_occ_face(poly)
-            if face is None:
+            faces, mode = _polygon_to_occ_faces(poly)
+            if not faces:
                 skipped += 1
                 continue
-            roofs_by_building[str(bname)].append(face)
+            if mode == "triangulated":
+                triangulated_source_polygons += 1
+                loaded_triangulated += len(faces)
+            else:
+                loaded_direct += len(faces)
+            roofs_by_building[str(bname)].extend(faces)
 
-    print(f"Loaded custom roofs for {len(roofs_by_building)} buildings. Skipped {skipped} faces.")
+    print(
+        "Loaded custom roofs for "
+        f"{len(roofs_by_building)} buildings. "
+        f"Direct faces: {loaded_direct}. "
+        f"Triangulated faces: {loaded_triangulated} "
+        f"(from {triangulated_source_polygons} source polygons). "
+        f"Skipped source polygons: {skipped}."
+    )
     return dict(roofs_by_building)
 
 

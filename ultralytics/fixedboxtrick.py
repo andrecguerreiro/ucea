@@ -1,4 +1,3 @@
-import argparse
 import numpy as np
 from ultralytics import YOLO
 from owslib.wmts import WebMapTileService
@@ -13,6 +12,7 @@ import json
 import gradio as gr
 import os
 import hashlib
+import argparse
 import time
 import rasterio
 from rasterio.transform import from_bounds
@@ -39,10 +39,10 @@ def draw_azimuths_on_satellite(
     building, one arrow per active roof face pointing in the azimuth direction.
  
     Face colours match traveler_copy_2.py:
-        top    → red
-        right  → blue
-        bottom → green
-        left   → yellow
+        top    â†’ red
+        right  â†’ blue
+        bottom â†’ green
+        left   â†’ yellow
     """
     BASE_AZ = {
         "top":    math.pi / 2,
@@ -86,8 +86,8 @@ def draw_azimuths_on_satellite(
  
             azimuth_rad = (ori - 0.5) * (math.pi / 2) + BASE_AZ[face]
  
-            # In image space: x → East, y → South (flipped vs. math convention)
-            # so dy uses -sin to convert from math → image coordinates
+            # In image space: x â†’ East, y â†’ South (flipped vs. math convention)
+            # so dy uses -sin to convert from math â†’ image coordinates
             dx = math.cos(azimuth_rad)
             dy = -math.sin(azimuth_rad)   # flip y axis for pixel space
  
@@ -119,22 +119,23 @@ def get_tile_indices(xmin, ymin, xmax, ymax, matrix):
 
 
 def _retry_delay_seconds(attempt, base=2.0, cap=120.0):
-    return min(cap, base * (2 ** min(attempt - 1, 8)))
+    # Smooth exponential backoff capped to keep retry pace reasonable for long runs.
+    return min(cap, base * (1.6 ** max(0, attempt - 1)))
 
 
 def _connect_wmts_forever(wmts_url):
-    attempt = 0
+    attempt = 1
     while True:
-        attempt += 1
         try:
             return WebMapTileService(wmts_url)
         except Exception as exc:
             wait_s = _retry_delay_seconds(attempt)
             print(
-                f"[warn] WMTS connection failed (attempt {attempt}): {exc}. "
-                f"Retrying in {wait_s:.1f}s..."
+                f"[warn] WMTS capabilities connection failed "
+                f"(attempt {attempt}). Retrying in {wait_s:.1f}s. Error: {exc}"
             )
             time.sleep(wait_s)
+            attempt += 1
 
 def retrieve_satelite_image(top_left_corner, bottom_right_corner,progress_cb = None):
     wmts_url = (
@@ -165,13 +166,12 @@ def retrieve_satelite_image(top_left_corner, bottom_right_corner,progress_cb = N
     for row in range(row_min, row_max + 1):
         for col in range(col_min, col_max + 1):
             tile_filename = f"cache/tiles/tile_{zoom_level}_{row}_{col}.png"
-            attempt = 0
-            while True:
-                attempt += 1
-                try:
-                    if os.path.exists(tile_filename):
-                        img_array = np.array(Image.open(tile_filename).convert("RGB"))
-                    else:
+            if os.path.exists(tile_filename):
+                img_array = np.array(Image.open(tile_filename).convert("RGB"))
+            else:
+                attempt = 1
+                while True:
+                    try:
                         tile = wmts.gettile(
                             layer=layer,
                             tilematrixset=tile_matrix_set,
@@ -180,27 +180,19 @@ def retrieve_satelite_image(top_left_corner, bottom_right_corner,progress_cb = N
                             column=col,
                             format="image/png",
                         )
-                        tile_bytes = tile.read()
-                        if not tile_bytes:
-                            raise RuntimeError("empty tile payload")
-                        img = Image.open(io.BytesIO(tile_bytes)).convert("RGB")
-                        img.save(tile_filename)
+                        img = Image.open(io.BytesIO(tile.read())).convert("RGB")
+                        img.save(tile_filename)  # Save to cache
                         img_array = np.array(img)
-                    break
-                except Exception as exc:
-                    wait_s = _retry_delay_seconds(attempt)
-                    print(
-                        f"[warn] Tile fetch failed row={row} col={col} "
-                        f"(attempt {attempt}): {exc}. Retrying in {wait_s:.1f}s..."
-                    )
-                    if os.path.exists(tile_filename):
-                        try:
-                            os.remove(tile_filename)
-                        except OSError:
-                            pass
-                    if attempt % 4 == 0:
+                        break
+                    except Exception as exc:
+                        wait_s = _retry_delay_seconds(attempt)
+                        print(
+                            f"[warn] WMTS tile fetch failed row={row} col={col} "
+                            f"(attempt {attempt}). Retrying in {wait_s:.1f}s. Error: {exc}"
+                        )
+                        time.sleep(wait_s)
                         wmts = _connect_wmts_forever(wmts_url)
-                    time.sleep(wait_s)
+                        attempt += 1
             processed_blocks[row - row_min, col - col_min] = {"img": img_array}
             done += 1
             if progress_cb:
@@ -275,6 +267,11 @@ class EstimatedBuilding:
         inc_top, inc_right, inc_bottom, inc_left = roof_prediction[10:14]
         ori_top, ori_right, ori_bottom, ori_left = roof_prediction[14:18]
 
+        inc_top = 0.308 
+        inc_right = 0.308 
+        inc_bottom = 0.308 
+        inc_left = 0.308 
+
         dx, dy = w_map/2, h_map/2
         p_tl = np.array([cx_map-dx, cy_map+dy, 0.])
         p_tr = np.array([cx_map+dx, cy_map+dy, 0.])
@@ -314,7 +311,7 @@ def _iter_tiles(image, top_left_corner, res, tile_px, overlap=0.2):
     top_left_corner : (x, y)      EPSG:3763 coords of the image top-left pixel
     res             : float        metres per pixel
     tile_px         : int          tile side in pixels (match your model input, e.g. 640)
-    overlap         : float        fractional overlap between adjacent tiles (0.0–0.5)
+    overlap         : float        fractional overlap between adjacent tiles (0.0â€“0.5)
     """
     img_h, img_w = image.shape[:2]
     stride = int(tile_px * (1.0 - overlap))   # pixels between tile starts
@@ -424,8 +421,8 @@ def retrieve_prediction_list(
  
     for tile_img, tile_tl in _iter_tiles(satellite_image, top_left_corner, res, cached_model.model.model.args.get('imgsz', 640), tile_overlap):
         tile_idx += 1
-        print(f"  🔲 Tile {tile_idx} — tl=({tile_tl[0]:.0f}, {tile_tl[1]:.0f}), "
-              f"size={tile_img.shape[1]}×{tile_img.shape[0]}")
+        print(f"  ðŸ”² Tile {tile_idx} â€” tl=({tile_tl[0]:.0f}, {tile_tl[1]:.0f}), "
+              f"size={tile_img.shape[1]}Ã—{tile_img.shape[0]}")
  
         results = cached_model.model(
             tile_img,
@@ -444,9 +441,9 @@ def retrieve_prediction_list(
             )
             all_predictions.append(b)
  
-    print(f"  📦 {len(all_predictions)} raw detections across {tile_idx} tile(s)")
+    print(f"  ðŸ“¦ {len(all_predictions)} raw detections across {tile_idx} tile(s)")
     final = _nms_predictions(all_predictions, iou_threshold=nms_iou)
-    print(f"  ✅ {len(final)} after global NMS (iou≥{nms_iou})")
+    print(f"  âœ… {len(final)} after global NMS (iouâ‰¥{nms_iou})")
     return final
 
 def get_osm_buildings(top_left_corner, bottom_right_corner):
@@ -456,48 +453,57 @@ def get_osm_buildings(top_left_corner, bottom_right_corner):
     s, n = min(tl_lat, br_lat), max(tl_lat, br_lat)
     w, e = min(tl_lon, br_lon), max(tl_lon, br_lon)
     q = f"""[out:json];(way["building"]({s},{w},{n},{e});relation["building"]({s},{w},{n},{e}););out body;>;out skel qt;"""
-    #r = requests.post("https://overpass-api.de/api/interpreter", data=q)
-    ## AI suggested solution
     headers = {
         'User-Agent': 'OVEN_Building_Tool/4.0 (https://github.com/Joaopmoliveira/OVEN)',
     }
     payload = {'data': q}
-
-    endpoints = [
+    overpass_endpoints = [
         "https://overpass-api.de/api/interpreter",
-        "https://lz4.overpass-api.de/api/interpreter",
-        "https://z.overpass-api.de/api/interpreter",
         "https://overpass.kumi.systems/api/interpreter",
+        "https://overpass.private.coffee/api/interpreter",
     ]
-    print("Query sent:\n", q)
-    data = None
-    endpoint_idx = 0
-    attempt = 0
-    while data is None:
-        endpoint = endpoints[endpoint_idx % len(endpoints)]
-        endpoint_idx += 1
-        attempt += 1
+
+    last_error = None
+    r = None
+    max_attempts = 6
+    for attempt in range(1, max_attempts + 1):
+        endpoint = overpass_endpoints[(attempt - 1) % len(overpass_endpoints)]
         try:
             r = requests.post(
                 endpoint,
                 data=payload,
                 headers=headers,
-                timeout=(10, 120),
+                timeout=(15, 120),
             )
-            print(f"Overpass endpoint: {endpoint} | status={r.status_code}")
+            if r.status_code in (429, 500, 502, 503, 504):
+                raise requests.HTTPError(
+                    f"{r.status_code} from {endpoint}",
+                    response=r,
+                )
             r.raise_for_status()
-            data = r.json()
-        except Exception as exc:
-            wait_s = _retry_delay_seconds(attempt)
+            break
+        except requests.RequestException as exc:
+            last_error = exc
+            wait_s = min(2 ** attempt, 45)
             print(
-                f"[warn] Overpass request failed (attempt {attempt}) via {endpoint}: {exc}. "
-                f"Retrying in {wait_s:.1f}s..."
+                f"[warn] Overpass attempt {attempt}/{max_attempts} failed "
+                f"({endpoint}): {exc}"
             )
-            time.sleep(wait_s)
+            if attempt < max_attempts:
+                print(f"[warn] Retrying in {wait_s}s...")
+                time.sleep(wait_s)
+            else:
+                print("[error] Overpass retries exhausted.")
+                raise
 
-    if data is None:
-        raise RuntimeError("Unexpected state: Overpass data is None after retry loop.")
-
+    print("Query sent:\n", q)
+    if r is None:
+        if last_error is not None:
+            raise last_error
+        raise RuntimeError("Overpass request failed before receiving a response.")
+    print("Status:", r.status_code)
+    print("Response:", r.text[:500])
+    data  = r.json()
     nodes = {el["id"]: (el["lon"], el["lat"]) for el in data["elements"] if el["type"]=="node"}
     features = []
     for el in data["elements"]:
@@ -522,7 +528,7 @@ def get_osm_buildings_cached(top_left, bottom_right):
     cache_path = f"cache/osm/{cache_key}.json"
 
     if os.path.exists(cache_path):
-        print(f"📦 Loading OSM data from cache: {cache_path}")
+        print(f"ðŸ“¦ Loading OSM data from cache: {cache_path}")
         with open(cache_path, "r") as f:
             return json.load(f)
 
@@ -536,8 +542,8 @@ def get_osm_buildings_cached(top_left, bottom_right):
 import numpy as np
 import math
 from pyproj import Transformer
-from shapely.geometry import Polygon, LineString
-from shapely.ops import split
+from shapely.geometry import Polygon, LineString, MultiLineString, MultiPolygon, GeometryCollection
+from shapely.ops import split, polygonize, unary_union
 import cv2
 
 def convert_azimuth_to_local_vector_in_bounding_box(face_id,ori,axis_aligned_bounding_box_rotation):
@@ -583,27 +589,66 @@ def planenormal(face_id, inc, ori,axis_aligned_bounding_box_rotation):
  
 def split_with_lines(corners, lines):
     """Split a polygon defined by corners using a list of lines"""
-    polys = [Polygon(corners)]
+    from shapely.geometry import GeometryCollection
+
+    poly = Polygon(corners)
+    if poly.is_empty or float(poly.area) <= 1e-9:
+        return []
+
+    def _iter_line_geoms(geom):
+        if geom is None or geom.is_empty:
+            return
+        gtype = geom.geom_type
+        if gtype == "LineString":
+            yield geom
+            return
+        if gtype == "MultiLineString":
+            for g in geom.geoms:
+                if not g.is_empty:
+                    yield g
+            return
+        if gtype == "GeometryCollection":
+            for g in geom.geoms:
+                yield from _iter_line_geoms(g)
+            return
+
+    segments = [poly.boundary]
     for line in lines:
-        new_polys = []
-        splitter = LineString(line)
- 
-        for poly in polys:
-            result = split(poly, splitter)
- 
-            if len(result.geoms) > 1:
-                new_polys.extend(result.geoms)
-            else:
-                new_polys.append(poly)
-        polys = new_polys
-    return [np.array(p.exterior.coords[:-1]) for p in polys]
+        try:
+            raw = LineString(line)
+        except Exception:
+            continue
+        if raw.is_empty or raw.length <= 1e-9:
+            continue
+
+        # Keep only the portion inside/on the polygon.
+        clipped = raw.intersection(poly)
+        for seg in _iter_line_geoms(clipped):
+            if seg.length > 1e-9:
+                segments.append(seg)
+
+    # If no effective splitters, return the original polygon.
+    if len(segments) == 1:
+        return [np.array(poly.exterior.coords[:-1])]
+
+    network = unary_union(segments)
+    candidates = []
+    for piece in polygonize(network):
+        if piece.is_empty or float(piece.area) <= 1e-9:
+            continue
+        if poly.covers(piece.representative_point()):
+            candidates.append(piece)
+
+    if not candidates:
+        return [np.array(poly.exterior.coords[:-1])]
+    return [np.array(p.exterior.coords[:-1]) for p in candidates]
 
 def determine_face_for_polygon(poly_centroid, corners, code):
     """
     Determine which face a polygon belongs to based on its centroid position.
     Returns the face identifier (e.g., 'T', 'R', 'B', 'L').
-    Never returns 'H' directly — H assignment is handled by the caller via
-    a remainder strategy (match all directional faces first, leftover → H).
+    Never returns 'H' directly â€” H assignment is handled by the caller via
+    a remainder strategy (match all directional faces first, leftover â†’ H).
 
     corners: [[x_min_l, y_min_l], [x_max_l, y_min_l], [x_max_l, y_max_l], [x_min_l, y_max_l]]
     """
@@ -612,7 +657,7 @@ def determine_face_for_polygon(poly_centroid, corners, code):
     cx, cy = poly_centroid
 
     # Distance from centroid to each directional edge.
-    # H is intentionally excluded — it is never matched by proximity.
+    # H is intentionally excluded â€” it is never matched by proximity.
     distances = {
         'T': abs(cy - y_max_l),
         'B': abs(cy - y_min_l),
@@ -658,7 +703,6 @@ def rooftile(corners, plane_point, plane_data, height,osm_local_2d):
     the section of the building reserved for this direction
     with the roof predicted by the OVEN model
     """
-    import pyvista as pv
     from shapely.geometry import Polygon, MultiPolygon
     plane_normal,azymuth = plane_data 
 
@@ -672,13 +716,78 @@ def rooftile(corners, plane_point, plane_data, height,osm_local_2d):
     if isinstance(clipped, MultiPolygon):
         clipped = max(clipped.geoms, key=lambda p: p.area)
 
-    pts_2d = np.array(clipped.exterior.coords[:-1])  # shape (N, 2)
-    pts = np.column_stack([pts_2d, np.zeros(len(pts_2d))])  # add Z=0
-    n_pts = len(pts)
-    faces = [n_pts] + list(range(n_pts))
-    rect_prism = pv.PolyData(pts, faces=faces).extrude((0, 0, height), capping=True).triangulate()
-    intersection_polygon = rect_prism.slice(normal=plane_normal, origin=plane_point)
-    return intersection_polygon,azymuth
+    pts_2d = np.asarray(clipped.exterior.coords[:-1], dtype=float)  # open ring
+    if pts_2d.shape[0] < 3:
+        return None, azymuth
+
+    face_spec = {
+        "kind": "topology_face_spec",
+        "ring_2d_local": pts_2d.tolist(),
+        "plane_normal": [float(v) for v in plane_normal],
+        "plane_point": [float(v) for v in plane_point],
+    }
+    return face_spec, azymuth
+
+
+def _plane_z_at_xy(plane_normal, plane_point, x, y):
+    nx, ny, nz = [float(v) for v in plane_normal]
+    px, py, pz = [float(v) for v in plane_point]
+    if abs(nz) < 1e-9:
+        return float(pz)
+    return float(pz - (nx * (x - px) + ny * (y - py)) / nz)
+
+
+def _build_topology_first_intersections(intersections, snap_tol=1e-5):
+    """
+    Convert per-face topology specs to watertight PyVista polygons by enforcing
+    a shared Z for identical XY vertices across all faces of the same building.
+    """
+    import pyvista as pv
+
+    face_specs = {}
+    for face_name, tile_obj in intersections.items():
+        if not isinstance(tile_obj, (tuple, list)) or len(tile_obj) < 2:
+            continue
+        payload, azymuth = tile_obj[0], tile_obj[1]
+        if isinstance(payload, dict) and payload.get("kind") == "topology_face_spec":
+            face_specs[face_name] = (payload, azymuth)
+
+    if not face_specs:
+        return intersections
+
+    vertex_candidates = {}
+    for payload, _ in face_specs.values():
+        ring = np.asarray(payload.get("ring_2d_local", []), dtype=float)
+        if ring.ndim != 2 or ring.shape[1] < 2 or ring.shape[0] < 3:
+            continue
+        for x, y in ring[:, :2]:
+            key = (int(round(float(x) / snap_tol)), int(round(float(y) / snap_tol)))
+            z = _plane_z_at_xy(payload["plane_normal"], payload["plane_point"], float(x), float(y))
+            vertex_candidates.setdefault(key, []).append(z)
+
+    canonical_z = {k: float(np.median(v)) for k, v in vertex_candidates.items() if len(v) > 0}
+
+    resolved = dict(intersections)
+    for face_name, (payload, azymuth) in face_specs.items():
+        ring = np.asarray(payload.get("ring_2d_local", []), dtype=float)
+        if ring.ndim != 2 or ring.shape[1] < 2 or ring.shape[0] < 3:
+            resolved[face_name] = (None, azymuth)
+            continue
+
+        pts3d = []
+        for x, y in ring[:, :2]:
+            key = (int(round(float(x) / snap_tol)), int(round(float(y) / snap_tol)))
+            z = canonical_z.get(key)
+            if z is None:
+                z = _plane_z_at_xy(payload["plane_normal"], payload["plane_point"], float(x), float(y))
+            pts3d.append([float(x), float(y), float(z)])
+
+        pts = np.asarray(pts3d, dtype=float)
+        n_pts = pts.shape[0]
+        faces = np.array([n_pts] + list(range(n_pts)), dtype=np.int64)
+        resolved[face_name] = (pv.PolyData(pts, faces=faces), azymuth)
+
+    return resolved
  
 def match_vector_to_coordinates(dx, dy, width, height):
     """
@@ -773,6 +882,14 @@ def topology_converter_mine(roof_prediction, osm_building):
         [x_max_l, y_max_l],
         [x_min_l, y_max_l],
     ])
+    import pyvista as pv
+    from shapely.geometry import Polygon, MultiPolygon
+    pts = np.array(corners)
+    if pts.shape[1] == 2:
+        pts = np.column_stack([pts, np.zeros(len(pts))])
+    n_pts = len(pts)
+    faces = [n_pts] + list(range(n_pts))
+    building_cuboid = pv.PolyData(pts, faces=faces).extrude((0, 0, height), capping=True)
 
     #    corners = np.array([
     #    c00,
@@ -850,7 +967,7 @@ def topology_converter_mine(roof_prediction, osm_building):
     code = ""
     for key,val in parsed.items():
         code = code + key
-    code = "".join(sorted(code))
+    code = "".join(sorted(code)) ## we need to sort or else HRL and HLR would be different, which is not the case
 
     if len(code) == 0: #this is a sanity check
         raise NameError('The code must never be empty. If a building exists, then at least one rooftop is present')
@@ -861,8 +978,53 @@ def topology_converter_mine(roof_prediction, osm_building):
     
     base_height = 10.0
 
-    def internal_function(matched_code,parsed,data,theta,corners,intersections,base_height,parts,osm_local):
+    def hungarian_internal_function(matched_code, parsed, data, theta, corners, intersections, base_height, parts, osm_local,intersection_point):
+        from scipy.optimize import linear_sum_assignment
         assert len(parts) == len(matched_code), "division of rooftop encountered an error, please check geometry"+matched_code
+
+        x_min_l, y_min_l = corners[0]
+        x_max_l, y_max_l = corners[2]
+
+        def _edge_dist(face, cx, cy):
+            if face == 'T': return abs(cy - y_max_l)
+            if face == 'B': return abs(cy - y_min_l)
+            if face == 'R': return abs(cx - x_max_l)
+            if face == 'L': return abs(cx - x_min_l)
+            return float('inf')
+
+        centroids = [np.mean(part, axis=0) for part in parts]
+        non_h_faces = [f for f in matched_code if f != 'H']
+
+        facedict = {}
+        for letter in matched_code:
+            global_face, probability, fdata = parsed[letter]
+            facedict[letter] = planenormal(letter, fdata["inclination"], fdata["orientation"], theta)   
+
+
+        if non_h_faces:
+            # Cost matrix: only directional faces vs all parts
+            cost = np.array([
+                [_edge_dist(face, cx, cy) for cx, cy in centroids]
+                for face in non_h_faces
+            ])
+            face_indices, part_indices = linear_sum_assignment(cost)
+            assigned_parts = set(part_indices)
+
+            for fi, pi in zip(face_indices, part_indices):
+                face = non_h_faces[fi]
+                intersections[face] = rooftile(parts[pi], intersection_point, facedict[face], 1000, osm_local)
+        else:
+            assigned_parts = set()
+
+        # H gets the leftover part â€” no assumption about its position
+        if 'H' in matched_code:
+            leftover = [i for i in range(len(parts)) if i not in assigned_parts]
+            assert len(leftover) == 1, f"Expected exactly 1 leftover part for H, got {len(leftover)}"
+            intersections['H'] = rooftile(parts[leftover[0]], intersection_point, facedict['H'], 1000, osm_local)
+
+    ''' TODO this is the old version of the internal function that I am keeping for consistency, TO ELIMINATE
+    def old_internal_function(matched_code,parsed,data,theta,corners,intersections,base_height,parts,osm_local):
+        assert len(parts) == len(matched_code), "division of rooftop encountered an error, please check geometry"
         facedict = {}
         for letter in matched_code:
             global_face,probability,data = parsed[letter]
@@ -910,7 +1072,8 @@ def topology_converter_mine(roof_prediction, osm_building):
                 if normal is not None:
                     intersections[face] = rooftile(parts[idx], np.array([0, 0, base_height]), normal,1000,osm_local)
                 else:
-                    print(f"failure detected for face {face}")
+                    raise Exception("The face should be assigned to something")
+    '''
     match code:
         case "L":
             global_face,probability,data = parsed["L"]
@@ -940,123 +1103,123 @@ def topology_converter_mine(roof_prediction, osm_building):
         case "BL": #corrected
             lines.append([[x_min_l, y_min_l], [x_max_l, y_max_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
         case "LR": #corrected
             lines.append([[0, y_min_l], [0, y_max_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)                    
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))                    
         case "BR": #corrected
             lines.append([[x_min_l, y_max_l], [x_max_l, y_min_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "HL":#corrected
             lines.append([[0, y_min_l], [0, y_max_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BH":#corrected
             lines.append([[x_min_l, 0], [x_max_l, 0]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "LT":#corrected
             lines.append([[x_min_l, y_max_l], [x_max_l, y_min_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BT":#corrected
             lines.append([[x_min_l, 0], [x_max_l, 0]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "RT":#corrected
             lines.append([[x_min_l, y_min_l], [x_max_l, y_max_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "HR":#corrected
             lines.append([[0, y_min_l], [0, y_max_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "HT":#corrected
             lines.append([[x_min_l, 0], [x_max_l, 0]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BLR":#corrected
             lines.append([[0, y_max_l], [x_min_l, y_min_l]])
             lines.append([[0, y_max_l], [x_max_l, y_min_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, y_max_l, base_height]))
                     
         case "BLT":#corrected
             lines.append([[x_max_l, 0], [x_min_l, y_min_l]])
             lines.append([[x_max_l, 0], [x_min_l, y_max_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([x_max_l, 0, base_height]))
                     
         case "LRT":#corrected
             lines.append([[0, y_min_l], [x_min_l, y_max_l]])
             lines.append([[0, y_min_l], [x_max_l, y_max_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, y_min_l, base_height]))
                     
         case "BRT":#corrected
             lines.append([[x_min_l, 0], [x_max_l, y_min_l]])
             lines.append([[x_min_l, 0], [x_max_l, y_max_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([x_min_l, 0, base_height]))
                     
         case "HLT":#corrected
             lines.append([[0, 0], [x_min_l, y_max_l]])
             lines.append([[x_min_l, y_min_l], [x_max_l, y_max_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BHT":#corrected
             lines.append([[0, y_min_l], [0, y_max_l]])
             lines.append([[0, 0], [x_max_l, 0]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BHL":#corrected
             lines.append([[x_min_l, y_max_l], [x_max_l, y_min_l]])
             lines.append([[0, 0], [x_min_l, y_min_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "HLR":#corrected
             lines.append([[x_min_l, 0], [x_max_l, 0]])
             lines.append([[0, 0], [0, y_min_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BHR":#corrected
             lines.append([[x_min_l, y_min_l], [x_max_l, y_max_l]])
             lines.append([[0, 0], [x_max_l, y_min_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "HRT":#corrected
             lines.append([[x_min_l, y_max_l], [x_max_l, y_min_l]])
             lines.append([[0, 0], [x_max_l, y_max_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BLRT":#corrected
             lines.append([[x_min_l, y_min_l], [x_max_l, y_max_l]])
             lines.append([[x_min_l, y_max_l], [x_max_l, y_min_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BHLR":#corrected
             lines.append([[x_min_l, 0], [x_max_l, 0]])
             lines.append([[0, 0], [x_min_l, y_min_l]])
             lines.append([[0, 0], [x_max_l, y_min_l]])
             parts = split_with_lines(corners, lines)
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BHLT":#corrected
             lines.append([[0, y_min_l], [0, y_max_l]])
@@ -1064,7 +1227,7 @@ def topology_converter_mine(roof_prediction, osm_building):
             lines.append([[0, 0], [x_min_l, y_max_l]])
             parts = split_with_lines(corners, lines)
             
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "HLRT":#corrected
             lines.append([[x_min_l, 0], [x_max_l, 0]])
@@ -1072,7 +1235,7 @@ def topology_converter_mine(roof_prediction, osm_building):
             lines.append([[0, 0], [x_max_l, y_max_l]])
             parts = split_with_lines(corners, lines)
             
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BHRT":#corrected
             lines.append([[0, y_min_l], [0, y_max_l]])
@@ -1080,7 +1243,7 @@ def topology_converter_mine(roof_prediction, osm_building):
             lines.append([[0, 0], [x_max_l, y_max_l]])
             parts = split_with_lines(corners, lines)
             
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
                     
         case "BHLRT":
             ix_min, ix_max = 0.5 * x_min_l, 0.5 * x_max_l
@@ -1101,8 +1264,10 @@ def topology_converter_mine(roof_prediction, osm_building):
                 np.array([[x_max_l, y_min_l], [ix_max,  iy_min],
                            [ix_max,  iy_max], [x_max_l, y_max_l]]),
             ]
-            internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local)
+            hungarian_internal_function(code,parsed,data,theta,corners,intersections,base_height,parts,osm_local, np.array([0, 0, base_height]))
     
+    intersections = _build_topology_first_intersections(intersections)
+
     # Convert lines to world coordinates
     cx, cy = center
     for face in intersections:
@@ -1174,7 +1339,7 @@ def _to_lonlat(x, y):
  
 def _make_geojson_layer(geojson_fc) -> pdk.Layer:
     """
-    OSM building footprints → GeoJsonLayer (extruded, flat-roofed reference).
+    OSM building footprints â†’ GeoJsonLayer (extruded, flat-roofed reference).
     The `geojson_fc` is the FeatureCollection returned by get_osm_buildings_cached().
     Coordinates are already in EPSG:4326 (lon/lat) as required by deck.gl.
     """
@@ -1197,8 +1362,8 @@ def _make_geojson_layer(geojson_fc) -> pdk.Layer:
  
 def _make_osm_outline_layer(geojson_fc) -> pdk.Layer:
     """
-    OSM building footprints → flat PolygonLayer drawn at z=0.
-    This is the 'street outline' — always visible regardless of pitch,
+    OSM building footprints â†’ flat PolygonLayer drawn at z=0.
+    This is the 'street outline' â€” always visible regardless of pitch,
     because it sits on the ground and is never hidden by the extruded boxes.
     Coordinates are already in EPSG:4326 as returned by get_osm_buildings_cached().
     """
@@ -1226,7 +1391,7 @@ def _make_osm_outline_layer(geojson_fc) -> pdk.Layer:
  
 def _make_bounding_box_layer(matched_data) -> pdk.Layer:
     """
-    cv2.minAreaRect oriented bounding boxes → PolygonLayer.
+    cv2.minAreaRect oriented bounding boxes â†’ PolygonLayer.
     Each entry in matched_data must have "roof_planes" (the cv2 rotated-rect tuple).
     """
     import cv2
@@ -1263,16 +1428,16 @@ def _make_bounding_box_layer(matched_data) -> pdk.Layer:
  
 def _make_roof_face_layer(matched_data) -> pdk.Layer:
     """
-    PyVista face intersection polygons → PolygonLayer with elevation (3-D).
+    PyVista face intersection polygons â†’ PolygonLayer with elevation (3-D).
  
     Each intersection polygon is already a PyVista PolyData whose `.points`
     are in EPSG:3763 (x, y, z_metres).  We convert x/y to lon/lat and keep z
     as the elevation so deck.gl renders the sloped faces in true 3-D.
  
     Color scheme:
-        T (top / flat)  → warm orange
-        H (hip)         → warm orange
-        R / L / B       → blue-grey slope faces
+        T (top / flat)  â†’ warm orange
+        H (hip)         â†’ warm orange
+        R / L / B       â†’ blue-grey slope faces
     """
     _face_colors = {
         "T": [255, 140,  40, 220],
@@ -1284,6 +1449,7 @@ def _make_roof_face_layer(matched_data) -> pdk.Layer:
     _default_color = [160, 160, 160, 180]
  
     records = []
+    tr_3763_to_4326 = Transformer.from_crs("EPSG:3763", "EPSG:4326", always_xy=True)
     for entry in matched_data:
         face_data   = entry.get("face_data", {})
         intersections = face_data.get("intersections", {}) if face_data else {}
@@ -1292,22 +1458,46 @@ def _make_roof_face_layer(matched_data) -> pdk.Layer:
         for face_name, plane in intersections.items():
             if plane is None:
                 continue
-            points,azymuth = plane 
+            points, azymuth = plane
+            if points is None or not hasattr(points, "n_points") or points.n_points < 3:
+                continue
+
+            def _append_record(polygon_coords):
+                records.append({
+                    "polygon": polygon_coords,
+                    "azymuth": round(math.degrees(azymuth), 1),
+                    "face": face_name,
+                    "osm_id": osm_id,
+                    "code": code,
+                    "color": _face_colors.get(face_name, _default_color),
+                })
+
+            geometry_ll = None
+            geom2d, frame = _boundary_geometry_from_mesh(points)
+            if geom2d is not None and frame is not None:
+                geometry_src = _geometry2d_to_geojson3d(geom2d, frame)
+                if geometry_src is not None:
+                    geometry_ll = _transform_geometry_xy(geometry_src, tr_3763_to_4326)
+
+            if geometry_ll is not None:
+                if geometry_ll["type"] == "Polygon":
+                    _append_record(geometry_ll["coordinates"])
+                    continue
+                if geometry_ll["type"] == "MultiPolygon":
+                    for polygon_rings in geometry_ll["coordinates"]:
+                        _append_record(polygon_rings)
+                    continue
+
+            # Conservative fallback: keep prior raw slice-point behavior.
             raw_pts = points.points
+            if raw_pts is None or len(raw_pts) < 3:
+                continue
             polygon_3d = []
-            for v in raw_pts.tolist():
+            for v in raw_pts:
                 lon, lat = _to_lonlat(v[0], v[1])
-                polygon_3d.append([lon, lat, float(v[2])])  # z kept as metres
- 
-            records.append({
-                "polygon":   polygon_3d,
-                "azymuth": round(math.degrees(azymuth), 1),   # centroid height for tooltip
-                "face":      face_name,
-                "osm_id":    osm_id,
-                "code" :   code ,
-                "color":     _face_colors.get(face_name, _default_color),
-            })
- 
+                polygon_3d.append([lon, lat, float(v[2])])
+            _append_record(polygon_3d)
+
     return pdk.Layer(
         "PolygonLayer",
         records,
@@ -1326,7 +1516,7 @@ def _make_roof_face_layer(matched_data) -> pdk.Layer:
  
 def _make_topology_line_layer(matched_data) -> pdk.Layer:
     """
-    Roof ridge / valley topology lines → PathLayer.
+    Roof ridge / valley topology lines â†’ PathLayer.
     Each entry has "lines_world": list of [[x0,y0], [x1,y1]] in EPSG:3763.
     """
     records = []
@@ -1395,11 +1585,11 @@ def render_pydeck(
     """
     Build a pydeck Deck with four layers and write it to `out_path`.
  
-    Layers (bottom → top):
-        1. GeoJsonLayer   – OSM footprints (extruded reference boxes)
-        2. PolygonLayer   – Oriented min-bounding boxes
-        3. PolygonLayer   – Roof face intersections (PyVista planes)
-        4. PathLayer      – Topology ridge/valley lines
+    Layers (bottom â†’ top):
+        1. GeoJsonLayer   â€“ OSM footprints (extruded reference boxes)
+        2. PolygonLayer   â€“ Oriented min-bounding boxes
+        3. PolygonLayer   â€“ Roof face intersections (PyVista planes)
+        4. PathLayer      â€“ Topology ridge/valley lines
     """
     _map_styles = {
         "dark":  pdk.map_styles.DARK,
@@ -1425,14 +1615,14 @@ def render_pydeck(
             "html": (
                 "<b>OSM {osm_id}</b><br/>"
                 "Face: {face} | Code: {code}<br/>"
-                "Azymuth: {azymuth} º"
+                "Azymuth: {azymuth} Âº"
             ),
             "style": {"backgroundColor": "rgba(0,0,0,0.7)", "color": "white"},
         },
     )
  
     deck.to_html(out_path)
-    print(f"✅  pydeck map saved → {out_path}")
+    print(f"âœ…  pydeck map saved â†’ {out_path}")
 
     html_str = deck.to_html(as_string=True)
     return html_str
@@ -1445,7 +1635,7 @@ def reproject_to_geographic(
     """
     Reproject a uint8 RGB image from `src_crs` to EPSG:4326 so that pixel
     rows/columns align with lines of constant latitude/longitude.
-    Without this, the TM meridian convergence (~0.67° near Lisbon) causes
+    Without this, the TM meridian convergence (~0.67Â° near Lisbon) causes
     ImageOverlay to appear rotated, producing a ~12 m corner offset.
     Returns: reprojected image, (west, south, east, north) in degrees.
     """
@@ -1515,7 +1705,7 @@ def build_map_html(osm_geojson, predicted_buildings, satellite_image,
         n_planes = len(building.planes_in_physical_dimensions)
         folium.Polygon(locations=box_poly(building.box_coords_in_epsg_3763),
             color="#cc0000", fill_color="#ff4444", fill_opacity=0.3, weight=2,
-            tooltip=f"Building {i} — {n_planes} roof plane(s)").add_to(pred)
+            tooltip=f"Building {i} â€” {n_planes} roof plane(s)").add_to(pred)
         for plane in building.planes_in_physical_dimensions:
             cx = sum(p[0] for p in plane.corners)/4
             cy = sum(p[1] for p in plane.corners)/4
@@ -1548,9 +1738,9 @@ def build_map_html(osm_geojson, predicted_buildings, satellite_image,
                 locations=corners_latlon,
                 color="#00cc66", fill_color="#00ff88", fill_opacity=0.25, weight=2,
                 dash_array="6",
-                tooltip=(f"OSM {osm_id} — Min Bounding Box<br>"
+                tooltip=(f"OSM {osm_id} â€” Min Bounding Box<br>"
                          f"W: {w_rect:.1f} m  H: {h_rect:.1f} m<br>"
-                         f"Angle: {angle:.1f}°"
+                         f"Angle: {angle:.1f}Â°"
                          f"Azymuth:{0:.1f}"
                          f"Name: {entry.get("code")}"),
             ).add_to(mbb)
@@ -1569,11 +1759,11 @@ def build_map_html(osm_geojson, predicted_buildings, satellite_image,
                 p0, p1 = line
                 lon0, lat0 = tr.transform(p0[0], p0[1])
                 lon1, lat1 = tr.transform(p1[0], p1[1])
-                print(f"  line latlon: ({lat0:.6f},{lon0:.6f}) → ({lat1:.6f},{lon1:.6f})")
+                print(f"  line latlon: ({lat0:.6f},{lon0:.6f}) â†’ ({lat1:.6f},{lon1:.6f})")
                 folium.PolyLine(
                     locations=[[lat0, lon0], [lat1, lon1]],
                     color="#ffffff", weight=2, opacity=0.9,
-                    tooltip=f"OSM {osm_id} — roof line",
+                    tooltip=f"OSM {osm_id} â€” roof line",
                 ).add_to(topo_layer)
                 n_lines_total += 1
         print(f"Total topology lines drawn: {n_lines_total}")
@@ -1699,46 +1889,298 @@ def _entry_building_id(entry, fallback="?"):
     )
 
 
-def _ordered_ring_from_points(points_3d):
-    if points_3d.shape[0] < 3:
-        return None
+def _parse_vtk_cells(flat_cells):
+    """
+    Parse VTK-style flat cell arrays:
+    [n0, p0, p1, ..., n1, p0, p1, ...]
+    """
+    if flat_cells is None:
+        return []
+    arr = np.asarray(flat_cells).astype(int, copy=False).ravel()
+    if arr.size == 0:
+        return []
 
-    pts = np.unique(np.round(points_3d, 6), axis=0)
-    if pts.shape[0] < 3:
-        return None
+    cells = []
+    i = 0
+    total = arr.size
+    while i < total:
+        n = int(arr[i])
+        i += 1
+        if n <= 0 or i + n > total:
+            break
+        cell = [int(x) for x in arr[i:i + n]]
+        i += n
+        if len(cell) >= 2:
+            cells.append(cell)
+    return cells
 
-    centroid = np.mean(pts, axis=0)
-    centered = pts - centroid
-    _, _, vh = np.linalg.svd(centered, full_matrices=False)
+
+def _best_fit_plane(points_3d):
+    if points_3d.shape[0] < 3 or points_3d.shape[1] < 3:
+        return None
+    centroid = np.mean(points_3d, axis=0)
+    centered = points_3d - centroid
+    _, singular_values, vh = np.linalg.svd(centered, full_matrices=False)
+    if len(singular_values) < 3:
+        return None
 
     axis_u = vh[0]
     normal = vh[2]
     axis_v = np.cross(normal, axis_u)
-
-    norm_u = np.linalg.norm(axis_u)
-    norm_v = np.linalg.norm(axis_v)
-    if norm_u == 0.0 or norm_v == 0.0:
+    norm_u = float(np.linalg.norm(axis_u))
+    norm_v = float(np.linalg.norm(axis_v))
+    norm_n = float(np.linalg.norm(normal))
+    if norm_u <= 1e-12 or norm_v <= 1e-12 or norm_n <= 1e-12:
         return None
 
     axis_u = axis_u / norm_u
     axis_v = axis_v / norm_v
+    normal = normal / norm_n
+    return centroid, axis_u, axis_v, normal
 
-    uv = np.column_stack(
-        [
-            np.dot(centered, axis_u),
-            np.dot(centered, axis_v),
-        ]
-    )
-    angles = np.arctan2(uv[:, 1], uv[:, 0])
-    order = np.argsort(angles)
-    ordered = pts[order]
 
-    if ordered.shape[0] < 3:
-        return None
+def _to_uv(points_xyz, frame):
+    centroid, axis_u, axis_v, _ = frame
+    centered = points_xyz - centroid
+    u = centered @ axis_u
+    v = centered @ axis_v
+    return np.column_stack([u, v])
 
-    ring = ordered.tolist()
-    ring.append(ordered[0].tolist())
-    return ring
+
+def _uv_to_xyz(u, v, frame):
+    centroid, axis_u, axis_v, _ = frame
+    xyz = centroid + float(u) * axis_u + float(v) * axis_v
+    return [float(xyz[0]), float(xyz[1]), float(xyz[2])]
+
+
+def _extract_boundary_edges_from_faces(faces_cells):
+    edge_counts = {}
+    for cell in faces_cells:
+        if len(cell) < 3:
+            continue
+        for i in range(len(cell)):
+            a = int(cell[i])
+            b = int(cell[(i + 1) % len(cell)])
+            if a == b:
+                continue
+            key = (a, b) if a < b else (b, a)
+            edge_counts[key] = edge_counts.get(key, 0) + 1
+    return [edge for edge, count in edge_counts.items() if count == 1]
+
+
+def _extract_boundary_edges_from_lines(line_cells):
+    edges = set()
+    for cell in line_cells:
+        if len(cell) < 2:
+            continue
+        for i in range(len(cell) - 1):
+            a = int(cell[i])
+            b = int(cell[i + 1])
+            if a == b:
+                continue
+            key = (a, b) if a < b else (b, a)
+            edges.add(key)
+    return sorted(edges)
+
+
+def _geometry2d_to_geojson3d(geom2d, frame):
+    def ring_to_xyz(ring_coords):
+        ring = [_uv_to_xyz(u, v, frame) for u, v in list(ring_coords)]
+        if ring and ring[0] != ring[-1]:
+            ring.append(ring[0])
+        return ring
+
+    if geom2d.geom_type == "Polygon":
+        rings = [ring_to_xyz(geom2d.exterior.coords)]
+        for interior in geom2d.interiors:
+            rings.append(ring_to_xyz(interior.coords))
+        return {"type": "Polygon", "coordinates": rings}
+
+    if geom2d.geom_type == "MultiPolygon":
+        polygons = []
+        for poly in geom2d.geoms:
+            rings = [ring_to_xyz(poly.exterior.coords)]
+            for interior in poly.interiors:
+                rings.append(ring_to_xyz(interior.coords))
+            polygons.append(rings)
+        return {"type": "MultiPolygon", "coordinates": polygons}
+
+    return None
+
+
+def _transform_geometry_xy(geometry_obj, transformer):
+    gtype = geometry_obj.get("type")
+    coords = geometry_obj.get("coordinates")
+
+    if gtype == "Polygon":
+        out = []
+        for ring in coords:
+            t_ring = []
+            for x, y, z in ring:
+                x_t, y_t = transformer.transform(float(x), float(y))
+                t_ring.append([x_t, y_t, float(z)])
+            out.append(t_ring)
+        return {"type": "Polygon", "coordinates": out}
+
+    if gtype == "MultiPolygon":
+        out_polys = []
+        for poly in coords:
+            out_rings = []
+            for ring in poly:
+                t_ring = []
+                for x, y, z in ring:
+                    x_t, y_t = transformer.transform(float(x), float(y))
+                    t_ring.append([x_t, y_t, float(z)])
+                out_rings.append(t_ring)
+            out_polys.append(out_rings)
+        return {"type": "MultiPolygon", "coordinates": out_polys}
+
+    return None
+
+
+def _collect_mesh_edges(tile_mesh):
+    faces_cells = _parse_vtk_cells(getattr(tile_mesh, "faces", None))
+    line_cells = _parse_vtk_cells(getattr(tile_mesh, "lines", None))
+
+    boundary_edges = []
+    if faces_cells:
+        boundary_edges.extend(_extract_boundary_edges_from_faces(faces_cells))
+    if line_cells:
+        boundary_edges.extend(_extract_boundary_edges_from_lines(line_cells))
+
+    # Deduplicate undirected edges
+    unique_edges = sorted(set(boundary_edges))
+    return unique_edges, faces_cells
+
+
+def _boundary_geometry_from_mesh(tile_mesh):
+    if tile_mesh is None or not hasattr(tile_mesh, "points") or tile_mesh.n_points < 3:
+        return None, None
+
+    points = np.asarray(tile_mesh.points, dtype=float)
+    if points.ndim != 2 or points.shape[1] < 3:
+        return None, None
+
+    edges, _ = _collect_mesh_edges(tile_mesh)
+    if not edges:
+        return None, None
+
+    point_ids = sorted({idx for edge in edges for idx in edge})
+    if len(point_ids) < 3:
+        return None, None
+
+    points_subset = points[point_ids, :3]
+    frame = _best_fit_plane(points_subset)
+    if frame is None:
+        return None, None
+
+    uv_all = _to_uv(points[:, :3], frame)
+    segments = []
+    for a, b in edges:
+        pa = (float(uv_all[a, 0]), float(uv_all[a, 1]))
+        pb = (float(uv_all[b, 0]), float(uv_all[b, 1]))
+        if pa == pb:
+            continue
+        segments.append(LineString([pa, pb]))
+
+    if not segments:
+        return None, None
+
+    polygons = list(polygonize(MultiLineString(segments)))
+    if not polygons:
+        return None, None
+
+    merged = unary_union(polygons)
+    if merged.is_empty:
+        return None, None
+
+    if isinstance(merged, GeometryCollection):
+        polys = [g for g in merged.geoms if g.geom_type in ("Polygon", "MultiPolygon") and not g.is_empty]
+        if not polys:
+            return None, None
+        merged = unary_union(polys)
+        if merged.is_empty:
+            return None, None
+
+    if merged.geom_type not in ("Polygon", "MultiPolygon"):
+        return None, None
+    if float(merged.area) <= 1e-9:
+        return None, None
+
+    return merged, frame
+
+
+def _triangulation_fallback_geometry(tile_mesh):
+    if tile_mesh is None or not hasattr(tile_mesh, "points") or tile_mesh.n_points < 3:
+        return None, None
+    points = np.asarray(tile_mesh.points, dtype=float)
+    if points.ndim != 2 or points.shape[1] < 3:
+        return None, None
+
+    frame = _best_fit_plane(points[:, :3])
+    if frame is None:
+        return None, None
+    uv_all = _to_uv(points[:, :3], frame)
+
+    edges, faces_cells = _collect_mesh_edges(tile_mesh)
+    triangles = []
+    for cell in faces_cells:
+        if len(cell) < 3:
+            continue
+        coords_uv = [(float(uv_all[idx, 0]), float(uv_all[idx, 1])) for idx in cell]
+        poly = Polygon(coords_uv)
+        if poly.is_empty or float(poly.area) <= 1e-9:
+            continue
+        if not poly.is_valid:
+            poly = poly.buffer(0)
+        if poly.is_empty or float(poly.area) <= 1e-9:
+            continue
+        for tri in triangulate(poly):
+            if tri.is_empty or float(tri.area) <= 1e-9:
+                continue
+            overlap = tri.intersection(poly).area
+            if overlap <= 1e-9 or overlap / tri.area < 0.99:
+                continue
+            triangles.append(tri)
+
+    # If face-based triangulation is unavailable (e.g., slice only has polylines),
+    # triangulate polygonized boundary lines in projected 2D space.
+    if not triangles and edges:
+        segments = []
+        for a, b in edges:
+            pa = (float(uv_all[a, 0]), float(uv_all[a, 1]))
+            pb = (float(uv_all[b, 0]), float(uv_all[b, 1]))
+            if pa == pb:
+                continue
+            segments.append(LineString([pa, pb]))
+        if segments:
+            for poly in polygonize(MultiLineString(segments)):
+                if poly.is_empty or float(poly.area) <= 1e-9:
+                    continue
+                for tri in triangulate(poly):
+                    if tri.is_empty or float(tri.area) <= 1e-9:
+                        continue
+                    overlap = tri.intersection(poly).area
+                    if overlap <= 1e-9 or overlap / tri.area < 0.99:
+                        continue
+                    triangles.append(tri)
+
+    if not triangles:
+        return None, None
+
+    merged = unary_union(triangles)
+    if merged.is_empty:
+        return None, None
+    if merged.geom_type not in ("Polygon", "MultiPolygon"):
+        polys = []
+        if hasattr(merged, "geoms"):
+            polys = [g for g in merged.geoms if g.geom_type == "Polygon" and not g.is_empty]
+        if not polys:
+            return None, None
+        merged = MultiPolygon(polys) if len(polys) > 1 else polys[0]
+    if float(merged.area) <= 1e-9:
+        return None, None
+    return merged, frame
 
 
 def _polygon_ring_area_3d(ring_3d):
@@ -1781,6 +2223,11 @@ def export_roof_surfaces_geojson(
 
     tr = Transformer.from_crs(source_crs, target_crs, always_xy=True)
     features = []
+    export_stats = {
+        "direct_boundary": 0,
+        "raw_fallback": 0,
+        "skipped": 0,
+    }
 
     for entry in matched_data:
         building_id = _entry_building_id(entry, fallback="unknown")
@@ -1796,14 +2243,43 @@ def export_roof_surfaces_geojson(
             if tile_mesh is None or not hasattr(tile_mesh, "n_points") or tile_mesh.n_points < 3:
                 continue
 
-            points = np.asarray(tile_mesh.points)
-            if points.ndim != 2 or points.shape[1] < 3:
-                continue
+            geometry_dst = None
+            roof_area_m2 = None
 
-            ring_3d_src = _ordered_ring_from_points(points)
-            if ring_3d_src is None or len(ring_3d_src) < 4:
-                continue
-            roof_area_m2 = _polygon_ring_area_3d(ring_3d_src)
+            geom2d, frame = _boundary_geometry_from_mesh(tile_mesh)
+            if geom2d is not None and frame is not None:
+                geometry_src = _geometry2d_to_geojson3d(geom2d, frame)
+                if geometry_src is not None:
+                    geometry_dst = _transform_geometry_xy(geometry_src, tr)
+                    if geometry_dst is not None:
+                        roof_area_m2 = float(geom2d.area)
+                        export_stats["direct_boundary"] += 1
+
+            if geometry_dst is None:
+                # Conservative fallback: keep prior raw slice-point behavior.
+                points = np.asarray(tile_mesh.points, dtype=float)
+                if points.ndim != 2 or points.shape[1] < 3 or points.shape[0] < 3:
+                    export_stats["skipped"] += 1
+                    print(
+                        f"[warn] Skipping roof export for building {building_id} face {local_face}: "
+                        "boundary reconstruction failed and raw points are invalid."
+                    )
+                    continue
+
+                ring_3d_src = [[float(x), float(y), float(z)] for x, y, z in points[:, :3]]
+                if ring_3d_src[0] != ring_3d_src[-1]:
+                    ring_3d_src.append(ring_3d_src[0][:])
+
+                roof_area_m2 = _polygon_ring_area_3d(ring_3d_src)
+                if roof_area_m2 is None:
+                    roof_area_m2 = 0.0
+
+                ring_3d_dst = []
+                for x, y, z in ring_3d_src:
+                    x_t, y_t = tr.transform(float(x), float(y))
+                    ring_3d_dst.append([x_t, y_t, float(z)])
+                geometry_dst = {"type": "Polygon", "coordinates": [ring_3d_dst]}
+                export_stats["raw_fallback"] += 1
 
             selected_face = selected_faces.get(str(local_face), {}) if isinstance(selected_faces, dict) else {}
             roof_confidence = selected_face.get("probability") if isinstance(selected_face, dict) else None
@@ -1817,11 +2293,6 @@ def export_roof_surfaces_geojson(
             if roof_face_global == "":
                 roof_face_global = None
 
-            ring_3d_dst = []
-            for x, y, z in ring_3d_src:
-                x_t, y_t = tr.transform(float(x), float(y))
-                ring_3d_dst.append([x_t, y_t, float(z)])
-
             features.append(
                 {
                     "type": "Feature",
@@ -1834,8 +2305,8 @@ def export_roof_surfaces_geojson(
                         "roof_area_m2": roof_area_m2,
                     },
                     "geometry": {
-                        "type": "Polygon",
-                        "coordinates": [ring_3d_dst],
+                        "type": geometry_dst["type"],
+                        "coordinates": geometry_dst["coordinates"],
                     },
                 }
             )
@@ -1854,7 +2325,12 @@ def export_roof_surfaces_geojson(
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(geojson, f, ensure_ascii=False, indent=2)
 
-    print(f"[ok] Roof surfaces exported to: {output_path} ({len(features)} feature(s))")
+    print(
+        f"[ok] Roof surfaces exported to: {output_path} ({len(features)} feature(s)) | "
+        f"direct-boundary={export_stats['direct_boundary']} "
+        f"raw-fallback={export_stats['raw_fallback']} "
+        f"skipped={export_stats['skipped']}"
+    )
     return geojson
 
 _model_cache = None
@@ -1884,54 +2360,61 @@ def use_this_function(
         log_lines.append(msg)
         return "\n".join(log_lines)
 
-    # Stage 1 — CRS
-    print("Converting coordinates…")
+    # Stage 1 â€” CRS
+    print("Converting coordinatesâ€¦")
     t = Transformer.from_crs("EPSG:4326", "EPSG:3763", always_xy=True)
     tl_x, tl_y = t.transform(west, north)
     br_x, br_y = t.transform(east, south)
     area_m2 = abs(br_x - tl_x) * abs(tl_y - br_y)
-    print(f"📐  Area: {area_m2/1e6:.4f} km²")
-    print(f"🔁  EPSG:4326 → EPSG:3763 done")
+    print(f"ðŸ“  Area: {area_m2/1e6:.4f} kmÂ²")
+    print(f"ðŸ”  EPSG:4326 â†’ EPSG:3763 done")
 
 
-    # Stage 2 — OSM
-    print("Fetching OSM buildings…")
-    print("🗺   Querying Overpass API…")
+    # Stage 2 â€” OSM
+    print("Fetching OSM buildingsâ€¦")
+    print("ðŸ—º   Querying Overpass APIâ€¦")
     geojson = get_osm_buildings((tl_x, tl_y), (br_x, br_y))
-    print(f"✅  OSM done — {len(geojson['features'])} footprint(s)")
+    print(f"âœ…  OSM done â€” {len(geojson['features'])} footprint(s)")
 
-    # Stage 3 — WMTS connect
-    print("Connecting to WMTS…")
-    print("📡  Connecting to DGT WMTS satellite service…")
+    # Stage 3 â€” WMTS connect
+    print("Connecting to WMTSâ€¦")
+    print("ðŸ“¡  Connecting to DGT WMTS satellite serviceâ€¦")
     wmts_url = ("https://cartografia.dgterritorio.gov.pt/ortos2018/service"
                 "?service=WMTS&request=GetCapabilities")
     wmts   = _connect_wmts_forever(wmts_url)
     matrix = wmts.tilematrixsets["PTTM_06"].tilematrix["14"]
     col_min, col_max, row_min, row_max = get_tile_indices(tl_x, br_y, br_x, tl_y, matrix)
     total_tiles = (col_max+1-col_min) * (row_max+1-row_min)
-    print(f"🛰   Service ready — {total_tiles} tile(s) to download")
+    print(f"ðŸ›°   Service ready â€” {total_tiles} tile(s) to download")
 
-    # Stage 4 — Tiles
+    # Stage 4 â€” Tiles
     def tile_cb(done, total):
-        print(f"Downloading tiles… {done}/{total}")
+        print(f"Downloading tilesâ€¦ {done}/{total}")
 
     satellite_image, res, _ = retrieve_satelite_image(
         (tl_x, tl_y), (br_x, br_y), progress_cb=tile_cb)
     h, w = satellite_image.shape[:2]
 
-    # Stage 5 — YOLO
-    print("Running YOLO inference…")
-    print(f"🤖  Running detector  (conf≥{building_threshold:.2f}, iou≤{overlap_threshold:.2f})…")
+    # Stage 5 â€” YOLO
+    print("Running YOLO inferenceâ€¦")
+    print(f"ðŸ¤–  Running detector  (confâ‰¥{building_threshold:.2f}, iouâ‰¤{overlap_threshold:.2f})â€¦")
     model = get_cached_model()
     img_bgr   = cv2.cvtColor(satellite_image, cv2.COLOR_RGB2BGR)
     buildings = retrieve_prediction_list(img_bgr, (tl_x, tl_y), res,
                                             building_threshold, overlap_threshold, model)
-    print(f"✅  {len(buildings)} building(s)")
+    print(f"âœ…  {len(buildings)} building(s)")
 
     from PIL import Image
     annotated_image = draw_azimuths_on_satellite(satellite_image, buildings, (tl_x, tl_y), res)
     Image.fromarray(satellite_image).save("satellite_image.png")
-    print(f"✅  Satellite image ready  ({w}×{h} px, {res:.3f} m/px)")
+    output_path_abs = os.path.abspath(output_path)
+    output_dir = os.path.dirname(output_path_abs)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        scenario_satellite_raw = os.path.join(output_dir, "satellite_image_raw.png")
+        Image.fromarray(satellite_image).save(scenario_satellite_raw)
+        print(f"[ok] Saved scenario satellite image: {scenario_satellite_raw}")
+    print(f"âœ…  Satellite image ready  ({w}Ã—{h} px, {res:.3f} m/px)")
     # Matching source for IDs: authoritative scenario zone.shp
     if polygon_ring_lon_lat is not None:
         selection_ring = _normalise_polygon_ring(polygon_ring_lon_lat)
@@ -2244,4 +2727,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
