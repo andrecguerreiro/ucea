@@ -446,8 +446,58 @@ def write_zone_shp(typology_df, poly, locator):
 
 def parse_year(year: Union[str, int]) -> int:
     import re
+    import unicodedata
+    from typing import Optional
+
+    def _roman_to_int(text: str) -> Optional[int]:
+        values = {"I": 1, "V": 5, "X": 10, "L": 50, "C": 100, "D": 500, "M": 1000}
+        roman = text.strip().upper()
+        if not roman or any(ch not in values for ch in roman):
+            return None
+        total = 0
+        prev = 0
+        for ch in reversed(roman):
+            val = values[ch]
+            if val < prev:
+                total -= val
+            else:
+                total += val
+                prev = val
+        return total if total > 0 else None
+
+    def _century_to_year_start(century_number: int) -> Optional[int]:
+        if century_number <= 0:
+            return None
+        return (century_number - 1) * 100
+
+    def _normalize_text(text: str) -> str:
+        normalized = unicodedata.normalize("NFKD", text)
+        normalized = "".join(ch for ch in normalized if not unicodedata.combining(ch))
+        return normalized.strip()
+
     # `start-date` formats can be found here https://wiki.openstreetmap.org/wiki/Key:start_date#Formatting
     if isinstance(year, str):
+        year = _normalize_text(year)
+
+        # Century expressions (Portuguese / OSM free text), e.g.:
+        # - "Sec. XVIII"
+        # - "Sec. XVIII/XIX"
+        # - "18th century"
+        century_roman = re.search(r"\bsec\.?\s*([ivxlcdm]+)(?:\s*[/\-]\s*([ivxlcdm]+))?\b", year, re.IGNORECASE)
+        if century_roman:
+            c1 = _roman_to_int(century_roman.group(1))
+            c2 = _roman_to_int(century_roman.group(2) or "")
+            selected = c2 if c2 is not None else c1
+            selected_year = _century_to_year_start(selected) if selected is not None else None
+            if selected_year is not None:
+                return selected_year
+
+        century_arabic = re.search(r"\b(\d{1,2})(?:st|nd|rd|th)?\s*century\b", year, re.IGNORECASE)
+        if century_arabic:
+            selected_year = _century_to_year_start(int(century_arabic.group(1)))
+            if selected_year is not None:
+                return selected_year
+
         # For year in "century" format e.g. `C19`
         century_year = re.search(r'C(\d{2})', year)
         if century_year:
