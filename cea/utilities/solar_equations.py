@@ -412,7 +412,7 @@ def optimal_angle_and_tilt(sensors_metadata_clean, latitude, solar_properties, m
 
     # calculate the surface area required to install one pv panel on flat roofs with defined tilt angle and array spacing
     if panel_properties['type'] == 'PV':
-        module_width_m = module_length_m  # for PV
+        module_width_m = 1  # for PV
     else:
         module_width_m = panel_properties['module_area_m2'] / module_length_m  # for FP, ET
     module_flat_surface_area_m2 = module_width_m * (sensors_metadata_clean.array_spacing_m / 2 +
@@ -421,9 +421,10 @@ def optimal_angle_and_tilt(sensors_metadata_clean, latitude, solar_properties, m
 
     # calculate the pv/solar collector module area within the area of each sensor point
     sensors_metadata_clean['area_installed_module_m2'] = np.where(sensors_metadata_clean['tilt_deg'] >= 5,
-                                                                  sensors_metadata_clean.AREA_m2,
+                                                                  np.floor(sensors_metadata_clean.AREA_m2/
+                                                                   area_per_module_m2),
                                                                   roof_coverage * area_per_module_m2 *
-                                                                  (sensors_metadata_clean.AREA_m2 /
+                                                                np.floor(sensors_metadata_clean.AREA_m2 /
                                                                    module_flat_surface_area_m2))
 
     # categorize the sensors by surface_azimuth, B, GB

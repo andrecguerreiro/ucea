@@ -18,6 +18,13 @@ Two-step workflow:
     - writes per-area validation outputs
 """
 
+"""
+Usage: # 1) Build validation directly from your existing config
+python tools/validation_dataset.py build-validation --areas-config tools/validation_areas_config.json --output-dir tools/validation_outputs
+
+
+"""
+
 from __future__ import annotations
 
 import argparse

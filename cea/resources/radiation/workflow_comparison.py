@@ -93,12 +93,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--harmonise-pv-azimuth-convention",
         action="store_true",
-        default=True,
+        default=False,
         dest="harmonise_pv_azimuth_convention",
         help=(
-            "Before each photovoltaic run, rotate sloped-roof metadata normals by 180° in XY so panel azimuth "
+            "Before each photovoltaic run, rotate sloped-roof metadata normals by 180Â° in XY so panel azimuth "
             "is in the same convention frame expected by the current PV AOI path. Metadata is restored afterwards. "
-            "Default: enabled."
+            "Default: disabled."
         ),
     )
     parser.add_argument(
@@ -442,3 +442,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

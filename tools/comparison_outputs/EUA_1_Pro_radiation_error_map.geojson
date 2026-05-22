@@ -34,7 +34,11 @@
         "err_ucea_area_pct_of_validation": 0.38261420984242583,
         "err_workflow0_minus_validation_kwh_year": 97187.86162499862,
         "err_workflow0_abs_kwh_year": 97187.86162499862,
-        "err_workflow0_pct_of_validation": 19.99978090096441
+        "err_workflow0_pct_of_validation": 19.99978090096441,
+        "err_oven_minus_cea_kwh_year": 368.9399999983143,
+        "err_oven_vs_cea_ratio": 0.0009490252735619574,
+        "err_oven_vs_cea_pct_of_cea": 0.09490252735619574,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.09490252735619574
       },
       "geometry": {
         "type": "Polygon",
@@ -100,7 +104,11 @@
         "err_ucea_area_pct_of_validation": 1.0328168200781778,
         "err_workflow0_minus_validation_kwh_year": 114622.5892343754,
         "err_workflow0_abs_kwh_year": 114622.5892343754,
-        "err_workflow0_pct_of_validation": 23.438120703067927
+        "err_workflow0_pct_of_validation": 23.438120703067927,
+        "err_oven_minus_cea_kwh_year": 13528.370000000752,
+        "err_oven_vs_cea_ratio": 0.03613145571705027,
+        "err_oven_vs_cea_pct_of_cea": 3.613145571705027,
+        "err_oven_vs_cea_abs_pct_of_cea": 3.613145571705027
       },
       "geometry": {
         "type": "Polygon",
@@ -170,7 +178,11 @@
         "err_ucea_area_pct_of_validation": 1.4814312891228902,
         "err_workflow0_minus_validation_kwh_year": 152231.83870312496,
         "err_workflow0_abs_kwh_year": 152231.83870312496,
-        "err_workflow0_pct_of_validation": 30.524975737317888
+        "err_workflow0_pct_of_validation": 30.524975737317888,
+        "err_oven_minus_cea_kwh_year": 14137.71000000101,
+        "err_oven_vs_cea_ratio": 0.040803761111448816,
+        "err_oven_vs_cea_pct_of_cea": 4.080376111144882,
+        "err_oven_vs_cea_abs_pct_of_cea": 4.080376111144882
       },
       "geometry": {
         "type": "Polygon",
@@ -244,7 +256,11 @@
         "err_ucea_area_pct_of_validation": 2.3753926345274525,
         "err_workflow0_minus_validation_kwh_year": 84187.37974999983,
         "err_workflow0_abs_kwh_year": 84187.37974999983,
-        "err_workflow0_pct_of_validation": 64.00673000888143
+        "err_workflow0_pct_of_validation": 64.00673000888143,
+        "err_oven_minus_cea_kwh_year": 5337.589999999946,
+        "err_oven_vs_cea_ratio": 0.11274636645975042,
+        "err_oven_vs_cea_pct_of_cea": 11.274636645975042,
+        "err_oven_vs_cea_abs_pct_of_cea": 11.274636645975042
       },
       "geometry": {
         "type": "Polygon",
@@ -322,7 +338,11 @@
         "err_ucea_area_pct_of_validation": 2.87643059064271,
         "err_workflow0_minus_validation_kwh_year": 9271.996031250252,
         "err_workflow0_abs_kwh_year": 9271.996031250252,
-        "err_workflow0_pct_of_validation": 7.521575446894079
+        "err_workflow0_pct_of_validation": 7.521575446894079,
+        "err_oven_minus_cea_kwh_year": 16512.649999999587,
+        "err_oven_vs_cea_ratio": 0.12458241222404393,
+        "err_oven_vs_cea_pct_of_cea": 12.458241222404393,
+        "err_oven_vs_cea_abs_pct_of_cea": 12.458241222404393
       },
       "geometry": {
         "type": "Polygon",
@@ -384,7 +404,11 @@
         "err_ucea_area_pct_of_validation": 0.028840173497658862,
         "err_workflow0_minus_validation_kwh_year": 34384.72071874987,
         "err_workflow0_abs_kwh_year": 34384.72071874987,
-        "err_workflow0_pct_of_validation": 22.573073283095496
+        "err_workflow0_pct_of_validation": 22.573073283095496,
+        "err_oven_minus_cea_kwh_year": -268.35000000071886,
+        "err_oven_vs_cea_ratio": -0.0022752795770508236,
+        "err_oven_vs_cea_pct_of_cea": -0.22752795770508236,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.22752795770508236
       },
       "geometry": {
         "type": "Polygon",
@@ -450,7 +474,11 @@
         "err_ucea_area_pct_of_validation": 1.203379993073475,
         "err_workflow0_minus_validation_kwh_year": 104432.50314062508,
         "err_workflow0_abs_kwh_year": 104432.50314062508,
-        "err_workflow0_pct_of_validation": 19.537825511215402
+        "err_workflow0_pct_of_validation": 19.537825511215402,
+        "err_oven_minus_cea_kwh_year": -1959.9100000020117,
+        "err_oven_vs_cea_ratio": -0.004557061635419472,
+        "err_oven_vs_cea_pct_of_cea": -0.45570616354194715,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.45570616354194715
       },
       "geometry": {
         "type": "Polygon",
@@ -512,7 +540,11 @@
         "err_ucea_area_pct_of_validation": 1.2305691839054365,
         "err_workflow0_minus_validation_kwh_year": 33851.35492187424,
         "err_workflow0_abs_kwh_year": 33851.35492187424,
-        "err_workflow0_pct_of_validation": 7.995213958447242
+        "err_workflow0_pct_of_validation": 7.995213958447242,
+        "err_oven_minus_cea_kwh_year": 2717.5099999975064,
+        "err_oven_vs_cea_ratio": 0.006976133215075799,
+        "err_oven_vs_cea_pct_of_cea": 0.6976133215075799,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.6976133215075799
       },
       "geometry": {
         "type": "Polygon",
@@ -574,7 +606,11 @@
         "err_ucea_area_pct_of_validation": 1.364485146293005,
         "err_workflow0_minus_validation_kwh_year": 95214.14018749935,
         "err_workflow0_abs_kwh_year": 95214.14018749935,
-        "err_workflow0_pct_of_validation": 19.163200910303704
+        "err_workflow0_pct_of_validation": 19.163200910303704,
+        "err_oven_minus_cea_kwh_year": 502.1399999978021,
+        "err_oven_vs_cea_ratio": 0.0012502081128129233,
+        "err_oven_vs_cea_pct_of_cea": 0.12502081128129233,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.12502081128129233
       },
       "geometry": {
         "type": "Polygon",
@@ -636,7 +672,11 @@
         "err_ucea_area_pct_of_validation": 2.53368489173048,
         "err_workflow0_minus_validation_kwh_year": 1093.8987812503765,
         "err_workflow0_abs_kwh_year": 1093.8987812503765,
-        "err_workflow0_pct_of_validation": 0.4203151604004074
+        "err_workflow0_pct_of_validation": 0.4203151604004074,
+        "err_oven_minus_cea_kwh_year": 427.3900000002759,
+        "err_oven_vs_cea_ratio": 0.0016491172154667066,
+        "err_oven_vs_cea_pct_of_cea": 0.16491172154667066,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.16491172154667066
       },
       "geometry": {
         "type": "Polygon",
@@ -698,7 +738,11 @@
         "err_ucea_area_pct_of_validation": 1.6742412882506787,
         "err_workflow0_minus_validation_kwh_year": 13985.468499999639,
         "err_workflow0_abs_kwh_year": 13985.468499999639,
-        "err_workflow0_pct_of_validation": 5.900510552576554
+        "err_workflow0_pct_of_validation": 5.900510552576554,
+        "err_oven_minus_cea_kwh_year": 996.1099999996368,
+        "err_oven_vs_cea_ratio": 0.004466142798739338,
+        "err_oven_vs_cea_pct_of_cea": 0.44661427987393376,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.44661427987393376
       },
       "geometry": {
         "type": "Polygon",
@@ -760,7 +804,11 @@
         "err_ucea_area_pct_of_validation": 0.9425444296420189,
         "err_workflow0_minus_validation_kwh_year": 214645.3004375007,
         "err_workflow0_abs_kwh_year": 214645.3004375007,
-        "err_workflow0_pct_of_validation": 27.26048196650565
+        "err_workflow0_pct_of_validation": 27.26048196650565,
+        "err_oven_minus_cea_kwh_year": 5147.199999999953,
+        "err_oven_vs_cea_ratio": 0.00898695920145399,
+        "err_oven_vs_cea_pct_of_cea": 0.898695920145399,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.898695920145399
       },
       "geometry": {
         "type": "Polygon",
@@ -858,7 +906,11 @@
         "err_ucea_area_pct_of_validation": 0.25817752800339183,
         "err_workflow0_minus_validation_kwh_year": 676684.1227812541,
         "err_workflow0_abs_kwh_year": 676684.1227812541,
-        "err_workflow0_pct_of_validation": 28.864638941621696
+        "err_workflow0_pct_of_validation": 28.864638941621696,
+        "err_oven_minus_cea_kwh_year": 127.24000000581145,
+        "err_oven_vs_cea_ratio": 7.629889758875321e-05,
+        "err_oven_vs_cea_pct_of_cea": 0.007629889758875321,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.007629889758875321
       },
       "geometry": {
         "type": "Polygon",
@@ -972,7 +1024,11 @@
         "err_ucea_area_pct_of_validation": 0.0004343875932417452,
         "err_workflow0_minus_validation_kwh_year": 374673.3133750026,
         "err_workflow0_abs_kwh_year": 374673.3133750026,
-        "err_workflow0_pct_of_validation": 32.45070923836001
+        "err_workflow0_pct_of_validation": 32.45070923836001,
+        "err_oven_minus_cea_kwh_year": 200.030000002007,
+        "err_oven_vs_cea_ratio": 0.0002564754341423484,
+        "err_oven_vs_cea_pct_of_cea": 0.025647543414234843,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.025647543414234843
       },
       "geometry": {
         "type": "Polygon",
@@ -1034,7 +1090,11 @@
         "err_ucea_area_pct_of_validation": 0.011059936967496114,
         "err_workflow0_minus_validation_kwh_year": 227182.8462499982,
         "err_workflow0_abs_kwh_year": 227182.8462499982,
-        "err_workflow0_pct_of_validation": 27.680799673881445
+        "err_workflow0_pct_of_validation": 27.680799673881445,
+        "err_oven_minus_cea_kwh_year": 42031.71999999776,
+        "err_oven_vs_cea_ratio": 0.07081522561754083,
+        "err_oven_vs_cea_pct_of_cea": 7.081522561754083,
+        "err_oven_vs_cea_abs_pct_of_cea": 7.081522561754083
       },
       "geometry": {
         "type": "Polygon",
@@ -1156,7 +1216,11 @@
         "err_ucea_area_pct_of_validation": 0.7178250017356452,
         "err_workflow0_minus_validation_kwh_year": 51691.219437499356,
         "err_workflow0_abs_kwh_year": 51691.219437499356,
-        "err_workflow0_pct_of_validation": 22.519461540454017
+        "err_workflow0_pct_of_validation": 22.519461540454017,
+        "err_oven_minus_cea_kwh_year": 9528.390000001644,
+        "err_oven_vs_cea_ratio": 0.03388095704666319,
+        "err_oven_vs_cea_pct_of_cea": 3.388095704666319,
+        "err_oven_vs_cea_abs_pct_of_cea": 3.388095704666319
       },
       "geometry": {
         "type": "Polygon",
@@ -1218,7 +1282,11 @@
         "err_ucea_area_pct_of_validation": 0.2633975597609794,
         "err_workflow0_minus_validation_kwh_year": 154091.78468750126,
         "err_workflow0_abs_kwh_year": 154091.78468750126,
-        "err_workflow0_pct_of_validation": 19.65652639842615
+        "err_workflow0_pct_of_validation": 19.65652639842615,
+        "err_oven_minus_cea_kwh_year": 4750.180000002729,
+        "err_oven_vs_cea_ratio": 0.007542003876733234,
+        "err_oven_vs_cea_pct_of_cea": 0.7542003876733234,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7542003876733234
       },
       "geometry": {
         "type": "Polygon",
@@ -1348,7 +1416,11 @@
         "err_ucea_area_pct_of_validation": 0.00021538429178295668,
         "err_workflow0_minus_validation_kwh_year": 143110.60879687464,
         "err_workflow0_abs_kwh_year": 143110.60879687464,
-        "err_workflow0_pct_of_validation": 16.546659362775568
+        "err_workflow0_pct_of_validation": 16.546659362775568,
+        "err_oven_minus_cea_kwh_year": -2409.649999997695,
+        "err_oven_vs_cea_ratio": -0.0033384796799172858,
+        "err_oven_vs_cea_pct_of_cea": -0.33384796799172856,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.33384796799172856
       },
       "geometry": {
         "type": "Polygon",
@@ -1410,7 +1482,11 @@
         "err_ucea_area_pct_of_validation": 0.8111306650184286,
         "err_workflow0_minus_validation_kwh_year": 13965.553124999831,
         "err_workflow0_abs_kwh_year": 13965.553124999831,
-        "err_workflow0_pct_of_validation": 8.508267014804279
+        "err_workflow0_pct_of_validation": 8.508267014804279,
+        "err_oven_minus_cea_kwh_year": -447.49999999953434,
+        "err_oven_vs_cea_ratio": -0.002979848301413446,
+        "err_oven_vs_cea_pct_of_cea": -0.2979848301413446,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.2979848301413446
       },
       "geometry": {
         "type": "Polygon",
@@ -1480,7 +1556,11 @@
         "err_ucea_area_pct_of_validation": 0.0038326685920040903,
         "err_workflow0_minus_validation_kwh_year": 165679.14251562662,
         "err_workflow0_abs_kwh_year": 165679.14251562662,
-        "err_workflow0_pct_of_validation": 23.11761906351614
+        "err_workflow0_pct_of_validation": 23.11761906351614,
+        "err_oven_minus_cea_kwh_year": 275.61000000149943,
+        "err_oven_vs_cea_ratio": 0.000500199682416487,
+        "err_oven_vs_cea_pct_of_cea": 0.050019968241648706,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.050019968241648706
       },
       "geometry": {
         "type": "Polygon",
@@ -1546,7 +1626,11 @@
         "err_ucea_area_pct_of_validation": 2.3375330392043367,
         "err_workflow0_minus_validation_kwh_year": 112821.35043750028,
         "err_workflow0_abs_kwh_year": 112821.35043750028,
-        "err_workflow0_pct_of_validation": 16.653232997793214
+        "err_workflow0_pct_of_validation": 16.653232997793214,
+        "err_oven_minus_cea_kwh_year": 9984.659999998054,
+        "err_oven_vs_cea_ratio": 0.01768283062294166,
+        "err_oven_vs_cea_pct_of_cea": 1.768283062294166,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.768283062294166
       },
       "geometry": {
         "type": "Polygon",
@@ -1608,7 +1692,11 @@
         "err_ucea_area_pct_of_validation": 0.007265020645851451,
         "err_workflow0_minus_validation_kwh_year": 28025.49243750202,
         "err_workflow0_abs_kwh_year": 28025.49243750202,
-        "err_workflow0_pct_of_validation": 3.5366058333571835
+        "err_workflow0_pct_of_validation": 3.5366058333571835,
+        "err_oven_minus_cea_kwh_year": 3594.720000000787,
+        "err_oven_vs_cea_ratio": 0.004702577218278111,
+        "err_oven_vs_cea_pct_of_cea": 0.4702577218278111,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.4702577218278111
       },
       "geometry": {
         "type": "Polygon",
@@ -1758,7 +1846,11 @@
         "err_ucea_area_pct_of_validation": 0.0010171005544139641,
         "err_workflow0_minus_validation_kwh_year": 249279.73126562499,
         "err_workflow0_abs_kwh_year": 249279.73126562499,
-        "err_workflow0_pct_of_validation": 42.58468014590712
+        "err_workflow0_pct_of_validation": 42.58468014590712,
+        "err_oven_minus_cea_kwh_year": 558.609999999986,
+        "err_oven_vs_cea_ratio": 0.0016620624552376184,
+        "err_oven_vs_cea_pct_of_cea": 0.16620624552376184,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.16620624552376184
       },
       "geometry": {
         "type": "Polygon",
@@ -1820,7 +1912,11 @@
         "err_ucea_area_pct_of_validation": 0.06768121327986029,
         "err_workflow0_minus_validation_kwh_year": 130411.36856249924,
         "err_workflow0_abs_kwh_year": 130411.36856249924,
-        "err_workflow0_pct_of_validation": 21.005326651459555
+        "err_workflow0_pct_of_validation": 21.005326651459555,
+        "err_oven_minus_cea_kwh_year": -5486.819999999891,
+        "err_oven_vs_cea_ratio": -0.011187599027619313,
+        "err_oven_vs_cea_pct_of_cea": -1.1187599027619313,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.1187599027619313
       },
       "geometry": {
         "type": "Polygon",
@@ -1886,7 +1982,11 @@
         "err_ucea_area_pct_of_validation": 1.5451900885720045,
         "err_workflow0_minus_validation_kwh_year": 86920.62565625092,
         "err_workflow0_abs_kwh_year": 86920.62565625092,
-        "err_workflow0_pct_of_validation": 16.826417049603968
+        "err_workflow0_pct_of_validation": 16.826417049603968,
+        "err_oven_minus_cea_kwh_year": 3690.0400000001537,
+        "err_oven_vs_cea_ratio": 0.008588443613301446,
+        "err_oven_vs_cea_pct_of_cea": 0.8588443613301445,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8588443613301445
       },
       "geometry": {
         "type": "Polygon",
@@ -1948,7 +2048,11 @@
         "err_ucea_area_pct_of_validation": 0.015716432186906402,
         "err_workflow0_minus_validation_kwh_year": 434298.21915625024,
         "err_workflow0_abs_kwh_year": 434298.21915625024,
-        "err_workflow0_pct_of_validation": 53.108767348693256
+        "err_workflow0_pct_of_validation": 53.108767348693256,
+        "err_oven_minus_cea_kwh_year": 37941.02999999892,
+        "err_oven_vs_cea_ratio": 0.09894540724526445,
+        "err_oven_vs_cea_pct_of_cea": 9.894540724526445,
+        "err_oven_vs_cea_abs_pct_of_cea": 9.894540724526445
       },
       "geometry": {
         "type": "Polygon",
@@ -2070,7 +2174,11 @@
         "err_ucea_area_pct_of_validation": 1.8459208938156155,
         "err_workflow0_minus_validation_kwh_year": 74252.80904687429,
         "err_workflow0_abs_kwh_year": 74252.80904687429,
-        "err_workflow0_pct_of_validation": 11.119206691741297
+        "err_workflow0_pct_of_validation": 11.119206691741297,
+        "err_oven_minus_cea_kwh_year": 3876.239999997546,
+        "err_oven_vs_cea_ratio": 0.0065307589134580785,
+        "err_oven_vs_cea_pct_of_cea": 0.6530758913458079,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.6530758913458079
       },
       "geometry": {
         "type": "Polygon",
@@ -2136,7 +2244,11 @@
         "err_ucea_area_pct_of_validation": 0.0002329698039356618,
         "err_workflow0_minus_validation_kwh_year": 272390.2967187506,
         "err_workflow0_abs_kwh_year": 272390.2967187506,
-        "err_workflow0_pct_of_validation": 20.784960977421594
+        "err_workflow0_pct_of_validation": 20.784960977421594,
+        "err_oven_minus_cea_kwh_year": -3144.0799999984447,
+        "err_oven_vs_cea_ratio": -0.0030286112288591856,
+        "err_oven_vs_cea_pct_of_cea": -0.30286112288591854,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.30286112288591854
       },
       "geometry": {
         "type": "Polygon",
@@ -2206,7 +2318,11 @@
         "err_ucea_area_pct_of_validation": 100.0,
         "err_workflow0_minus_validation_kwh_year": 155256.4173203125,
         "err_workflow0_abs_kwh_year": 155256.4173203125,
-        "err_workflow0_pct_of_validation": 100.0
+        "err_workflow0_pct_of_validation": 100.0,
+        "err_oven_minus_cea_kwh_year": 0.0,
+        "err_oven_vs_cea_ratio": null,
+        "err_oven_vs_cea_pct_of_cea": null,
+        "err_oven_vs_cea_abs_pct_of_cea": null
       },
       "geometry": {
         "type": "Polygon",
@@ -2304,7 +2420,11 @@
         "err_ucea_area_pct_of_validation": 0.01118477436249365,
         "err_workflow0_minus_validation_kwh_year": 345193.04567968636,
         "err_workflow0_abs_kwh_year": 345193.04567968636,
-        "err_workflow0_pct_of_validation": 16.785218211423224
+        "err_workflow0_pct_of_validation": 16.785218211423224,
+        "err_oven_minus_cea_kwh_year": 26309.159999998286,
+        "err_oven_vs_cea_ratio": 0.015373454160346862,
+        "err_oven_vs_cea_pct_of_cea": 1.5373454160346862,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.5373454160346862
       },
       "geometry": {
         "type": "Polygon",
@@ -2406,7 +2526,11 @@
         "err_ucea_area_pct_of_validation": 0.01774089816999442,
         "err_workflow0_minus_validation_kwh_year": 302446.78773437184,
         "err_workflow0_abs_kwh_year": 302446.78773437184,
-        "err_workflow0_pct_of_validation": 15.353000192223599
+        "err_workflow0_pct_of_validation": 15.353000192223599,
+        "err_oven_minus_cea_kwh_year": -19078.43000000599,
+        "err_oven_vs_cea_ratio": -0.011441299182238381,
+        "err_oven_vs_cea_pct_of_cea": -1.144129918223838,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.144129918223838
       },
       "geometry": {
         "type": "Polygon",
@@ -2484,7 +2608,11 @@
         "err_ucea_area_pct_of_validation": 1.4877125059455014,
         "err_workflow0_minus_validation_kwh_year": 98299.41237499972,
         "err_workflow0_abs_kwh_year": 98299.41237499972,
-        "err_workflow0_pct_of_validation": 17.442291436233536
+        "err_workflow0_pct_of_validation": 17.442291436233536,
+        "err_oven_minus_cea_kwh_year": -629.2600000001257,
+        "err_oven_vs_cea_ratio": -0.0013524621275788475,
+        "err_oven_vs_cea_pct_of_cea": -0.13524621275788476,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.13524621275788476
       },
       "geometry": {
         "type": "Polygon",
@@ -2550,7 +2678,11 @@
         "err_ucea_area_pct_of_validation": 2.055190183477714,
         "err_workflow0_minus_validation_kwh_year": 126049.44434375048,
         "err_workflow0_abs_kwh_year": 126049.44434375048,
-        "err_workflow0_pct_of_validation": 20.235228216541426
+        "err_workflow0_pct_of_validation": 20.235228216541426,
+        "err_oven_minus_cea_kwh_year": 7954.730000000505,
+        "err_oven_vs_cea_ratio": 0.01600963710224088,
+        "err_oven_vs_cea_pct_of_cea": 1.600963710224088,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.600963710224088
       },
       "geometry": {
         "type": "Polygon",
@@ -2612,7 +2744,11 @@
         "err_ucea_area_pct_of_validation": 0.7871751774900357,
         "err_workflow0_minus_validation_kwh_year": 126952.84531249932,
         "err_workflow0_abs_kwh_year": 126952.84531249932,
-        "err_workflow0_pct_of_validation": 23.2225347963554
+        "err_workflow0_pct_of_validation": 23.2225347963554,
+        "err_oven_minus_cea_kwh_year": -525.4100000000908,
+        "err_oven_vs_cea_ratio": -0.0012517907784231925,
+        "err_oven_vs_cea_pct_of_cea": -0.12517907784231924,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.12517907784231924
       },
       "geometry": {
         "type": "Polygon",
@@ -2678,7 +2814,11 @@
         "err_ucea_area_pct_of_validation": 1.2559534135680785,
         "err_workflow0_minus_validation_kwh_year": 89508.12081250141,
         "err_workflow0_abs_kwh_year": 89508.12081250141,
-        "err_workflow0_pct_of_validation": 18.366853972415882
+        "err_workflow0_pct_of_validation": 18.366853972415882,
+        "err_oven_minus_cea_kwh_year": 8727.019999999553,
+        "err_oven_vs_cea_ratio": 0.021936723995193346,
+        "err_oven_vs_cea_pct_of_cea": 2.193672399519335,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.193672399519335
       },
       "geometry": {
         "type": "Polygon",
@@ -2744,7 +2884,11 @@
         "err_ucea_area_pct_of_validation": 1.375835486855495,
         "err_workflow0_minus_validation_kwh_year": 129812.74796875118,
         "err_workflow0_abs_kwh_year": 129812.74796875118,
-        "err_workflow0_pct_of_validation": 24.0253443706486
+        "err_workflow0_pct_of_validation": 24.0253443706486,
+        "err_oven_minus_cea_kwh_year": 2522.2500000012224,
+        "err_oven_vs_cea_ratio": 0.006144289475805275,
+        "err_oven_vs_cea_pct_of_cea": 0.6144289475805276,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.6144289475805276
       },
       "geometry": {
         "type": "Polygon",
@@ -2806,7 +2950,11 @@
         "err_ucea_area_pct_of_validation": 1.847922014023876,
         "err_workflow0_minus_validation_kwh_year": 176129.14118750166,
         "err_workflow0_abs_kwh_year": 176129.14118750166,
-        "err_workflow0_pct_of_validation": 28.818743640845447
+        "err_workflow0_pct_of_validation": 28.818743640845447,
+        "err_oven_minus_cea_kwh_year": 3881.480000000447,
+        "err_oven_vs_cea_ratio": 0.008922273460782002,
+        "err_oven_vs_cea_pct_of_cea": 0.8922273460782002,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8922273460782002
       },
       "geometry": {
         "type": "Polygon",
@@ -2868,7 +3016,11 @@
         "err_ucea_area_pct_of_validation": 1.4855892634281247,
         "err_workflow0_minus_validation_kwh_year": 122159.63406250172,
         "err_workflow0_abs_kwh_year": 122159.63406250172,
-        "err_workflow0_pct_of_validation": 19.662313442251154
+        "err_workflow0_pct_of_validation": 19.662313442251154,
+        "err_oven_minus_cea_kwh_year": -2470.629999999306,
+        "err_oven_vs_cea_ratio": -0.0049498869599857095,
+        "err_oven_vs_cea_pct_of_cea": -0.494988695998571,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.494988695998571
       },
       "geometry": {
         "type": "Polygon",
@@ -2930,7 +3082,11 @@
         "err_ucea_area_pct_of_validation": 1.216326431241678,
         "err_workflow0_minus_validation_kwh_year": 121126.22021874943,
         "err_workflow0_abs_kwh_year": 121126.22021874943,
-        "err_workflow0_pct_of_validation": 22.521690734585768
+        "err_workflow0_pct_of_validation": 22.521690734585768,
+        "err_oven_minus_cea_kwh_year": 580.5499999988824,
+        "err_oven_vs_cea_ratio": 0.0013932284035891502,
+        "err_oven_vs_cea_pct_of_cea": 0.139322840358915,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.139322840358915
       },
       "geometry": {
         "type": "Polygon",
@@ -2992,7 +3148,11 @@
         "err_ucea_area_pct_of_validation": 0.864570974667189,
         "err_workflow0_minus_validation_kwh_year": 122554.24078906112,
         "err_workflow0_abs_kwh_year": 122554.24078906112,
-        "err_workflow0_pct_of_validation": 20.09791381697392
+        "err_workflow0_pct_of_validation": 20.09791381697392,
+        "err_oven_minus_cea_kwh_year": 2647.009999998496,
+        "err_oven_vs_cea_ratio": 0.0054327547365324805,
+        "err_oven_vs_cea_pct_of_cea": 0.543275473653248,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.543275473653248
       },
       "geometry": {
         "type": "Polygon",
@@ -3054,7 +3214,11 @@
         "err_ucea_area_pct_of_validation": 0.973295484014888,
         "err_workflow0_minus_validation_kwh_year": 129583.03787499899,
         "err_workflow0_abs_kwh_year": 129583.03787499899,
-        "err_workflow0_pct_of_validation": 23.226487133111366
+        "err_workflow0_pct_of_validation": 23.226487133111366,
+        "err_oven_minus_cea_kwh_year": -1340.4700000011362,
+        "err_oven_vs_cea_ratio": -0.0031295439812704406,
+        "err_oven_vs_cea_pct_of_cea": -0.31295439812704406,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.31295439812704406
       },
       "geometry": {
         "type": "Polygon",
@@ -3116,7 +3280,11 @@
         "err_ucea_area_pct_of_validation": 1.0657015628194841,
         "err_workflow0_minus_validation_kwh_year": 114978.52980468853,
         "err_workflow0_abs_kwh_year": 114978.52980468853,
-        "err_workflow0_pct_of_validation": 21.131001968354663
+        "err_workflow0_pct_of_validation": 21.131001968354663,
+        "err_oven_minus_cea_kwh_year": -5984.439999997616,
+        "err_oven_vs_cea_ratio": -0.013945064679225412,
+        "err_oven_vs_cea_pct_of_cea": -1.3945064679225412,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.3945064679225412
       },
       "geometry": {
         "type": "Polygon",
@@ -3178,7 +3346,11 @@
         "err_ucea_area_pct_of_validation": 1.274862013300659,
         "err_workflow0_minus_validation_kwh_year": 31825.45056249923,
         "err_workflow0_abs_kwh_year": 31825.45056249923,
-        "err_workflow0_pct_of_validation": 8.733085429735981
+        "err_workflow0_pct_of_validation": 8.733085429735981,
+        "err_oven_minus_cea_kwh_year": 1141.9999999987776,
+        "err_oven_vs_cea_ratio": 0.003433569819699325,
+        "err_oven_vs_cea_pct_of_cea": 0.3433569819699325,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.3433569819699325
       },
       "geometry": {
         "type": "Polygon",
@@ -3240,7 +3412,11 @@
         "err_ucea_area_pct_of_validation": 2.1379679914355942,
         "err_workflow0_minus_validation_kwh_year": 98642.90671875025,
         "err_workflow0_abs_kwh_year": 98642.90671875025,
-        "err_workflow0_pct_of_validation": 25.75815165430916
+        "err_workflow0_pct_of_validation": 25.75815165430916,
+        "err_oven_minus_cea_kwh_year": 1455.8500000004424,
+        "err_oven_vs_cea_ratio": 0.00512055092675322,
+        "err_oven_vs_cea_pct_of_cea": 0.512055092675322,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.512055092675322
       },
       "geometry": {
         "type": "Polygon",
@@ -3306,7 +3482,11 @@
         "err_ucea_area_pct_of_validation": 1.1705113665519142,
         "err_workflow0_minus_validation_kwh_year": 16929.911546874733,
         "err_workflow0_abs_kwh_year": 16929.911546874733,
-        "err_workflow0_pct_of_validation": 5.086817669379828
+        "err_workflow0_pct_of_validation": 5.086817669379828,
+        "err_oven_minus_cea_kwh_year": 1124.9300000003423,
+        "err_oven_vs_cea_ratio": 0.0035611514663054264,
+        "err_oven_vs_cea_pct_of_cea": 0.3561151466305426,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.3561151466305426
       },
       "geometry": {
         "type": "Polygon",
@@ -3368,7 +3548,11 @@
         "err_ucea_area_pct_of_validation": 0.1317010248875239,
         "err_workflow0_minus_validation_kwh_year": 113629.46421874978,
         "err_workflow0_abs_kwh_year": 113629.46421874978,
-        "err_workflow0_pct_of_validation": 23.378464132059428
+        "err_workflow0_pct_of_validation": 23.378464132059428,
+        "err_oven_minus_cea_kwh_year": 300.13000000006286,
+        "err_oven_vs_cea_ratio": 0.0008059044848654738,
+        "err_oven_vs_cea_pct_of_cea": 0.08059044848654738,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.08059044848654738
       },
       "geometry": {
         "type": "Polygon",
@@ -3434,7 +3618,11 @@
         "err_ucea_area_pct_of_validation": 0.01134912695080315,
         "err_workflow0_minus_validation_kwh_year": 51541.7228750003,
         "err_workflow0_abs_kwh_year": 51541.7228750003,
-        "err_workflow0_pct_of_validation": 17.657734369586997
+        "err_workflow0_pct_of_validation": 17.657734369586997,
+        "err_oven_minus_cea_kwh_year": -445.1199999997625,
+        "err_oven_vs_cea_ratio": -0.0018519546334345672,
+        "err_oven_vs_cea_pct_of_cea": -0.1851954633434567,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.1851954633434567
       },
       "geometry": {
         "type": "Polygon",
@@ -3500,7 +3688,11 @@
         "err_ucea_area_pct_of_validation": 1.9203721281643278,
         "err_workflow0_minus_validation_kwh_year": 59069.54604687472,
         "err_workflow0_abs_kwh_year": 59069.54604687472,
-        "err_workflow0_pct_of_validation": 18.29118878464639
+        "err_workflow0_pct_of_validation": 18.29118878464639,
+        "err_oven_minus_cea_kwh_year": 962.3299999988521,
+        "err_oven_vs_cea_ratio": 0.0036469804204938188,
+        "err_oven_vs_cea_pct_of_cea": 0.3646980420493819,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.3646980420493819
       },
       "geometry": {
         "type": "Polygon",
@@ -3566,7 +3758,11 @@
         "err_ucea_area_pct_of_validation": 0.8043584574074112,
         "err_workflow0_minus_validation_kwh_year": 24646.607906250138,
         "err_workflow0_abs_kwh_year": 24646.607906250138,
-        "err_workflow0_pct_of_validation": 9.003858673362572
+        "err_workflow0_pct_of_validation": 9.003858673362572,
+        "err_oven_minus_cea_kwh_year": 1844.5600000002305,
+        "err_oven_vs_cea_ratio": 0.007405277259698265,
+        "err_oven_vs_cea_pct_of_cea": 0.7405277259698264,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7405277259698264
       },
       "geometry": {
         "type": "Polygon",
@@ -3628,7 +3824,11 @@
         "err_ucea_area_pct_of_validation": 1.2221887977233634,
         "err_workflow0_minus_validation_kwh_year": 48478.18695312433,
         "err_workflow0_abs_kwh_year": 48478.18695312433,
-        "err_workflow0_pct_of_validation": 16.792638378271725
+        "err_workflow0_pct_of_validation": 16.792638378271725,
+        "err_oven_minus_cea_kwh_year": -2472.8100000007544,
+        "err_oven_vs_cea_ratio": -0.010294412427183697,
+        "err_oven_vs_cea_pct_of_cea": -1.0294412427183697,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.0294412427183697
       },
       "geometry": {
         "type": "Polygon",
@@ -3694,7 +3894,11 @@
         "err_ucea_area_pct_of_validation": 0.003856135411330023,
         "err_workflow0_minus_validation_kwh_year": 68994.6286250001,
         "err_workflow0_abs_kwh_year": 68994.6286250001,
-        "err_workflow0_pct_of_validation": 23.111402362946965
+        "err_workflow0_pct_of_validation": 23.111402362946965,
+        "err_oven_minus_cea_kwh_year": -1877.9099999999744,
+        "err_oven_vs_cea_ratio": -0.008181328894466409,
+        "err_oven_vs_cea_pct_of_cea": -0.8181328894466409,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8181328894466409
       },
       "geometry": {
         "type": "Polygon",
@@ -3760,7 +3964,11 @@
         "err_ucea_area_pct_of_validation": 1.5364624819526356,
         "err_workflow0_minus_validation_kwh_year": 89212.06487500132,
         "err_workflow0_abs_kwh_year": 89212.06487500132,
-        "err_workflow0_pct_of_validation": 23.49922209638985
+        "err_workflow0_pct_of_validation": 23.49922209638985,
+        "err_oven_minus_cea_kwh_year": -2338.32999999827,
+        "err_oven_vs_cea_ratio": -0.008051371103390326,
+        "err_oven_vs_cea_pct_of_cea": -0.8051371103390326,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8051371103390326
       },
       "geometry": {
         "type": "Polygon",
@@ -3826,7 +4034,11 @@
         "err_ucea_area_pct_of_validation": 0.8746789823247743,
         "err_workflow0_minus_validation_kwh_year": 61725.46856249857,
         "err_workflow0_abs_kwh_year": 61725.46856249857,
-        "err_workflow0_pct_of_validation": 15.143589401169411
+        "err_workflow0_pct_of_validation": 15.143589401169411,
+        "err_oven_minus_cea_kwh_year": 9583.029999998049,
+        "err_oven_vs_cea_ratio": 0.0277065608282961,
+        "err_oven_vs_cea_pct_of_cea": 2.77065608282961,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.77065608282961
       },
       "geometry": {
         "type": "Polygon",
@@ -3892,7 +4104,11 @@
         "err_ucea_area_pct_of_validation": 0.7888001685326133,
         "err_workflow0_minus_validation_kwh_year": 16822.199156249437,
         "err_workflow0_abs_kwh_year": 16822.199156249437,
-        "err_workflow0_pct_of_validation": 7.369523896118804
+        "err_workflow0_pct_of_validation": 7.369523896118804,
+        "err_oven_minus_cea_kwh_year": 1625.3399999996182,
+        "err_oven_vs_cea_ratio": 0.007686824903941239,
+        "err_oven_vs_cea_pct_of_cea": 0.7686824903941238,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7686824903941238
       },
       "geometry": {
         "type": "Polygon",
@@ -3954,7 +4170,11 @@
         "err_ucea_area_pct_of_validation": 1.168163365224612,
         "err_workflow0_minus_validation_kwh_year": 85654.41296875151,
         "err_workflow0_abs_kwh_year": 85654.41296875151,
-        "err_workflow0_pct_of_validation": 20.906536984331055
+        "err_workflow0_pct_of_validation": 20.906536984331055,
+        "err_oven_minus_cea_kwh_year": 645.2900000024238,
+        "err_oven_vs_cea_ratio": 0.001991345889558075,
+        "err_oven_vs_cea_pct_of_cea": 0.1991345889558075,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.1991345889558075
       },
       "geometry": {
         "type": "Polygon",
@@ -4016,7 +4236,11 @@
         "err_ucea_area_pct_of_validation": 1.0627653095141945,
         "err_workflow0_minus_validation_kwh_year": 120010.25493749918,
         "err_workflow0_abs_kwh_year": 120010.25493749918,
-        "err_workflow0_pct_of_validation": 19.666117515378797
+        "err_workflow0_pct_of_validation": 19.666117515378797,
+        "err_oven_minus_cea_kwh_year": 11701.739999999176,
+        "err_oven_vs_cea_ratio": 0.02386997473544915,
+        "err_oven_vs_cea_pct_of_cea": 2.3869974735449153,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.3869974735449153
       },
       "geometry": {
         "type": "Polygon",
@@ -4078,7 +4302,11 @@
         "err_ucea_area_pct_of_validation": 0.6360146780750154,
         "err_workflow0_minus_validation_kwh_year": 271944.3300937491,
         "err_workflow0_abs_kwh_year": 271944.3300937491,
-        "err_workflow0_pct_of_validation": 25.391020775698276
+        "err_workflow0_pct_of_validation": 25.391020775698276,
+        "err_oven_minus_cea_kwh_year": -21868.890000001527,
+        "err_oven_vs_cea_ratio": -0.027367542069503047,
+        "err_oven_vs_cea_pct_of_cea": -2.736754206950305,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.736754206950305
       },
       "geometry": {
         "type": "Polygon",
@@ -4188,7 +4416,11 @@
         "err_ucea_area_pct_of_validation": 0.3448629928462105,
         "err_workflow0_minus_validation_kwh_year": 99697.46743749973,
         "err_workflow0_abs_kwh_year": 99697.46743749973,
-        "err_workflow0_pct_of_validation": 18.67927115120631
+        "err_workflow0_pct_of_validation": 18.67927115120631,
+        "err_oven_minus_cea_kwh_year": 7959.699999999546,
+        "err_oven_vs_cea_ratio": 0.01833881364277502,
+        "err_oven_vs_cea_pct_of_cea": 1.833881364277502,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.833881364277502
       },
       "geometry": {
         "type": "Polygon",
@@ -4250,7 +4482,11 @@
         "err_ucea_area_pct_of_validation": 0.28734676599636794,
         "err_workflow0_minus_validation_kwh_year": 92471.8208437502,
         "err_workflow0_abs_kwh_year": 92471.8208437502,
-        "err_workflow0_pct_of_validation": 19.17068838561053
+        "err_workflow0_pct_of_validation": 19.17068838561053,
+        "err_oven_minus_cea_kwh_year": 1283.8100000004633,
+        "err_oven_vs_cea_ratio": 0.003292760722652663,
+        "err_oven_vs_cea_pct_of_cea": 0.3292760722652663,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.3292760722652663
       },
       "geometry": {
         "type": "Polygon",
@@ -4312,7 +4548,11 @@
         "err_ucea_area_pct_of_validation": 0.0009466104584323915,
         "err_workflow0_minus_validation_kwh_year": 97124.62665625109,
         "err_workflow0_abs_kwh_year": 97124.62665625109,
-        "err_workflow0_pct_of_validation": 19.198945044949387
+        "err_workflow0_pct_of_validation": 19.198945044949387,
+        "err_oven_minus_cea_kwh_year": 264.67999999952735,
+        "err_oven_vs_cea_ratio": 0.0006475183762807082,
+        "err_oven_vs_cea_pct_of_cea": 0.06475183762807082,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.06475183762807082
       },
       "geometry": {
         "type": "Polygon",
@@ -4374,7 +4614,11 @@
         "err_ucea_area_pct_of_validation": 1.300913952372647,
         "err_workflow0_minus_validation_kwh_year": 99659.95503125043,
         "err_workflow0_abs_kwh_year": 99659.95503125043,
-        "err_workflow0_pct_of_validation": 20.482049343788482
+        "err_workflow0_pct_of_validation": 20.482049343788482,
+        "err_oven_minus_cea_kwh_year": 4298.370000000752,
+        "err_oven_vs_cea_ratio": 0.011109418795060463,
+        "err_oven_vs_cea_pct_of_cea": 1.1109418795060464,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.1109418795060464
       },
       "geometry": {
         "type": "Polygon",
@@ -4436,7 +4680,11 @@
         "err_ucea_area_pct_of_validation": 0.5962111060091392,
         "err_workflow0_minus_validation_kwh_year": 111103.78450000024,
         "err_workflow0_abs_kwh_year": 111103.78450000024,
-        "err_workflow0_pct_of_validation": 21.635145247775064
+        "err_workflow0_pct_of_validation": 21.635145247775064,
+        "err_oven_minus_cea_kwh_year": 1777.1200000023236,
+        "err_oven_vs_cea_ratio": 0.00441597274478262,
+        "err_oven_vs_cea_pct_of_cea": 0.44159727447826197,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.44159727447826197
       },
       "geometry": {
         "type": "Polygon",
@@ -4498,7 +4746,11 @@
         "err_ucea_area_pct_of_validation": 0.4381999305897791,
         "err_workflow0_minus_validation_kwh_year": 66870.14764062542,
         "err_workflow0_abs_kwh_year": 66870.14764062542,
-        "err_workflow0_pct_of_validation": 13.641175091606378
+        "err_workflow0_pct_of_validation": 13.641175091606378,
+        "err_oven_minus_cea_kwh_year": 4395.230000000622,
+        "err_oven_vs_cea_ratio": 0.010382319355857983,
+        "err_oven_vs_cea_pct_of_cea": 1.0382319355857983,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.0382319355857983
       },
       "geometry": {
         "type": "Polygon",
@@ -4564,7 +4816,11 @@
         "err_ucea_area_pct_of_validation": 0.738582107261108,
         "err_workflow0_minus_validation_kwh_year": 89111.15478124982,
         "err_workflow0_abs_kwh_year": 89111.15478124982,
-        "err_workflow0_pct_of_validation": 19.613629022766432
+        "err_workflow0_pct_of_validation": 19.613629022766432,
+        "err_oven_minus_cea_kwh_year": 2751.420000000624,
+        "err_oven_vs_cea_ratio": 0.007533561740738501,
+        "err_oven_vs_cea_pct_of_cea": 0.7533561740738501,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7533561740738501
       },
       "geometry": {
         "type": "Polygon",
@@ -4626,7 +4882,11 @@
         "err_ucea_area_pct_of_validation": 1.7640398791969696,
         "err_workflow0_minus_validation_kwh_year": 92786.28759375092,
         "err_workflow0_abs_kwh_year": 92786.28759375092,
-        "err_workflow0_pct_of_validation": 21.825885674767296
+        "err_workflow0_pct_of_validation": 21.825885674767296,
+        "err_oven_minus_cea_kwh_year": 4118.800000001444,
+        "err_oven_vs_cea_ratio": 0.012393552524212773,
+        "err_oven_vs_cea_pct_of_cea": 1.2393552524212772,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.2393552524212772
       },
       "geometry": {
         "type": "Polygon",
@@ -4688,7 +4948,11 @@
         "err_ucea_area_pct_of_validation": 0.5518116771654616,
         "err_workflow0_minus_validation_kwh_year": 105673.73576562514,
         "err_workflow0_abs_kwh_year": 105673.73576562514,
-        "err_workflow0_pct_of_validation": 21.35940944727264
+        "err_workflow0_pct_of_validation": 21.35940944727264,
+        "err_oven_minus_cea_kwh_year": -10521.4300000004,
+        "err_oven_vs_cea_ratio": -0.027042708332343755,
+        "err_oven_vs_cea_pct_of_cea": -2.7042708332343754,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.7042708332343754
       },
       "geometry": {
         "type": "Polygon",
@@ -4750,7 +5014,11 @@
         "err_ucea_area_pct_of_validation": 0.5346081607613467,
         "err_workflow0_minus_validation_kwh_year": 160346.29637499922,
         "err_workflow0_abs_kwh_year": 160346.29637499922,
-        "err_workflow0_pct_of_validation": 31.935779445333353
+        "err_workflow0_pct_of_validation": 31.935779445333353,
+        "err_oven_minus_cea_kwh_year": 23762.50999999966,
+        "err_oven_vs_cea_ratio": 0.06953316920244634,
+        "err_oven_vs_cea_pct_of_cea": 6.953316920244634,
+        "err_oven_vs_cea_abs_pct_of_cea": 6.953316920244634
       },
       "geometry": {
         "type": "Polygon",
@@ -4812,7 +5080,11 @@
         "err_ucea_area_pct_of_validation": 0.6881375895797469,
         "err_workflow0_minus_validation_kwh_year": 96347.13218749978,
         "err_workflow0_abs_kwh_year": 96347.13218749978,
-        "err_workflow0_pct_of_validation": 20.07230782358061
+        "err_workflow0_pct_of_validation": 20.07230782358061,
+        "err_oven_minus_cea_kwh_year": -9901.61999999982,
+        "err_oven_vs_cea_ratio": -0.025808781338267722,
+        "err_oven_vs_cea_pct_of_cea": -2.580878133826772,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.580878133826772
       },
       "geometry": {
         "type": "Polygon",
@@ -4874,7 +5146,11 @@
         "err_ucea_area_pct_of_validation": 0.5329851428377215,
         "err_workflow0_minus_validation_kwh_year": 147523.2228124992,
         "err_workflow0_abs_kwh_year": 147523.2228124992,
-        "err_workflow0_pct_of_validation": 29.006176732925976
+        "err_workflow0_pct_of_validation": 29.006176732925976,
+        "err_oven_minus_cea_kwh_year": 239.90999999898486,
+        "err_oven_vs_cea_ratio": 0.000664443233347291,
+        "err_oven_vs_cea_pct_of_cea": 0.06644432333472909,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.06644432333472909
       },
       "geometry": {
         "type": "Polygon",
@@ -4936,7 +5212,11 @@
         "err_ucea_area_pct_of_validation": 0.4907591140711957,
         "err_workflow0_minus_validation_kwh_year": 93863.18865625001,
         "err_workflow0_abs_kwh_year": 93863.18865625001,
-        "err_workflow0_pct_of_validation": 19.567916661434463
+        "err_workflow0_pct_of_validation": 19.567916661434463,
+        "err_oven_minus_cea_kwh_year": -18869.100000000326,
+        "err_oven_vs_cea_ratio": -0.048907014751236294,
+        "err_oven_vs_cea_pct_of_cea": -4.890701475123629,
+        "err_oven_vs_cea_abs_pct_of_cea": 4.890701475123629
       },
       "geometry": {
         "type": "Polygon",
@@ -4998,7 +5278,11 @@
         "err_ucea_area_pct_of_validation": 0.4730509257892928,
         "err_workflow0_minus_validation_kwh_year": 128042.8694687481,
         "err_workflow0_abs_kwh_year": 128042.8694687481,
-        "err_workflow0_pct_of_validation": 27.8999548034711
+        "err_workflow0_pct_of_validation": 27.8999548034711,
+        "err_oven_minus_cea_kwh_year": 378.47999999759486,
+        "err_oven_vs_cea_ratio": 0.0011438142415135988,
+        "err_oven_vs_cea_pct_of_cea": 0.11438142415135988,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.11438142415135988
       },
       "geometry": {
         "type": "Polygon",
@@ -5060,7 +5344,11 @@
         "err_ucea_area_pct_of_validation": 1.0269929101007067,
         "err_workflow0_minus_validation_kwh_year": 99168.21640625055,
         "err_workflow0_abs_kwh_year": 99168.21640625055,
-        "err_workflow0_pct_of_validation": 18.853841334156265
+        "err_workflow0_pct_of_validation": 18.853841334156265,
+        "err_oven_minus_cea_kwh_year": -9667.479999999516,
+        "err_oven_vs_cea_ratio": -0.022650232384717996,
+        "err_oven_vs_cea_pct_of_cea": -2.2650232384717994,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.2650232384717994
       },
       "geometry": {
         "type": "Polygon",
@@ -5122,7 +5410,11 @@
         "err_ucea_area_pct_of_validation": 1.1726365138522477,
         "err_workflow0_minus_validation_kwh_year": 139085.99262500048,
         "err_workflow0_abs_kwh_year": 139085.99262500048,
-        "err_workflow0_pct_of_validation": 26.93595260009766
+        "err_workflow0_pct_of_validation": 26.93595260009766,
+        "err_oven_minus_cea_kwh_year": 1119.2300000007963,
+        "err_oven_vs_cea_ratio": 0.0029666380383541603,
+        "err_oven_vs_cea_pct_of_cea": 0.296663803835416,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.296663803835416
       },
       "geometry": {
         "type": "Polygon",
@@ -5184,7 +5476,11 @@
         "err_ucea_area_pct_of_validation": 1.8764558285351345,
         "err_workflow0_minus_validation_kwh_year": 66682.07150000107,
         "err_workflow0_abs_kwh_year": 66682.07150000107,
-        "err_workflow0_pct_of_validation": 17.662047025161982
+        "err_workflow0_pct_of_validation": 17.662047025161982,
+        "err_oven_minus_cea_kwh_year": 1491.3800000022165,
+        "err_oven_vs_cea_ratio": 0.004797557658487103,
+        "err_oven_vs_cea_pct_of_cea": 0.4797557658487103,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.4797557658487103
       },
       "geometry": {
         "type": "Polygon",
@@ -5246,7 +5542,11 @@
         "err_ucea_area_pct_of_validation": 0.8367717846512577,
         "err_workflow0_minus_validation_kwh_year": 165754.12009375042,
         "err_workflow0_abs_kwh_year": 165754.12009375042,
-        "err_workflow0_pct_of_validation": 31.53221608084194
+        "err_workflow0_pct_of_validation": 31.53221608084194,
+        "err_oven_minus_cea_kwh_year": -766.5199999985052,
+        "err_oven_vs_cea_ratio": -0.0021297438911523,
+        "err_oven_vs_cea_pct_of_cea": -0.21297438911522998,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.21297438911522998
       },
       "geometry": {
         "type": "Polygon",
@@ -5312,7 +5612,11 @@
         "err_ucea_area_pct_of_validation": 1.2448790004190007,
         "err_workflow0_minus_validation_kwh_year": 57407.304531250265,
         "err_workflow0_abs_kwh_year": 57407.304531250265,
-        "err_workflow0_pct_of_validation": 15.043941680426581
+        "err_workflow0_pct_of_validation": 15.043941680426581,
+        "err_oven_minus_cea_kwh_year": 936.1099999998114,
+        "err_oven_vs_cea_ratio": 0.0028875333951339246,
+        "err_oven_vs_cea_pct_of_cea": 0.28875333951339244,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.28875333951339244
       },
       "geometry": {
         "type": "Polygon",
@@ -5374,7 +5678,11 @@
         "err_ucea_area_pct_of_validation": 0.7393365427846879,
         "err_workflow0_minus_validation_kwh_year": 134745.90085937525,
         "err_workflow0_abs_kwh_year": 134745.90085937525,
-        "err_workflow0_pct_of_validation": 23.497434700899625
+        "err_workflow0_pct_of_validation": 23.497434700899625,
+        "err_oven_minus_cea_kwh_year": -633.6999999990803,
+        "err_oven_vs_cea_ratio": -0.0014444835419691094,
+        "err_oven_vs_cea_pct_of_cea": -0.14444835419691093,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.14444835419691093
       },
       "geometry": {
         "type": "Polygon",
@@ -5436,7 +5744,11 @@
         "err_ucea_area_pct_of_validation": 1.3809913935274876,
         "err_workflow0_minus_validation_kwh_year": 107100.20353125024,
         "err_workflow0_abs_kwh_year": 107100.20353125024,
-        "err_workflow0_pct_of_validation": 25.818327361630732
+        "err_workflow0_pct_of_validation": 25.818327361630732,
+        "err_oven_minus_cea_kwh_year": 768.8700000009267,
+        "err_oven_vs_cea_ratio": 0.0024985848436894567,
+        "err_oven_vs_cea_pct_of_cea": 0.24985848436894567,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.24985848436894567
       },
       "geometry": {
         "type": "Polygon",
@@ -5498,7 +5810,11 @@
         "err_ucea_area_pct_of_validation": 0.4894523673957281,
         "err_workflow0_minus_validation_kwh_year": 86503.69340624963,
         "err_workflow0_abs_kwh_year": 86503.69340624963,
-        "err_workflow0_pct_of_validation": 25.087804306918315
+        "err_workflow0_pct_of_validation": 25.087804306918315,
+        "err_oven_minus_cea_kwh_year": 327.079999999085,
+        "err_oven_vs_cea_ratio": 0.0012662791767694237,
+        "err_oven_vs_cea_pct_of_cea": 0.12662791767694237,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.12662791767694237
       },
       "geometry": {
         "type": "Polygon",
@@ -5564,7 +5880,11 @@
         "err_ucea_area_pct_of_validation": 1.0259200457803925,
         "err_workflow0_minus_validation_kwh_year": 114469.52021874965,
         "err_workflow0_abs_kwh_year": 114469.52021874965,
-        "err_workflow0_pct_of_validation": 22.90273487024125
+        "err_workflow0_pct_of_validation": 22.90273487024125,
+        "err_oven_minus_cea_kwh_year": 190.0700000001234,
+        "err_oven_vs_cea_ratio": 0.0004932556688138221,
+        "err_oven_vs_cea_pct_of_cea": 0.04932556688138221,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.04932556688138221
       },
       "geometry": {
         "type": "Polygon",
@@ -5626,7 +5946,11 @@
         "err_ucea_area_pct_of_validation": 1.5689034819705523,
         "err_workflow0_minus_validation_kwh_year": 121896.87128124997,
         "err_workflow0_abs_kwh_year": 121896.87128124997,
-        "err_workflow0_pct_of_validation": 27.87321284710602
+        "err_workflow0_pct_of_validation": 27.87321284710602,
+        "err_oven_minus_cea_kwh_year": 11372.969999998517,
+        "err_oven_vs_cea_ratio": 0.036055521274235586,
+        "err_oven_vs_cea_pct_of_cea": 3.6055521274235587,
+        "err_oven_vs_cea_abs_pct_of_cea": 3.6055521274235587
       },
       "geometry": {
         "type": "Polygon",
@@ -5688,7 +6012,11 @@
         "err_ucea_area_pct_of_validation": 1.1801512879498426,
         "err_workflow0_minus_validation_kwh_year": 85532.74167187541,
         "err_workflow0_abs_kwh_year": 85532.74167187541,
-        "err_workflow0_pct_of_validation": 19.171954423483374
+        "err_workflow0_pct_of_validation": 19.171954423483374,
+        "err_oven_minus_cea_kwh_year": 11511.740000000456,
+        "err_oven_vs_cea_ratio": 0.031923675622840396,
+        "err_oven_vs_cea_pct_of_cea": 3.1923675622840397,
+        "err_oven_vs_cea_abs_pct_of_cea": 3.1923675622840397
       },
       "geometry": {
         "type": "Polygon",
@@ -5754,7 +6082,11 @@
         "err_ucea_area_pct_of_validation": 2.464161549658587,
         "err_workflow0_minus_validation_kwh_year": 121838.74324999942,
         "err_workflow0_abs_kwh_year": 121838.74324999942,
-        "err_workflow0_pct_of_validation": 22.56223121968875
+        "err_workflow0_pct_of_validation": 22.56223121968875,
+        "err_oven_minus_cea_kwh_year": 2788.369999998831,
+        "err_oven_vs_cea_ratio": 0.006667978722689133,
+        "err_oven_vs_cea_pct_of_cea": 0.6667978722689133,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.6667978722689133
       },
       "geometry": {
         "type": "Polygon",
@@ -5816,7 +6148,11 @@
         "err_ucea_area_pct_of_validation": 1.2841982423371396,
         "err_workflow0_minus_validation_kwh_year": 72422.56653125002,
         "err_workflow0_abs_kwh_year": 72422.56653125002,
-        "err_workflow0_pct_of_validation": 18.658810692278273
+        "err_workflow0_pct_of_validation": 18.658810692278273,
+        "err_oven_minus_cea_kwh_year": 12186.900000000547,
+        "err_oven_vs_cea_ratio": 0.03860048634414808,
+        "err_oven_vs_cea_pct_of_cea": 3.860048634414808,
+        "err_oven_vs_cea_abs_pct_of_cea": 3.860048634414808
       },
       "geometry": {
         "type": "Polygon",
@@ -5890,7 +6226,11 @@
         "err_ucea_area_pct_of_validation": 2.112133146017583,
         "err_workflow0_minus_validation_kwh_year": 59471.042249999824,
         "err_workflow0_abs_kwh_year": 59471.042249999824,
-        "err_workflow0_pct_of_validation": 18.125800618518568
+        "err_workflow0_pct_of_validation": 18.125800618518568,
+        "err_oven_minus_cea_kwh_year": 882.0999999991618,
+        "err_oven_vs_cea_ratio": 0.0032836919224646715,
+        "err_oven_vs_cea_pct_of_cea": 0.32836919224646716,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.32836919224646716
       },
       "geometry": {
         "type": "Polygon",
@@ -5952,7 +6292,11 @@
         "err_ucea_area_pct_of_validation": 0.8020597137346668,
         "err_workflow0_minus_validation_kwh_year": 3517.5809453114634,
         "err_workflow0_abs_kwh_year": 3517.5809453114634,
-        "err_workflow0_pct_of_validation": 1.3875047968675447
+        "err_workflow0_pct_of_validation": 1.3875047968675447,
+        "err_oven_minus_cea_kwh_year": 661.0599999984843,
+        "err_oven_vs_cea_ratio": 0.0026442305865330383,
+        "err_oven_vs_cea_pct_of_cea": 0.26442305865330384,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.26442305865330384
       },
       "geometry": {
         "type": "Polygon",
@@ -6014,7 +6358,11 @@
         "err_ucea_area_pct_of_validation": 0.7796411356324642,
         "err_workflow0_minus_validation_kwh_year": 27954.265156249923,
         "err_workflow0_abs_kwh_year": 27954.265156249923,
-        "err_workflow0_pct_of_validation": 11.65376390431194
+        "err_workflow0_pct_of_validation": 11.65376390431194,
+        "err_oven_minus_cea_kwh_year": 2301.7099999995844,
+        "err_oven_vs_cea_ratio": 0.010861271954788688,
+        "err_oven_vs_cea_pct_of_cea": 1.0861271954788687,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.0861271954788687
       },
       "geometry": {
         "type": "Polygon",
@@ -6076,7 +6424,11 @@
         "err_ucea_area_pct_of_validation": 0.4628343221239258,
         "err_workflow0_minus_validation_kwh_year": 54295.04521875037,
         "err_workflow0_abs_kwh_year": 54295.04521875037,
-        "err_workflow0_pct_of_validation": 17.910802292788773
+        "err_workflow0_pct_of_validation": 17.910802292788773,
+        "err_oven_minus_cea_kwh_year": -350.8199999995413,
+        "err_oven_vs_cea_ratio": -0.0014097859365295013,
+        "err_oven_vs_cea_pct_of_cea": -0.14097859365295012,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.14097859365295012
       },
       "geometry": {
         "type": "Polygon",
@@ -6138,7 +6490,11 @@
         "err_ucea_area_pct_of_validation": 1.0761470868415395,
         "err_workflow0_minus_validation_kwh_year": 52556.23650000035,
         "err_workflow0_abs_kwh_year": 52556.23650000035,
-        "err_workflow0_pct_of_validation": 17.85406164987299
+        "err_workflow0_pct_of_validation": 17.85406164987299,
+        "err_oven_minus_cea_kwh_year": 924.4699999997392,
+        "err_oven_vs_cea_ratio": 0.0038231338159270705,
+        "err_oven_vs_cea_pct_of_cea": 0.38231338159270706,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.38231338159270706
       },
       "geometry": {
         "type": "Polygon",
@@ -6200,7 +6556,11 @@
         "err_ucea_area_pct_of_validation": 1.7436679607427759,
         "err_workflow0_minus_validation_kwh_year": 53449.5283281251,
         "err_workflow0_abs_kwh_year": 53449.5283281251,
-        "err_workflow0_pct_of_validation": 19.69995747701204
+        "err_workflow0_pct_of_validation": 19.69995747701204,
+        "err_oven_minus_cea_kwh_year": -1040.7799999999406,
+        "err_oven_vs_cea_ratio": -0.0047771026609356,
+        "err_oven_vs_cea_pct_of_cea": -0.47771026609356,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.47771026609356
       },
       "geometry": {
         "type": "Polygon",
@@ -6262,7 +6622,11 @@
         "err_ucea_area_pct_of_validation": 1.7968194268148459,
         "err_workflow0_minus_validation_kwh_year": 43686.02287500023,
         "err_workflow0_abs_kwh_year": 43686.02287500023,
-        "err_workflow0_pct_of_validation": 14.705228072538928
+        "err_workflow0_pct_of_validation": 14.705228072538928,
+        "err_oven_minus_cea_kwh_year": -1596.3699999995297,
+        "err_oven_vs_cea_ratio": -0.006299997849181718,
+        "err_oven_vs_cea_pct_of_cea": -0.6299997849181718,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.6299997849181718
       },
       "geometry": {
         "type": "Polygon",
@@ -6324,7 +6688,11 @@
         "err_ucea_area_pct_of_validation": 2.1984574418581992,
         "err_workflow0_minus_validation_kwh_year": 19572.014578124334,
         "err_workflow0_abs_kwh_year": 19572.014578124334,
-        "err_workflow0_pct_of_validation": 7.670583942160504
+        "err_workflow0_pct_of_validation": 7.670583942160504,
+        "err_oven_minus_cea_kwh_year": 2934.33999999988,
+        "err_oven_vs_cea_ratio": 0.012455559519214536,
+        "err_oven_vs_cea_pct_of_cea": 1.2455559519214536,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.2455559519214536
       },
       "geometry": {
         "type": "Polygon",
@@ -6390,7 +6758,11 @@
         "err_ucea_area_pct_of_validation": 1.8042733944646574,
         "err_workflow0_minus_validation_kwh_year": 26733.2347031252,
         "err_workflow0_abs_kwh_year": 26733.2347031252,
-        "err_workflow0_pct_of_validation": 9.561654661235803
+        "err_workflow0_pct_of_validation": 9.561654661235803,
+        "err_oven_minus_cea_kwh_year": 1211.830000000191,
+        "err_oven_vs_cea_ratio": 0.004792593944855733,
+        "err_oven_vs_cea_pct_of_cea": 0.4792593944855733,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.4792593944855733
       },
       "geometry": {
         "type": "Polygon",
@@ -6456,7 +6828,11 @@
         "err_ucea_area_pct_of_validation": 1.8224052888243798,
         "err_workflow0_minus_validation_kwh_year": 18854.377468751045,
         "err_workflow0_abs_kwh_year": 18854.377468751045,
-        "err_workflow0_pct_of_validation": 6.688283300998722
+        "err_workflow0_pct_of_validation": 6.688283300998722,
+        "err_oven_minus_cea_kwh_year": 370.4000000016531,
+        "err_oven_vs_cea_ratio": 0.0014081122013061174,
+        "err_oven_vs_cea_pct_of_cea": 0.14081122013061173,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.14081122013061173
       },
       "geometry": {
         "type": "Polygon",
@@ -6522,7 +6898,11 @@
         "err_ucea_area_pct_of_validation": 0.000632641672507968,
         "err_workflow0_minus_validation_kwh_year": 47866.95467187534,
         "err_workflow0_abs_kwh_year": 47866.95467187534,
-        "err_workflow0_pct_of_validation": 16.789567864892486
+        "err_workflow0_pct_of_validation": 16.789567864892486,
+        "err_oven_minus_cea_kwh_year": -1199.7899999997753,
+        "err_oven_vs_cea_ratio": -0.005057445139350371,
+        "err_oven_vs_cea_pct_of_cea": -0.5057445139350372,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.5057445139350372
       },
       "geometry": {
         "type": "Polygon",
@@ -6584,7 +6964,11 @@
         "err_ucea_area_pct_of_validation": 0.0025208578142335643,
         "err_workflow0_minus_validation_kwh_year": 50852.62026562463,
         "err_workflow0_abs_kwh_year": 50852.62026562463,
-        "err_workflow0_pct_of_validation": 17.874201007492818
+        "err_workflow0_pct_of_validation": 17.874201007492818,
+        "err_oven_minus_cea_kwh_year": -1069.3800000012561,
+        "err_oven_vs_cea_ratio": -0.004576840224635103,
+        "err_oven_vs_cea_pct_of_cea": -0.45768402246351025,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.45768402246351025
       },
       "geometry": {
         "type": "Polygon",
@@ -6646,7 +7030,11 @@
         "err_ucea_area_pct_of_validation": 0.0002461956276739686,
         "err_workflow0_minus_validation_kwh_year": 74292.52803124976,
         "err_workflow0_abs_kwh_year": 74292.52803124976,
-        "err_workflow0_pct_of_validation": 24.664796773121058
+        "err_workflow0_pct_of_validation": 24.664796773121058,
+        "err_oven_minus_cea_kwh_year": -2164.6599999995087,
+        "err_oven_vs_cea_ratio": -0.009539467494235678,
+        "err_oven_vs_cea_pct_of_cea": -0.9539467494235678,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.9539467494235678
       },
       "geometry": {
         "type": "Polygon",
@@ -6708,7 +7096,11 @@
         "err_ucea_area_pct_of_validation": 2.9771679762678085,
         "err_workflow0_minus_validation_kwh_year": 43429.88445312399,
         "err_workflow0_abs_kwh_year": 43429.88445312399,
-        "err_workflow0_pct_of_validation": 14.810793497318157
+        "err_workflow0_pct_of_validation": 14.810793497318157,
+        "err_oven_minus_cea_kwh_year": 87.57999999888125,
+        "err_oven_vs_cea_ratio": 0.00035059847335093677,
+        "err_oven_vs_cea_pct_of_cea": 0.03505984733509368,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.03505984733509368
       },
       "geometry": {
         "type": "Polygon",
@@ -6770,7 +7162,11 @@
         "err_ucea_area_pct_of_validation": 1.4050652728897561,
         "err_workflow0_minus_validation_kwh_year": 48384.56587499997,
         "err_workflow0_abs_kwh_year": 48384.56587499997,
-        "err_workflow0_pct_of_validation": 17.20894502722262
+        "err_workflow0_pct_of_validation": 17.20894502722262,
+        "err_oven_minus_cea_kwh_year": -817.4200000003038,
+        "err_oven_vs_cea_ratio": -0.003511633968330269,
+        "err_oven_vs_cea_pct_of_cea": -0.3511633968330269,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.3511633968330269
       },
       "geometry": {
         "type": "Polygon",
@@ -6832,7 +7228,11 @@
         "err_ucea_area_pct_of_validation": 1.2797174037175925,
         "err_workflow0_minus_validation_kwh_year": 52873.20232812481,
         "err_workflow0_abs_kwh_year": 52873.20232812481,
-        "err_workflow0_pct_of_validation": 17.749935876451854
+        "err_workflow0_pct_of_validation": 17.749935876451854,
+        "err_oven_minus_cea_kwh_year": 256.39999999990687,
+        "err_oven_vs_cea_ratio": 0.0010465089559163272,
+        "err_oven_vs_cea_pct_of_cea": 0.10465089559163272,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.10465089559163272
       },
       "geometry": {
         "type": "Polygon",
@@ -6894,7 +7294,11 @@
         "err_ucea_area_pct_of_validation": 1.3454783231201914,
         "err_workflow0_minus_validation_kwh_year": 133855.81749999966,
         "err_workflow0_abs_kwh_year": 133855.81749999966,
-        "err_workflow0_pct_of_validation": 30.78421129290688
+        "err_workflow0_pct_of_validation": 30.78421129290688,
+        "err_oven_minus_cea_kwh_year": 12474.319999998785,
+        "err_oven_vs_cea_ratio": 0.04144789595854429,
+        "err_oven_vs_cea_pct_of_cea": 4.144789595854429,
+        "err_oven_vs_cea_abs_pct_of_cea": 4.144789595854429
       },
       "geometry": {
         "type": "Polygon",
@@ -6964,7 +7368,11 @@
         "err_ucea_area_pct_of_validation": 0.0002087935772626965,
         "err_workflow0_minus_validation_kwh_year": 57712.696093749895,
         "err_workflow0_abs_kwh_year": 57712.696093749895,
-        "err_workflow0_pct_of_validation": 17.281958726354425
+        "err_workflow0_pct_of_validation": 17.281958726354425,
+        "err_oven_minus_cea_kwh_year": -6028.599999999744,
+        "err_oven_vs_cea_ratio": -0.021824174608455572,
+        "err_oven_vs_cea_pct_of_cea": -2.1824174608455573,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.1824174608455573
       },
       "geometry": {
         "type": "Polygon",
@@ -7026,7 +7434,11 @@
         "err_ucea_area_pct_of_validation": 2.323090254848278,
         "err_workflow0_minus_validation_kwh_year": 41998.58815625016,
         "err_workflow0_abs_kwh_year": 41998.58815625016,
-        "err_workflow0_pct_of_validation": 14.054466037121225
+        "err_workflow0_pct_of_validation": 14.054466037121225,
+        "err_oven_minus_cea_kwh_year": -1610.0799999990268,
+        "err_oven_vs_cea_ratio": -0.006269079833578714,
+        "err_oven_vs_cea_pct_of_cea": -0.6269079833578715,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.6269079833578715
       },
       "geometry": {
         "type": "Polygon",
@@ -7088,7 +7500,11 @@
         "err_ucea_area_pct_of_validation": 0.0022040057140967073,
         "err_workflow0_minus_validation_kwh_year": 37431.584062499984,
         "err_workflow0_abs_kwh_year": 37431.584062499984,
-        "err_workflow0_pct_of_validation": 12.716529346945677
+        "err_workflow0_pct_of_validation": 12.716529346945677,
+        "err_oven_minus_cea_kwh_year": -6720.510000000737,
+        "err_oven_vs_cea_ratio": -0.026157763951804774,
+        "err_oven_vs_cea_pct_of_cea": -2.6157763951804776,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.6157763951804776
       },
       "geometry": {
         "type": "Polygon",
@@ -7150,7 +7566,11 @@
         "err_ucea_area_pct_of_validation": 1.0833505541105721,
         "err_workflow0_minus_validation_kwh_year": 99998.05556250055,
         "err_workflow0_abs_kwh_year": 99998.05556250055,
-        "err_workflow0_pct_of_validation": 26.745745946086704
+        "err_workflow0_pct_of_validation": 26.745745946086704,
+        "err_oven_minus_cea_kwh_year": -2388.229999999574,
+        "err_oven_vs_cea_ratio": -0.008719798692819133,
+        "err_oven_vs_cea_pct_of_cea": -0.8719798692819133,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8719798692819133
       },
       "geometry": {
         "type": "Polygon",
@@ -7212,7 +7632,11 @@
         "err_ucea_area_pct_of_validation": 1.2848801819410323,
         "err_workflow0_minus_validation_kwh_year": 31896.224343749724,
         "err_workflow0_abs_kwh_year": 31896.224343749724,
-        "err_workflow0_pct_of_validation": 14.818991396696305
+        "err_workflow0_pct_of_validation": 14.818991396696305,
+        "err_oven_minus_cea_kwh_year": 1127.3999999997613,
+        "err_oven_vs_cea_ratio": 0.006149143398797255,
+        "err_oven_vs_cea_pct_of_cea": 0.6149143398797254,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.6149143398797254
       },
       "geometry": {
         "type": "Polygon",
@@ -7274,7 +7698,11 @@
         "err_ucea_area_pct_of_validation": 0.7148927740905415,
         "err_workflow0_minus_validation_kwh_year": 134201.71249999988,
         "err_workflow0_abs_kwh_year": 134201.71249999988,
-        "err_workflow0_pct_of_validation": 35.00772967720432
+        "err_workflow0_pct_of_validation": 35.00772967720432,
+        "err_oven_minus_cea_kwh_year": 25725.449999999226,
+        "err_oven_vs_cea_ratio": 0.103254065700704,
+        "err_oven_vs_cea_pct_of_cea": 10.3254065700704,
+        "err_oven_vs_cea_abs_pct_of_cea": 10.3254065700704
       },
       "geometry": {
         "type": "Polygon",
@@ -7340,7 +7768,11 @@
         "err_ucea_area_pct_of_validation": 1.7088327653534032,
         "err_workflow0_minus_validation_kwh_year": 61557.150531250314,
         "err_workflow0_abs_kwh_year": 61557.150531250314,
-        "err_workflow0_pct_of_validation": 19.30528928216782
+        "err_workflow0_pct_of_validation": 19.30528928216782,
+        "err_oven_minus_cea_kwh_year": 1686.0799999997835,
+        "err_oven_vs_cea_ratio": 0.0065528603607788085,
+        "err_oven_vs_cea_pct_of_cea": 0.6552860360778808,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.6552860360778808
       },
       "geometry": {
         "type": "Polygon",
@@ -7406,7 +7838,11 @@
         "err_ucea_area_pct_of_validation": 0.34786569556342023,
         "err_workflow0_minus_validation_kwh_year": 90488.52753124927,
         "err_workflow0_abs_kwh_year": 90488.52753124927,
-        "err_workflow0_pct_of_validation": 24.79633276397994
+        "err_workflow0_pct_of_validation": 24.79633276397994,
+        "err_oven_minus_cea_kwh_year": 2673.539999998815,
+        "err_oven_vs_cea_ratio": 0.009741853667554654,
+        "err_oven_vs_cea_pct_of_cea": 0.9741853667554654,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.9741853667554654
       },
       "geometry": {
         "type": "Polygon",
@@ -7472,7 +7908,11 @@
         "err_ucea_area_pct_of_validation": 0.532914449505989,
         "err_workflow0_minus_validation_kwh_year": 152642.20326562412,
         "err_workflow0_abs_kwh_year": 152642.20326562412,
-        "err_workflow0_pct_of_validation": 19.732053161765013
+        "err_workflow0_pct_of_validation": 19.732053161765013,
+        "err_oven_minus_cea_kwh_year": 133.30999999749474,
+        "err_oven_vs_cea_ratio": 0.0002146931681730102,
+        "err_oven_vs_cea_pct_of_cea": 0.02146931681730102,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.02146931681730102
       },
       "geometry": {
         "type": "Polygon",
@@ -7538,7 +7978,11 @@
         "err_ucea_area_pct_of_validation": 2.101898385314253,
         "err_workflow0_minus_validation_kwh_year": 53947.01203124982,
         "err_workflow0_abs_kwh_year": 53947.01203124982,
-        "err_workflow0_pct_of_validation": 18.196911562302038
+        "err_workflow0_pct_of_validation": 18.196911562302038,
+        "err_oven_minus_cea_kwh_year": 1231.9799999995448,
+        "err_oven_vs_cea_ratio": 0.0050800062428993445,
+        "err_oven_vs_cea_pct_of_cea": 0.5080006242899344,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.5080006242899344
       },
       "geometry": {
         "type": "Polygon",
@@ -7604,7 +8048,11 @@
         "err_ucea_area_pct_of_validation": 2.8919002868032813,
         "err_workflow0_minus_validation_kwh_year": 73296.00162499986,
         "err_workflow0_abs_kwh_year": 73296.00162499986,
-        "err_workflow0_pct_of_validation": 26.719152746971215
+        "err_workflow0_pct_of_validation": 26.719152746971215,
+        "err_oven_minus_cea_kwh_year": 3147.620000000228,
+        "err_oven_vs_cea_ratio": 0.015657925160011806,
+        "err_oven_vs_cea_pct_of_cea": 1.5657925160011805,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.5657925160011805
       },
       "geometry": {
         "type": "Polygon",
@@ -7666,7 +8114,11 @@
         "err_ucea_area_pct_of_validation": 1.3085792457666965,
         "err_workflow0_minus_validation_kwh_year": 93760.42006250081,
         "err_workflow0_abs_kwh_year": 93760.42006250081,
-        "err_workflow0_pct_of_validation": 16.953075206785574
+        "err_workflow0_pct_of_validation": 16.953075206785574,
+        "err_oven_minus_cea_kwh_year": 3595.3100000012782,
+        "err_oven_vs_cea_ratio": 0.007827836242115381,
+        "err_oven_vs_cea_pct_of_cea": 0.7827836242115381,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7827836242115381
       },
       "geometry": {
         "type": "Polygon",
@@ -7728,7 +8180,11 @@
         "err_ucea_area_pct_of_validation": 1.3993506172190502,
         "err_workflow0_minus_validation_kwh_year": 139120.93579687452,
         "err_workflow0_abs_kwh_year": 139120.93579687452,
-        "err_workflow0_pct_of_validation": 23.660093680778445
+        "err_workflow0_pct_of_validation": 23.660093680778445,
+        "err_oven_minus_cea_kwh_year": -876.8300000000745,
+        "err_oven_vs_cea_ratio": -0.0019533845451000266,
+        "err_oven_vs_cea_pct_of_cea": -0.19533845451000265,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.19533845451000265
       },
       "geometry": {
         "type": "Polygon",
@@ -7790,7 +8246,11 @@
         "err_ucea_area_pct_of_validation": 1.3155073875314294,
         "err_workflow0_minus_validation_kwh_year": 124491.85474999977,
         "err_workflow0_abs_kwh_year": 124491.85474999977,
-        "err_workflow0_pct_of_validation": 22.050259159327208
+        "err_workflow0_pct_of_validation": 22.050259159327208,
+        "err_oven_minus_cea_kwh_year": 1012.2900000005029,
+        "err_oven_vs_cea_ratio": 0.0023001864026044976,
+        "err_oven_vs_cea_pct_of_cea": 0.23001864026044977,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.23001864026044977
       },
       "geometry": {
         "type": "Polygon",
@@ -7852,7 +8312,11 @@
         "err_ucea_area_pct_of_validation": 0.14052531719853867,
         "err_workflow0_minus_validation_kwh_year": 104597.3656953132,
         "err_workflow0_abs_kwh_year": 104597.3656953132,
-        "err_workflow0_pct_of_validation": 17.678327043309007
+        "err_workflow0_pct_of_validation": 17.678327043309007,
+        "err_oven_minus_cea_kwh_year": -17299.820000001288,
+        "err_oven_vs_cea_ratio": -0.03551794364652378,
+        "err_oven_vs_cea_pct_of_cea": -3.551794364652378,
+        "err_oven_vs_cea_abs_pct_of_cea": 3.551794364652378
       },
       "geometry": {
         "type": "Polygon",
@@ -7914,7 +8378,11 @@
         "err_ucea_area_pct_of_validation": 1.4572453806026702,
         "err_workflow0_minus_validation_kwh_year": 231690.02300000016,
         "err_workflow0_abs_kwh_year": 231690.02300000016,
-        "err_workflow0_pct_of_validation": 39.28248707433114
+        "err_workflow0_pct_of_validation": 39.28248707433114,
+        "err_oven_minus_cea_kwh_year": -1675.4099999999744,
+        "err_oven_vs_cea_ratio": -0.004678415318437577,
+        "err_oven_vs_cea_pct_of_cea": -0.46784153184375765,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.46784153184375765
       },
       "geometry": {
         "type": "Polygon",
@@ -7976,7 +8444,11 @@
         "err_ucea_area_pct_of_validation": 0.6853535704781938,
         "err_workflow0_minus_validation_kwh_year": 95712.15278124955,
         "err_workflow0_abs_kwh_year": 95712.15278124955,
-        "err_workflow0_pct_of_validation": 24.959129617210966
+        "err_workflow0_pct_of_validation": 24.959129617210966,
+        "err_oven_minus_cea_kwh_year": 2392.530000000552,
+        "err_oven_vs_cea_ratio": 0.008314227067887578,
+        "err_oven_vs_cea_pct_of_cea": 0.8314227067887578,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8314227067887578
       },
       "geometry": {
         "type": "Polygon",
@@ -8042,7 +8514,11 @@
         "err_ucea_area_pct_of_validation": 0.5361839551502187,
         "err_workflow0_minus_validation_kwh_year": 100296.39212500071,
         "err_workflow0_abs_kwh_year": 100296.39212500071,
-        "err_workflow0_pct_of_validation": 24.62832037594357
+        "err_workflow0_pct_of_validation": 24.62832037594357,
+        "err_oven_minus_cea_kwh_year": 1278.6800000014482,
+        "err_oven_vs_cea_ratio": 0.004165845533431396,
+        "err_oven_vs_cea_pct_of_cea": 0.4165845533431396,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.4165845533431396
       },
       "geometry": {
         "type": "Polygon",
@@ -8104,7 +8580,11 @@
         "err_ucea_area_pct_of_validation": 0.43577519978021145,
         "err_workflow0_minus_validation_kwh_year": 31681.132390624785,
         "err_workflow0_abs_kwh_year": 31681.132390624785,
-        "err_workflow0_pct_of_validation": 9.856470328415792
+        "err_workflow0_pct_of_validation": 9.856470328415792,
+        "err_oven_minus_cea_kwh_year": 2503.3600000003353,
+        "err_oven_vs_cea_ratio": 0.008639915036602996,
+        "err_oven_vs_cea_pct_of_cea": 0.8639915036602996,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8639915036602996
       },
       "geometry": {
         "type": "Polygon",
@@ -8166,7 +8646,11 @@
         "err_ucea_area_pct_of_validation": 1.1103666332638595,
         "err_workflow0_minus_validation_kwh_year": 74022.56150000077,
         "err_workflow0_abs_kwh_year": 74022.56150000077,
-        "err_workflow0_pct_of_validation": 18.941244898235553
+        "err_workflow0_pct_of_validation": 18.941244898235553,
+        "err_oven_minus_cea_kwh_year": 2271.3600000004517,
+        "err_oven_vs_cea_ratio": 0.00717018652504733,
+        "err_oven_vs_cea_pct_of_cea": 0.717018652504733,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.717018652504733
       },
       "geometry": {
         "type": "Polygon",
@@ -8232,7 +8716,11 @@
         "err_ucea_area_pct_of_validation": 0.6807508763390635,
         "err_workflow0_minus_validation_kwh_year": 138935.33237499994,
         "err_workflow0_abs_kwh_year": 138935.33237499994,
-        "err_workflow0_pct_of_validation": 35.02297821608074
+        "err_workflow0_pct_of_validation": 35.02297821608074,
+        "err_oven_minus_cea_kwh_year": 6818.510000000591,
+        "err_oven_vs_cea_ratio": 0.026452702629308232,
+        "err_oven_vs_cea_pct_of_cea": 2.6452702629308233,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.6452702629308233
       },
       "geometry": {
         "type": "Polygon",
@@ -8294,7 +8782,11 @@
         "err_ucea_area_pct_of_validation": 0.5665430034722043,
         "err_workflow0_minus_validation_kwh_year": 39977.76378124993,
         "err_workflow0_abs_kwh_year": 39977.76378124993,
-        "err_workflow0_pct_of_validation": 11.129479406156017
+        "err_workflow0_pct_of_validation": 11.129479406156017,
+        "err_oven_minus_cea_kwh_year": 485.1699999999255,
+        "err_oven_vs_cea_ratio": 0.001519821441890145,
+        "err_oven_vs_cea_pct_of_cea": 0.15198214418901448,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.15198214418901448
       },
       "geometry": {
         "type": "Polygon",
@@ -8356,7 +8848,11 @@
         "err_ucea_area_pct_of_validation": 1.667089297354229,
         "err_workflow0_minus_validation_kwh_year": 66327.12700000062,
         "err_workflow0_abs_kwh_year": 66327.12700000062,
-        "err_workflow0_pct_of_validation": 24.77804986746816
+        "err_workflow0_pct_of_validation": 24.77804986746816,
+        "err_oven_minus_cea_kwh_year": 24.880000000295695,
+        "err_oven_vs_cea_ratio": 0.00012356108817139359,
+        "err_oven_vs_cea_pct_of_cea": 0.012356108817139359,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.012356108817139359
       },
       "geometry": {
         "type": "Polygon",
@@ -8418,7 +8914,11 @@
         "err_ucea_area_pct_of_validation": 0.32239141870299226,
         "err_workflow0_minus_validation_kwh_year": 104116.78881250066,
         "err_workflow0_abs_kwh_year": 104116.78881250066,
-        "err_workflow0_pct_of_validation": 25.37154093166862
+        "err_workflow0_pct_of_validation": 25.37154093166862,
+        "err_oven_minus_cea_kwh_year": -3641.1999999990803,
+        "err_oven_vs_cea_ratio": -0.01188956975966066,
+        "err_oven_vs_cea_pct_of_cea": -1.188956975966066,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.188956975966066
       },
       "geometry": {
         "type": "Polygon",
@@ -8484,7 +8984,11 @@
         "err_ucea_area_pct_of_validation": 1.35699513670916,
         "err_workflow0_minus_validation_kwh_year": 94011.14043750026,
         "err_workflow0_abs_kwh_year": 94011.14043750026,
-        "err_workflow0_pct_of_validation": 24.09356100590459
+        "err_workflow0_pct_of_validation": 24.09356100590459,
+        "err_oven_minus_cea_kwh_year": 20.280000000086147,
+        "err_oven_vs_cea_ratio": 6.847168332969479e-05,
+        "err_oven_vs_cea_pct_of_cea": 0.006847168332969479,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.006847168332969479
       },
       "geometry": {
         "type": "Polygon",
@@ -8546,7 +9050,11 @@
         "err_ucea_area_pct_of_validation": 1.188106083765394,
         "err_workflow0_minus_validation_kwh_year": 38046.18585937546,
         "err_workflow0_abs_kwh_year": 38046.18585937546,
-        "err_workflow0_pct_of_validation": 11.056123841571305
+        "err_workflow0_pct_of_validation": 11.056123841571305,
+        "err_oven_minus_cea_kwh_year": 5835.830000000598,
+        "err_oven_vs_cea_ratio": 0.019066823649093203,
+        "err_oven_vs_cea_pct_of_cea": 1.9066823649093203,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.9066823649093203
       },
       "geometry": {
         "type": "Polygon",
@@ -8608,7 +9116,11 @@
         "err_ucea_area_pct_of_validation": 1.1854176508833474,
         "err_workflow0_minus_validation_kwh_year": 31220.984812499955,
         "err_workflow0_abs_kwh_year": 31220.984812499955,
-        "err_workflow0_pct_of_validation": 11.629797392674158
+        "err_workflow0_pct_of_validation": 11.629797392674158,
+        "err_oven_minus_cea_kwh_year": 764.0099999995437,
+        "err_oven_vs_cea_ratio": 0.0032204661825108024,
+        "err_oven_vs_cea_pct_of_cea": 0.3220466182510802,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.3220466182510802
       },
       "geometry": {
         "type": "Polygon",
@@ -8674,7 +9186,11 @@
         "err_ucea_area_pct_of_validation": 0.8721831348642243,
         "err_workflow0_minus_validation_kwh_year": 77311.29518749943,
         "err_workflow0_abs_kwh_year": 77311.29518749943,
-        "err_workflow0_pct_of_validation": 20.229502000987416
+        "err_workflow0_pct_of_validation": 20.229502000987416,
+        "err_oven_minus_cea_kwh_year": 1373.9800000013201,
+        "err_oven_vs_cea_ratio": 0.004506925201309198,
+        "err_oven_vs_cea_pct_of_cea": 0.45069252013091976,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.45069252013091976
       },
       "geometry": {
         "type": "Polygon",
@@ -8740,7 +9256,11 @@
         "err_ucea_area_pct_of_validation": 1.091124827656668,
         "err_workflow0_minus_validation_kwh_year": 86913.7286249994,
         "err_workflow0_abs_kwh_year": 86913.7286249994,
-        "err_workflow0_pct_of_validation": 22.422589642345763
+        "err_workflow0_pct_of_validation": 22.422589642345763,
+        "err_oven_minus_cea_kwh_year": 9910.0599999993,
+        "err_oven_vs_cea_ratio": 0.032956295859810684,
+        "err_oven_vs_cea_pct_of_cea": 3.2956295859810685,
+        "err_oven_vs_cea_abs_pct_of_cea": 3.2956295859810685
       },
       "geometry": {
         "type": "Polygon",
@@ -8802,7 +9322,11 @@
         "err_ucea_area_pct_of_validation": 0.7599370253484328,
         "err_workflow0_minus_validation_kwh_year": 37487.22637500026,
         "err_workflow0_abs_kwh_year": 37487.22637500026,
-        "err_workflow0_pct_of_validation": 11.18467869714091
+        "err_workflow0_pct_of_validation": 11.18467869714091,
+        "err_oven_minus_cea_kwh_year": 8468.950000000594,
+        "err_oven_vs_cea_ratio": 0.02844997449430989,
+        "err_oven_vs_cea_pct_of_cea": 2.844997449430989,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.844997449430989
       },
       "geometry": {
         "type": "Polygon",
@@ -8864,7 +9388,11 @@
         "err_ucea_area_pct_of_validation": 1.2741448506916897,
         "err_workflow0_minus_validation_kwh_year": 10195.89628125084,
         "err_workflow0_abs_kwh_year": 10195.89628125084,
-        "err_workflow0_pct_of_validation": 3.9611437334236133
+        "err_workflow0_pct_of_validation": 3.9611437334236133,
+        "err_oven_minus_cea_kwh_year": 68.25000000107684,
+        "err_oven_vs_cea_ratio": 0.0002760901221308505,
+        "err_oven_vs_cea_pct_of_cea": 0.027609012213085052,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.027609012213085052
       },
       "geometry": {
         "type": "Polygon",
@@ -8926,7 +9454,11 @@
         "err_ucea_area_pct_of_validation": 1.5174713842792902,
         "err_workflow0_minus_validation_kwh_year": 6466.987515625253,
         "err_workflow0_abs_kwh_year": 6466.987515625253,
-        "err_workflow0_pct_of_validation": 2.4481160151218053
+        "err_workflow0_pct_of_validation": 2.4481160151218053,
+        "err_oven_minus_cea_kwh_year": 1960.2300000005926,
+        "err_oven_vs_cea_ratio": 0.007606788526058049,
+        "err_oven_vs_cea_pct_of_cea": 0.7606788526058049,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7606788526058049
       },
       "geometry": {
         "type": "Polygon",
@@ -8988,7 +9520,11 @@
         "err_ucea_area_pct_of_validation": 1.0341418847271575,
         "err_workflow0_minus_validation_kwh_year": 63793.904062499554,
         "err_workflow0_abs_kwh_year": 63793.904062499554,
-        "err_workflow0_pct_of_validation": 21.305647059386963
+        "err_workflow0_pct_of_validation": 21.305647059386963,
+        "err_oven_minus_cea_kwh_year": 1201.5800000000163,
+        "err_oven_vs_cea_ratio": 0.005099465637895219,
+        "err_oven_vs_cea_pct_of_cea": 0.509946563789522,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.509946563789522
       },
       "geometry": {
         "type": "Polygon",
@@ -9054,7 +9590,11 @@
         "err_ucea_area_pct_of_validation": 1.232644877816462,
         "err_workflow0_minus_validation_kwh_year": 72795.27268749964,
         "err_workflow0_abs_kwh_year": 72795.27268749964,
-        "err_workflow0_pct_of_validation": 19.59268420894938
+        "err_workflow0_pct_of_validation": 19.59268420894938,
+        "err_oven_minus_cea_kwh_year": 1569.5100000005332,
+        "err_oven_vs_cea_ratio": 0.005253627590840421,
+        "err_oven_vs_cea_pct_of_cea": 0.5253627590840421,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.5253627590840421
       },
       "geometry": {
         "type": "Polygon",
@@ -9120,7 +9660,11 @@
         "err_ucea_area_pct_of_validation": 0.6148053097337639,
         "err_workflow0_minus_validation_kwh_year": 65928.48406249942,
         "err_workflow0_abs_kwh_year": 65928.48406249942,
-        "err_workflow0_pct_of_validation": 17.974648464518385
+        "err_workflow0_pct_of_validation": 17.974648464518385,
+        "err_oven_minus_cea_kwh_year": -3668.1599999999744,
+        "err_oven_vs_cea_ratio": -0.012192351820027886,
+        "err_oven_vs_cea_pct_of_cea": -1.2192351820027887,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.2192351820027887
       },
       "geometry": {
         "type": "Polygon",
@@ -9182,7 +9726,11 @@
         "err_ucea_area_pct_of_validation": 0.7047962255516618,
         "err_workflow0_minus_validation_kwh_year": 39662.049640624144,
         "err_workflow0_abs_kwh_year": 39662.049640624144,
-        "err_workflow0_pct_of_validation": 11.540242707363063
+        "err_workflow0_pct_of_validation": 11.540242707363063,
+        "err_oven_minus_cea_kwh_year": -2977.0100000015227,
+        "err_oven_vs_cea_ratio": -0.009792066157178923,
+        "err_oven_vs_cea_pct_of_cea": -0.9792066157178922,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.9792066157178922
       },
       "geometry": {
         "type": "Polygon",
@@ -9244,7 +9792,11 @@
         "err_ucea_area_pct_of_validation": 1.1368909069051247,
         "err_workflow0_minus_validation_kwh_year": 35354.5195624998,
         "err_workflow0_abs_kwh_year": 35354.5195624998,
-        "err_workflow0_pct_of_validation": 18.43233585164949
+        "err_workflow0_pct_of_validation": 18.43233585164949,
+        "err_oven_minus_cea_kwh_year": 1221.8899999998685,
+        "err_oven_vs_cea_ratio": 0.007809972775766981,
+        "err_oven_vs_cea_pct_of_cea": 0.7809972775766981,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7809972775766981
       },
       "geometry": {
         "type": "Polygon",
@@ -9306,7 +9858,11 @@
         "err_ucea_area_pct_of_validation": 0.7067968959570596,
         "err_workflow0_minus_validation_kwh_year": 80899.36093749927,
         "err_workflow0_abs_kwh_year": 80899.36093749927,
-        "err_workflow0_pct_of_validation": 20.096209874326476
+        "err_workflow0_pct_of_validation": 20.096209874326476,
+        "err_oven_minus_cea_kwh_year": -491.46000000002095,
+        "err_oven_vs_cea_ratio": -0.0015278821708313154,
+        "err_oven_vs_cea_pct_of_cea": -0.15278821708313153,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.15278821708313153
       },
       "geometry": {
         "type": "Polygon",
@@ -9380,7 +9936,11 @@
         "err_ucea_area_pct_of_validation": 1.459501172670731,
         "err_workflow0_minus_validation_kwh_year": 64931.513156250294,
         "err_workflow0_abs_kwh_year": 64931.513156250294,
-        "err_workflow0_pct_of_validation": 18.703366013559638
+        "err_workflow0_pct_of_validation": 18.703366013559638,
+        "err_oven_minus_cea_kwh_year": 34392.419999998994,
+        "err_oven_vs_cea_ratio": 0.12185810507007792,
+        "err_oven_vs_cea_pct_of_cea": 12.185810507007792,
+        "err_oven_vs_cea_abs_pct_of_cea": 12.185810507007792
       },
       "geometry": {
         "type": "Polygon",
@@ -9454,7 +10014,11 @@
         "err_ucea_area_pct_of_validation": 0.0023450687658200403,
         "err_workflow0_minus_validation_kwh_year": 28387.527828124876,
         "err_workflow0_abs_kwh_year": 28387.527828124876,
-        "err_workflow0_pct_of_validation": 10.642111897983023
+        "err_workflow0_pct_of_validation": 10.642111897983023,
+        "err_oven_minus_cea_kwh_year": 387.2600000000093,
+        "err_oven_vs_cea_ratio": 0.0016246880763351216,
+        "err_oven_vs_cea_pct_of_cea": 0.16246880763351215,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.16246880763351215
       },
       "geometry": {
         "type": "Polygon",
@@ -9516,7 +10080,11 @@
         "err_ucea_area_pct_of_validation": 1.7807336407339336,
         "err_workflow0_minus_validation_kwh_year": 113023.12181250006,
         "err_workflow0_abs_kwh_year": 113023.12181250006,
-        "err_workflow0_pct_of_validation": 20.06390260794804
+        "err_workflow0_pct_of_validation": 20.06390260794804,
+        "err_oven_minus_cea_kwh_year": 6110.809999999416,
+        "err_oven_vs_cea_ratio": 0.01357075316934889,
+        "err_oven_vs_cea_pct_of_cea": 1.357075316934889,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.357075316934889
       },
       "geometry": {
         "type": "Polygon",
@@ -9578,7 +10146,11 @@
         "err_ucea_area_pct_of_validation": 1.159054794863676,
         "err_workflow0_minus_validation_kwh_year": 88459.49680468946,
         "err_workflow0_abs_kwh_year": 88459.49680468946,
-        "err_workflow0_pct_of_validation": 16.90563301623477
+        "err_workflow0_pct_of_validation": 16.90563301623477,
+        "err_oven_minus_cea_kwh_year": -516.3799999956973,
+        "err_oven_vs_cea_ratio": -0.0011876399610411858,
+        "err_oven_vs_cea_pct_of_cea": -0.11876399610411857,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.11876399610411857
       },
       "geometry": {
         "type": "Polygon",
@@ -9640,7 +10212,11 @@
         "err_ucea_area_pct_of_validation": 1.1020527560202353,
         "err_workflow0_minus_validation_kwh_year": 72992.81923437538,
         "err_workflow0_abs_kwh_year": 72992.81923437538,
-        "err_workflow0_pct_of_validation": 15.438498140794888
+        "err_workflow0_pct_of_validation": 15.438498140794888,
+        "err_oven_minus_cea_kwh_year": -1579.3299999982119,
+        "err_oven_vs_cea_ratio": -0.003950254798220834,
+        "err_oven_vs_cea_pct_of_cea": -0.3950254798220834,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.3950254798220834
       },
       "geometry": {
         "type": "Polygon",
@@ -9702,7 +10278,11 @@
         "err_ucea_area_pct_of_validation": 1.1922567744847405,
         "err_workflow0_minus_validation_kwh_year": 70833.69260937406,
         "err_workflow0_abs_kwh_year": 70833.69260937406,
-        "err_workflow0_pct_of_validation": 13.811946828037858
+        "err_workflow0_pct_of_validation": 13.811946828037858,
+        "err_oven_minus_cea_kwh_year": -3792.3800000016345,
+        "err_oven_vs_cea_ratio": -0.008579851911033014,
+        "err_oven_vs_cea_pct_of_cea": -0.8579851911033014,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8579851911033014
       },
       "geometry": {
         "type": "Polygon",
@@ -9764,7 +10344,11 @@
         "err_ucea_area_pct_of_validation": 1.1873174420638617,
         "err_workflow0_minus_validation_kwh_year": 125224.3390625022,
         "err_workflow0_abs_kwh_year": 125224.3390625022,
-        "err_workflow0_pct_of_validation": 23.82594037204136
+        "err_workflow0_pct_of_validation": 23.82594037204136,
+        "err_oven_minus_cea_kwh_year": 1415.750000001397,
+        "err_oven_vs_cea_ratio": 0.003536232173659172,
+        "err_oven_vs_cea_pct_of_cea": 0.3536232173659172,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.3536232173659172
       },
       "geometry": {
         "type": "Polygon",
@@ -9826,7 +10410,11 @@
         "err_ucea_area_pct_of_validation": 2.444348740762942,
         "err_workflow0_minus_validation_kwh_year": 105983.74756249937,
         "err_workflow0_abs_kwh_year": 105983.74756249937,
-        "err_workflow0_pct_of_validation": 19.378263161777202
+        "err_workflow0_pct_of_validation": 19.378263161777202,
+        "err_oven_minus_cea_kwh_year": 1161.5800000006566,
+        "err_oven_vs_cea_ratio": 0.002634344409678305,
+        "err_oven_vs_cea_pct_of_cea": 0.2634344409678305,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.2634344409678305
       },
       "geometry": {
         "type": "Polygon",
@@ -9888,7 +10476,11 @@
         "err_ucea_area_pct_of_validation": 0.027918099189726122,
         "err_workflow0_minus_validation_kwh_year": 74924.66139843775,
         "err_workflow0_abs_kwh_year": 74924.66139843775,
-        "err_workflow0_pct_of_validation": 15.713057732436539
+        "err_workflow0_pct_of_validation": 15.713057732436539,
+        "err_oven_minus_cea_kwh_year": -2658.2200000006706,
+        "err_oven_vs_cea_ratio": -0.00661403577305203,
+        "err_oven_vs_cea_pct_of_cea": -0.661403577305203,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.661403577305203
       },
       "geometry": {
         "type": "Polygon",
@@ -9950,7 +10542,11 @@
         "err_ucea_area_pct_of_validation": 0.9291145272978264,
         "err_workflow0_minus_validation_kwh_year": 76825.559000001,
         "err_workflow0_abs_kwh_year": 76825.559000001,
-        "err_workflow0_pct_of_validation": 15.427428149929629
+        "err_workflow0_pct_of_validation": 15.427428149929629,
+        "err_oven_minus_cea_kwh_year": -3340.6499999992666,
+        "err_oven_vs_cea_ratio": -0.007932119398002023,
+        "err_oven_vs_cea_pct_of_cea": -0.7932119398002023,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7932119398002023
       },
       "geometry": {
         "type": "Polygon",
@@ -10012,7 +10608,11 @@
         "err_ucea_area_pct_of_validation": 1.3375016602031453,
         "err_workflow0_minus_validation_kwh_year": 31916.609812500712,
         "err_workflow0_abs_kwh_year": 31916.609812500712,
-        "err_workflow0_pct_of_validation": 11.228062130549631
+        "err_workflow0_pct_of_validation": 11.228062130549631,
+        "err_oven_minus_cea_kwh_year": 1449.6100000003353,
+        "err_oven_vs_cea_ratio": 0.005744649400871359,
+        "err_oven_vs_cea_pct_of_cea": 0.5744649400871359,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.5744649400871359
       },
       "geometry": {
         "type": "Polygon",
@@ -10074,7 +10674,11 @@
         "err_ucea_area_pct_of_validation": 1.7650710582619773,
         "err_workflow0_minus_validation_kwh_year": 37818.838265625585,
         "err_workflow0_abs_kwh_year": 37818.838265625585,
-        "err_workflow0_pct_of_validation": 12.371780639236581
+        "err_workflow0_pct_of_validation": 12.371780639236581,
+        "err_oven_minus_cea_kwh_year": 756.1400000004214,
+        "err_oven_vs_cea_ratio": 0.0028228139394028038,
+        "err_oven_vs_cea_pct_of_cea": 0.2822813939402804,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.2822813939402804
       },
       "geometry": {
         "type": "Polygon",
@@ -10136,7 +10740,11 @@
         "err_ucea_area_pct_of_validation": 1.2841223069319863,
         "err_workflow0_minus_validation_kwh_year": 24488.66104687532,
         "err_workflow0_abs_kwh_year": 24488.66104687532,
-        "err_workflow0_pct_of_validation": 9.138462991122047
+        "err_workflow0_pct_of_validation": 9.138462991122047,
+        "err_oven_minus_cea_kwh_year": 2035.6900000004098,
+        "err_oven_vs_cea_ratio": 0.008360643039573026,
+        "err_oven_vs_cea_pct_of_cea": 0.8360643039573026,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8360643039573026
       },
       "geometry": {
         "type": "Polygon",
@@ -10198,7 +10806,11 @@
         "err_ucea_area_pct_of_validation": 2.5804127617561394,
         "err_workflow0_minus_validation_kwh_year": 24268.89059374985,
         "err_workflow0_abs_kwh_year": 24268.89059374985,
-        "err_workflow0_pct_of_validation": 8.61453229864334
+        "err_workflow0_pct_of_validation": 8.61453229864334,
+        "err_oven_minus_cea_kwh_year": 2294.729999999574,
+        "err_oven_vs_cea_ratio": 0.008913253006992358,
+        "err_oven_vs_cea_pct_of_cea": 0.8913253006992358,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8913253006992358
       },
       "geometry": {
         "type": "Polygon",
@@ -10260,7 +10872,11 @@
         "err_ucea_area_pct_of_validation": 1.224279085131706,
         "err_workflow0_minus_validation_kwh_year": 91855.89318750019,
         "err_workflow0_abs_kwh_year": 91855.89318750019,
-        "err_workflow0_pct_of_validation": 24.063480450698478
+        "err_workflow0_pct_of_validation": 24.063480450698478,
+        "err_oven_minus_cea_kwh_year": 2683.6300000004703,
+        "err_oven_vs_cea_ratio": 0.009258131987487074,
+        "err_oven_vs_cea_pct_of_cea": 0.9258131987487074,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.9258131987487074
       },
       "geometry": {
         "type": "Polygon",
@@ -10322,7 +10938,11 @@
         "err_ucea_area_pct_of_validation": 0.3323389251392898,
         "err_workflow0_minus_validation_kwh_year": 92506.83256250003,
         "err_workflow0_abs_kwh_year": 92506.83256250003,
-        "err_workflow0_pct_of_validation": 24.222435278845655
+        "err_workflow0_pct_of_validation": 24.222435278845655,
+        "err_oven_minus_cea_kwh_year": 1142.5900000010151,
+        "err_oven_vs_cea_ratio": 0.003948151123669384,
+        "err_oven_vs_cea_pct_of_cea": 0.39481511236693845,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.39481511236693845
       },
       "geometry": {
         "type": "Polygon",
@@ -10384,7 +11004,11 @@
         "err_ucea_area_pct_of_validation": 1.0845465169547002,
         "err_workflow0_minus_validation_kwh_year": 89791.40499999904,
         "err_workflow0_abs_kwh_year": 89791.40499999904,
-        "err_workflow0_pct_of_validation": 23.483123230579398
+        "err_workflow0_pct_of_validation": 23.483123230579398,
+        "err_oven_minus_cea_kwh_year": 2990.099999999511,
+        "err_oven_vs_cea_ratio": 0.010219968754599691,
+        "err_oven_vs_cea_pct_of_cea": 1.021996875459969,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.021996875459969
       },
       "geometry": {
         "type": "Polygon",
@@ -10450,7 +11074,11 @@
         "err_ucea_area_pct_of_validation": 1.645244603663945,
         "err_workflow0_minus_validation_kwh_year": 42874.94857812484,
         "err_workflow0_abs_kwh_year": 42874.94857812484,
-        "err_workflow0_pct_of_validation": 14.679540300564605
+        "err_workflow0_pct_of_validation": 14.679540300564605,
+        "err_oven_minus_cea_kwh_year": -344.1499999999651,
+        "err_oven_vs_cea_ratio": -0.0013810310103760308,
+        "err_oven_vs_cea_pct_of_cea": -0.13810310103760307,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.13810310103760307
       },
       "geometry": {
         "type": "Polygon",
@@ -10516,7 +11144,11 @@
         "err_ucea_area_pct_of_validation": 0.6473129363301441,
         "err_workflow0_minus_validation_kwh_year": 115861.02215625101,
         "err_workflow0_abs_kwh_year": 115861.02215625101,
-        "err_workflow0_pct_of_validation": 27.679102306593112
+        "err_workflow0_pct_of_validation": 27.679102306593112,
+        "err_oven_minus_cea_kwh_year": 1891.610000000801,
+        "err_oven_vs_cea_ratio": 0.006248595881930198,
+        "err_oven_vs_cea_pct_of_cea": 0.6248595881930198,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.6248595881930198
       },
       "geometry": {
         "type": "Polygon",
@@ -10578,7 +11210,11 @@
         "err_ucea_area_pct_of_validation": 0.7943182655652528,
         "err_workflow0_minus_validation_kwh_year": 90003.2168437498,
         "err_workflow0_abs_kwh_year": 90003.2168437498,
-        "err_workflow0_pct_of_validation": 23.018125837144908
+        "err_workflow0_pct_of_validation": 23.018125837144908,
+        "err_oven_minus_cea_kwh_year": 6452.229999998584,
+        "err_oven_vs_cea_ratio": 0.021435483703246407,
+        "err_oven_vs_cea_pct_of_cea": 2.1435483703246407,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.1435483703246407
       },
       "geometry": {
         "type": "Polygon",
@@ -10640,7 +11276,11 @@
         "err_ucea_area_pct_of_validation": 1.0279414056206888,
         "err_workflow0_minus_validation_kwh_year": 55587.20954687375,
         "err_workflow0_abs_kwh_year": 55587.20954687375,
-        "err_workflow0_pct_of_validation": 15.560305668390074
+        "err_workflow0_pct_of_validation": 15.560305668390074,
+        "err_oven_minus_cea_kwh_year": 1666.3799999986659,
+        "err_oven_vs_cea_ratio": 0.0055242158918874995,
+        "err_oven_vs_cea_pct_of_cea": 0.55242158918875,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.55242158918875
       },
       "geometry": {
         "type": "Polygon",
@@ -10706,7 +11346,11 @@
         "err_ucea_area_pct_of_validation": 0.578956093064559,
         "err_workflow0_minus_validation_kwh_year": 75865.31306249974,
         "err_workflow0_abs_kwh_year": 75865.31306249974,
-        "err_workflow0_pct_of_validation": 23.329736537592456
+        "err_workflow0_pct_of_validation": 23.329736537592456,
+        "err_oven_minus_cea_kwh_year": 222.920000000071,
+        "err_oven_vs_cea_ratio": 0.0008941052784501847,
+        "err_oven_vs_cea_pct_of_cea": 0.08941052784501848,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.08941052784501848
       },
       "geometry": {
         "type": "Polygon",
@@ -10772,7 +11416,11 @@
         "err_ucea_area_pct_of_validation": 0.37822818573760886,
         "err_workflow0_minus_validation_kwh_year": 87902.3480624989,
         "err_workflow0_abs_kwh_year": 87902.3480624989,
-        "err_workflow0_pct_of_validation": 22.193757305881885
+        "err_workflow0_pct_of_validation": 22.193757305881885,
+        "err_oven_minus_cea_kwh_year": 467.71999999828404,
+        "err_oven_vs_cea_ratio": 0.0015177556349120866,
+        "err_oven_vs_cea_pct_of_cea": 0.15177556349120866,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.15177556349120866
       },
       "geometry": {
         "type": "Polygon",
@@ -10834,7 +11482,11 @@
         "err_ucea_area_pct_of_validation": 0.4437965975953256,
         "err_workflow0_minus_validation_kwh_year": 88282.23337500007,
         "err_workflow0_abs_kwh_year": 88282.23337500007,
-        "err_workflow0_pct_of_validation": 22.609096082346625
+        "err_workflow0_pct_of_validation": 22.609096082346625,
+        "err_oven_minus_cea_kwh_year": -319.9999999992433,
+        "err_oven_vs_cea_ratio": -0.0010589365708882034,
+        "err_oven_vs_cea_pct_of_cea": -0.10589365708882034,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.10589365708882034
       },
       "geometry": {
         "type": "Polygon",
@@ -10896,7 +11548,11 @@
         "err_ucea_area_pct_of_validation": 0.12132262783637734,
         "err_workflow0_minus_validation_kwh_year": 86111.6949218749,
         "err_workflow0_abs_kwh_year": 86111.6949218749,
-        "err_workflow0_pct_of_validation": 21.683651655206827
+        "err_workflow0_pct_of_validation": 21.683651655206827,
+        "err_oven_minus_cea_kwh_year": 3395.439999999013,
+        "err_oven_vs_cea_ratio": 0.010917266588378024,
+        "err_oven_vs_cea_pct_of_cea": 1.0917266588378023,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.0917266588378023
       },
       "geometry": {
         "type": "Polygon",
@@ -10970,7 +11626,11 @@
         "err_ucea_area_pct_of_validation": 1.0280732963303167,
         "err_workflow0_minus_validation_kwh_year": 55439.06965624908,
         "err_workflow0_abs_kwh_year": 55439.06965624908,
-        "err_workflow0_pct_of_validation": 16.661332600647874
+        "err_workflow0_pct_of_validation": 16.661332600647874,
+        "err_oven_minus_cea_kwh_year": 9530.829999998969,
+        "err_oven_vs_cea_ratio": 0.03436987652155116,
+        "err_oven_vs_cea_pct_of_cea": 3.436987652155116,
+        "err_oven_vs_cea_abs_pct_of_cea": 3.436987652155116
       },
       "geometry": {
         "type": "Polygon",
@@ -11044,7 +11704,11 @@
         "err_ucea_area_pct_of_validation": 0.6614768339268374,
         "err_workflow0_minus_validation_kwh_year": 86472.46181250026,
         "err_workflow0_abs_kwh_year": 86472.46181250026,
-        "err_workflow0_pct_of_validation": 22.090739546125402
+        "err_workflow0_pct_of_validation": 22.090739546125402,
+        "err_oven_minus_cea_kwh_year": 2784.840000000724,
+        "err_oven_vs_cea_ratio": 0.009131531014217664,
+        "err_oven_vs_cea_pct_of_cea": 0.9131531014217663,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.9131531014217663
       },
       "geometry": {
         "type": "Polygon",
@@ -11106,7 +11770,11 @@
         "err_ucea_area_pct_of_validation": 0.7269770125763118,
         "err_workflow0_minus_validation_kwh_year": 81801.57312500005,
         "err_workflow0_abs_kwh_year": 81801.57312500005,
-        "err_workflow0_pct_of_validation": 21.04698625359287
+        "err_workflow0_pct_of_validation": 21.04698625359287,
+        "err_oven_minus_cea_kwh_year": 9309.840000000375,
+        "err_oven_vs_cea_ratio": 0.030339035258150772,
+        "err_oven_vs_cea_pct_of_cea": 3.0339035258150773,
+        "err_oven_vs_cea_abs_pct_of_cea": 3.0339035258150773
       },
       "geometry": {
         "type": "Polygon",
@@ -11172,7 +11840,11 @@
         "err_ucea_area_pct_of_validation": 0.9605359016459474,
         "err_workflow0_minus_validation_kwh_year": 68911.41356250091,
         "err_workflow0_abs_kwh_year": 68911.41356250091,
-        "err_workflow0_pct_of_validation": 18.02965308770107
+        "err_workflow0_pct_of_validation": 18.02965308770107,
+        "err_oven_minus_cea_kwh_year": 4154.800000001444,
+        "err_oven_vs_cea_ratio": 0.0132614057090098,
+        "err_oven_vs_cea_pct_of_cea": 1.32614057090098,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.32614057090098
       },
       "geometry": {
         "type": "Polygon",
@@ -11238,7 +11910,11 @@
         "err_ucea_area_pct_of_validation": 3.3062456845980672,
         "err_workflow0_minus_validation_kwh_year": 63339.21871874994,
         "err_workflow0_abs_kwh_year": 63339.21871874994,
-        "err_workflow0_pct_of_validation": 19.98370899839627
+        "err_workflow0_pct_of_validation": 19.98370899839627,
+        "err_oven_minus_cea_kwh_year": 1410.7999999994936,
+        "err_oven_vs_cea_ratio": 0.005562761358206042,
+        "err_oven_vs_cea_pct_of_cea": 0.5562761358206042,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.5562761358206042
       },
       "geometry": {
         "type": "Polygon",
@@ -11304,7 +11980,11 @@
         "err_ucea_area_pct_of_validation": 1.1669061611960592,
         "err_workflow0_minus_validation_kwh_year": 95730.78649999987,
         "err_workflow0_abs_kwh_year": 95730.78649999987,
-        "err_workflow0_pct_of_validation": 23.832367333532478
+        "err_workflow0_pct_of_validation": 23.832367333532478,
+        "err_oven_minus_cea_kwh_year": 1834.8299999997253,
+        "err_oven_vs_cea_ratio": 0.005997095045243448,
+        "err_oven_vs_cea_pct_of_cea": 0.5997095045243448,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.5997095045243448
       },
       "geometry": {
         "type": "Polygon",
@@ -11366,7 +12046,11 @@
         "err_ucea_area_pct_of_validation": 0.6591079833548383,
         "err_workflow0_minus_validation_kwh_year": 86848.86143749929,
         "err_workflow0_abs_kwh_year": 86848.86143749929,
-        "err_workflow0_pct_of_validation": 22.007749089906923
+        "err_workflow0_pct_of_validation": 22.007749089906923,
+        "err_oven_minus_cea_kwh_year": 5081.259999999427,
+        "err_oven_vs_cea_ratio": 0.01650940645238617,
+        "err_oven_vs_cea_pct_of_cea": 1.650940645238617,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.650940645238617
       },
       "geometry": {
         "type": "Polygon",
@@ -11428,7 +12112,11 @@
         "err_ucea_area_pct_of_validation": 0.31319459306799297,
         "err_workflow0_minus_validation_kwh_year": 83342.63143750076,
         "err_workflow0_abs_kwh_year": 83342.63143750076,
-        "err_workflow0_pct_of_validation": 22.314225112187096
+        "err_workflow0_pct_of_validation": 22.314225112187096,
+        "err_oven_minus_cea_kwh_year": -108.33999999891967,
+        "err_oven_vs_cea_ratio": -0.00037338935345058923,
+        "err_oven_vs_cea_pct_of_cea": -0.03733893534505892,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.03733893534505892
       },
       "geometry": {
         "type": "Polygon",
@@ -11494,7 +12182,11 @@
         "err_ucea_area_pct_of_validation": 0.9121963890359549,
         "err_workflow0_minus_validation_kwh_year": 20886.32354687454,
         "err_workflow0_abs_kwh_year": 20886.32354687454,
-        "err_workflow0_pct_of_validation": 7.709247130711123
+        "err_workflow0_pct_of_validation": 7.709247130711123,
+        "err_oven_minus_cea_kwh_year": 1994.9899999996996,
+        "err_oven_vs_cea_ratio": 0.007978706704749603,
+        "err_oven_vs_cea_pct_of_cea": 0.7978706704749603,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7978706704749603
       },
       "geometry": {
         "type": "Polygon",
@@ -11560,7 +12252,11 @@
         "err_ucea_area_pct_of_validation": 1.1755342744068915,
         "err_workflow0_minus_validation_kwh_year": 86076.37931250053,
         "err_workflow0_abs_kwh_year": 86076.37931250053,
-        "err_workflow0_pct_of_validation": 22.20996583711588
+        "err_workflow0_pct_of_validation": 22.20996583711588,
+        "err_oven_minus_cea_kwh_year": 1948.3000000001048,
+        "err_oven_vs_cea_ratio": 0.006462428753406708,
+        "err_oven_vs_cea_pct_of_cea": 0.6462428753406708,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.6462428753406708
       },
       "geometry": {
         "type": "Polygon",
@@ -11622,7 +12318,11 @@
         "err_ucea_area_pct_of_validation": 0.8083303180827697,
         "err_workflow0_minus_validation_kwh_year": 79518.78968749987,
         "err_workflow0_abs_kwh_year": 79518.78968749987,
-        "err_workflow0_pct_of_validation": 19.70721643031028
+        "err_workflow0_pct_of_validation": 19.70721643031028,
+        "err_oven_minus_cea_kwh_year": -2280.6199999998207,
+        "err_oven_vs_cea_ratio": -0.007039339953616631,
+        "err_oven_vs_cea_pct_of_cea": -0.7039339953616631,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7039339953616631
       },
       "geometry": {
         "type": "Polygon",
@@ -11692,7 +12392,11 @@
         "err_ucea_area_pct_of_validation": 3.0747473534589536,
         "err_workflow0_minus_validation_kwh_year": 50929.735359374696,
         "err_workflow0_abs_kwh_year": 50929.735359374696,
-        "err_workflow0_pct_of_validation": 17.64933306224933
+        "err_workflow0_pct_of_validation": 17.64933306224933,
+        "err_oven_minus_cea_kwh_year": 11492.349999999948,
+        "err_oven_vs_cea_ratio": 0.04836137081037434,
+        "err_oven_vs_cea_pct_of_cea": 4.836137081037434,
+        "err_oven_vs_cea_abs_pct_of_cea": 4.836137081037434
       },
       "geometry": {
         "type": "Polygon",
@@ -11762,7 +12466,11 @@
         "err_ucea_area_pct_of_validation": 0.6975665947485054,
         "err_workflow0_minus_validation_kwh_year": 95757.99081250117,
         "err_workflow0_abs_kwh_year": 95757.99081250117,
-        "err_workflow0_pct_of_validation": 24.445285896983073
+        "err_workflow0_pct_of_validation": 24.445285896983073,
+        "err_oven_minus_cea_kwh_year": 4003.820000001637,
+        "err_oven_vs_cea_ratio": 0.013527983777588504,
+        "err_oven_vs_cea_pct_of_cea": 1.3527983777588504,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.3527983777588504
       },
       "geometry": {
         "type": "Polygon",
@@ -11824,7 +12532,11 @@
         "err_ucea_area_pct_of_validation": 0.707983571352493,
         "err_workflow0_minus_validation_kwh_year": 116167.71999999922,
         "err_workflow0_abs_kwh_year": 116167.71999999922,
-        "err_workflow0_pct_of_validation": 28.13246371308325
+        "err_workflow0_pct_of_validation": 28.13246371308325,
+        "err_oven_minus_cea_kwh_year": 5881.359999998822,
+        "err_oven_vs_cea_ratio": 0.0198183415290817,
+        "err_oven_vs_cea_pct_of_cea": 1.9818341529081698,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.9818341529081698
       },
       "geometry": {
         "type": "Polygon",
@@ -11886,7 +12598,11 @@
         "err_ucea_area_pct_of_validation": 0.5032234279690361,
         "err_workflow0_minus_validation_kwh_year": 88123.32267187524,
         "err_workflow0_abs_kwh_year": 88123.32267187524,
-        "err_workflow0_pct_of_validation": 23.90472812195476
+        "err_workflow0_pct_of_validation": 23.90472812195476,
+        "err_oven_minus_cea_kwh_year": 2768.02999999898,
+        "err_oven_vs_cea_ratio": 0.009867475676825502,
+        "err_oven_vs_cea_pct_of_cea": 0.9867475676825502,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.9867475676825502
       },
       "geometry": {
         "type": "Polygon",
@@ -11956,7 +12672,11 @@
         "err_ucea_area_pct_of_validation": 0.9745243125676779,
         "err_workflow0_minus_validation_kwh_year": 32740.39359375101,
         "err_workflow0_abs_kwh_year": 32740.39359375101,
-        "err_workflow0_pct_of_validation": 11.00794596654672
+        "err_workflow0_pct_of_validation": 11.00794596654672,
+        "err_oven_minus_cea_kwh_year": -1109.3199999984354,
+        "err_oven_vs_cea_ratio": -0.004191099825560146,
+        "err_oven_vs_cea_pct_of_cea": -0.41910998255601456,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.41910998255601456
       },
       "geometry": {
         "type": "Polygon",
@@ -12026,7 +12746,11 @@
         "err_ucea_area_pct_of_validation": 1.2053368080215887,
         "err_workflow0_minus_validation_kwh_year": 112353.58406249987,
         "err_workflow0_abs_kwh_year": 112353.58406249987,
-        "err_workflow0_pct_of_validation": 28.843795250735134
+        "err_workflow0_pct_of_validation": 28.843795250735134,
+        "err_oven_minus_cea_kwh_year": 923.0199999992037,
+        "err_oven_vs_cea_ratio": 0.00333015009631503,
+        "err_oven_vs_cea_pct_of_cea": 0.33301500963150305,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.33301500963150305
       },
       "geometry": {
         "type": "Polygon",
@@ -12088,7 +12812,11 @@
         "err_ucea_area_pct_of_validation": 0.359962612039504,
         "err_workflow0_minus_validation_kwh_year": 111148.2082187509,
         "err_workflow0_abs_kwh_year": 111148.2082187509,
-        "err_workflow0_pct_of_validation": 28.213462696823342
+        "err_workflow0_pct_of_validation": 28.213462696823342,
+        "err_oven_minus_cea_kwh_year": 2470.5800000009476,
+        "err_oven_vs_cea_ratio": 0.008735944001250875,
+        "err_oven_vs_cea_pct_of_cea": 0.8735944001250875,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8735944001250875
       },
       "geometry": {
         "type": "Polygon",
@@ -12150,7 +12878,11 @@
         "err_ucea_area_pct_of_validation": 0.8161098938369893,
         "err_workflow0_minus_validation_kwh_year": 120977.17974999949,
         "err_workflow0_abs_kwh_year": 120977.17974999949,
-        "err_workflow0_pct_of_validation": 29.17351183598106
+        "err_workflow0_pct_of_validation": 29.17351183598106,
+        "err_oven_minus_cea_kwh_year": 5608.929999999178,
+        "err_oven_vs_cea_ratio": 0.01909719432190722,
+        "err_oven_vs_cea_pct_of_cea": 1.909719432190722,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.909719432190722
       },
       "geometry": {
         "type": "Polygon",
@@ -12216,7 +12948,11 @@
         "err_ucea_area_pct_of_validation": 1.1874363711538043,
         "err_workflow0_minus_validation_kwh_year": 55179.0496718752,
         "err_workflow0_abs_kwh_year": 55179.0496718752,
-        "err_workflow0_pct_of_validation": 19.08614322985982
+        "err_workflow0_pct_of_validation": 19.08614322985982,
+        "err_oven_minus_cea_kwh_year": 3331.059999999794,
+        "err_oven_vs_cea_ratio": 0.014239787721120114,
+        "err_oven_vs_cea_pct_of_cea": 1.4239787721120114,
+        "err_oven_vs_cea_abs_pct_of_cea": 1.4239787721120114
       },
       "geometry": {
         "type": "Polygon",
@@ -12282,7 +13018,11 @@
         "err_ucea_area_pct_of_validation": 1.6689061770017146,
         "err_workflow0_minus_validation_kwh_year": 16370.782718749542,
         "err_workflow0_abs_kwh_year": 16370.782718749542,
-        "err_workflow0_pct_of_validation": 5.945412088921336
+        "err_workflow0_pct_of_validation": 5.945412088921336,
+        "err_oven_minus_cea_kwh_year": 2281.7799999995623,
+        "err_oven_vs_cea_ratio": 0.008810616573261619,
+        "err_oven_vs_cea_pct_of_cea": 0.8810616573261619,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.8810616573261619
       },
       "geometry": {
         "type": "Polygon",
@@ -12344,7 +13084,11 @@
         "err_ucea_area_pct_of_validation": 1.4342222810990604,
         "err_workflow0_minus_validation_kwh_year": 29527.64248437481,
         "err_workflow0_abs_kwh_year": 29527.64248437481,
-        "err_workflow0_pct_of_validation": 11.068959316051014
+        "err_workflow0_pct_of_validation": 11.068959316051014,
+        "err_oven_minus_cea_kwh_year": 134.31999999957043,
+        "err_oven_vs_cea_ratio": 0.0005661940823258096,
+        "err_oven_vs_cea_pct_of_cea": 0.05661940823258096,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.05661940823258096
       },
       "geometry": {
         "type": "Polygon",
@@ -12406,7 +13150,11 @@
         "err_ucea_area_pct_of_validation": 0.6187062663651913,
         "err_workflow0_minus_validation_kwh_year": 95409.3438750006,
         "err_workflow0_abs_kwh_year": 95409.3438750006,
-        "err_workflow0_pct_of_validation": 24.631273904527774
+        "err_workflow0_pct_of_validation": 24.631273904527774,
+        "err_oven_minus_cea_kwh_year": 6133.750000000233,
+        "err_oven_vs_cea_ratio": 0.021010232612691044,
+        "err_oven_vs_cea_pct_of_cea": 2.101023261269104,
+        "err_oven_vs_cea_abs_pct_of_cea": 2.101023261269104
       },
       "geometry": {
         "type": "Polygon",
@@ -12468,7 +13216,11 @@
         "err_ucea_area_pct_of_validation": 0.0013371318963466827,
         "err_workflow0_minus_validation_kwh_year": 8126.416437500135,
         "err_workflow0_abs_kwh_year": 8126.416437500135,
-        "err_workflow0_pct_of_validation": 15.153476510133038
+        "err_workflow0_pct_of_validation": 15.153476510133038,
+        "err_oven_minus_cea_kwh_year": 150.77000000013504,
+        "err_oven_vs_cea_ratio": 0.003313554276514324,
+        "err_oven_vs_cea_pct_of_cea": 0.3313554276514324,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.3313554276514324
       },
       "geometry": {
         "type": "Polygon",
@@ -12530,7 +13282,11 @@
         "err_ucea_area_pct_of_validation": 0.3428261390260824,
         "err_workflow0_minus_validation_kwh_year": 493425.8764843745,
         "err_workflow0_abs_kwh_year": 493425.8764843745,
-        "err_workflow0_pct_of_validation": 17.743083346609254
+        "err_workflow0_pct_of_validation": 17.743083346609254,
+        "err_oven_minus_cea_kwh_year": 9798.880000001285,
+        "err_oven_vs_cea_ratio": 0.004283622433739304,
+        "err_oven_vs_cea_pct_of_cea": 0.4283622433739304,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.4283622433739304
       },
       "geometry": {
         "type": "Polygon",
@@ -12640,7 +13396,11 @@
         "err_ucea_area_pct_of_validation": 0.007207247518742883,
         "err_workflow0_minus_validation_kwh_year": 340127.9868750005,
         "err_workflow0_abs_kwh_year": 340127.9868750005,
-        "err_workflow0_pct_of_validation": 49.566673176493495
+        "err_workflow0_pct_of_validation": 49.566673176493495,
+        "err_oven_minus_cea_kwh_year": -2722.7399999994086,
+        "err_oven_vs_cea_ratio": -0.007867485599000992,
+        "err_oven_vs_cea_pct_of_cea": -0.7867485599000992,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.7867485599000992
       },
       "geometry": {
         "type": "Polygon",
@@ -12714,7 +13474,11 @@
         "err_ucea_area_pct_of_validation": 0.011741664839644565,
         "err_workflow0_minus_validation_kwh_year": 306244.13954687613,
         "err_workflow0_abs_kwh_year": 306244.13954687613,
-        "err_workflow0_pct_of_validation": 47.97486801399315
+        "err_workflow0_pct_of_validation": 47.97486801399315,
+        "err_oven_minus_cea_kwh_year": 363.4299999992363,
+        "err_oven_vs_cea_ratio": 0.0010943433053360477,
+        "err_oven_vs_cea_pct_of_cea": 0.10943433053360477,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.10943433053360477
       },
       "geometry": {
         "type": "Polygon",
@@ -12780,7 +13544,11 @@
         "err_ucea_area_pct_of_validation": 0.0012127678439544719,
         "err_workflow0_minus_validation_kwh_year": 79379.38495312509,
         "err_workflow0_abs_kwh_year": 79379.38495312509,
-        "err_workflow0_pct_of_validation": 14.172480723124284
+        "err_workflow0_pct_of_validation": 14.172480723124284,
+        "err_oven_minus_cea_kwh_year": -554.2100000008941,
+        "err_oven_vs_cea_ratio": -0.0011528848790557677,
+        "err_oven_vs_cea_pct_of_cea": -0.11528848790557678,
+        "err_oven_vs_cea_abs_pct_of_cea": 0.11528848790557678
       },
       "geometry": {
         "type": "Polygon",

@@ -1,0 +1,42 @@
+{
+  "type": "FeatureCollection",
+  "name": "good_area",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "area_id": "good_area",
+        "source_crs": "EPSG:4326",
+        "crs": "EPSG:4326",
+        "ucea_compatible": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -9.204397201538088,
+              38.75655020905061
+            ],
+            [
+              -9.19761657714844,
+              38.75655020905061
+            ],
+            [
+              -9.19761657714844,
+              38.75086491020125
+            ],
+            [
+              -9.204397201538088,
+              38.75086491020125
+            ],
+            [
+              -9.204397201538088,
+              38.75655020905061
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

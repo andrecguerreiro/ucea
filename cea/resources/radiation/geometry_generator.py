@@ -14,6 +14,7 @@ import time
 from itertools import repeat
 import geopandas as gpd
 import numpy as np
+from cea.datamanagement.databases_verification import verify_input_geometry_zone, verify_input_geometry_surroundings # I added this
 import pandas as pd
 from shapely.geometry import Polygon as ShapelyPolygon
 from shapely.ops import triangulate as shapely_triangulate
@@ -1284,26 +1285,57 @@ def geometry_main(config: cea.config.Configuration,
 
 
 if __name__ == '__main__':
+    print("popo")
     config = cea.config.Configuration()
     locator = cea.inputlocator.InputLocator(scenario=config.scenario)
     settings = config.radiation
+    # config: cea.config.Configuration
 
+    zone_path = locator.get_zone_geometry()
+    surroundings_path = locator.get_surroundings_geometry()
+
+    print(f"zone: {zone_path}")
+    print(f"surroundings: {surroundings_path}")
+
+    zone_df = gpd.GeoDataFrame.from_file(zone_path)
+    surroundings_df = gpd.GeoDataFrame.from_file(surroundings_path)
+
+    verify_input_geometry_zone(zone_df)
+    verify_input_geometry_surroundings(surroundings_df)
+
+
+    trees_df = gpd.GeoDataFrame(geometry=[], crs=zone_df.crs)
+    terrain_raster = gdal.Open(locator.get_terrain())
+    architecture_wwr_df = gpd.GeoDataFrame.from_file(locator.get_building_architecture()).set_index('name')
+    geometry_pickle_dir = os.path.join(locator.get_solar_radiation_folder(), "radiance_geometry_pickle")
     # run routine City GML LOD 1
+
+
     time1 = time.time()
-    geometry_terrain, geometry_3D_zone, geometry_3D_surroundings = geometry_main(locator, config)
+
+    (geometry_terrain,
+         zone_building_names,
+         surroundings_building_names,
+         tree_surfaces) = geometry_main(config,zone_df,surroundings_df,trees_df,terrain_raster,architecture_wwr_df,geometry_pickle_dir)
+
+    # geometry_main returns building names; load the serialized geometry objects for visualization.
+    geometry_3D_zone = [BuildingGeometry.load(os.path.join(geometry_pickle_dir, 'zone', str(name)))
+                        for name in zone_building_names]
+    geometry_3D_surroundings = [BuildingGeometry.load(os.path.join(geometry_pickle_dir, 'surroundings', str(name)))
+                                for name in surroundings_building_names]
 
     # to visualize the results
     geometry_buildings = []
     geometry_buildings_nonop = []
-    walls_intercept = [val for sublist in geometry_3D_zone for val, inter in
-                       zip(sublist['walls'], sublist['intersect_walls']) if inter > 0]
-    windows = [val for sublist in geometry_3D_zone for val in sublist['windows']]
-    walls = [val for sublist in geometry_3D_zone for val in sublist['walls']]
-    roofs = [val for sublist in geometry_3D_zone for val in sublist['roofs']]
-    footprint = [val for sublist in geometry_3D_zone for val in sublist['footprint']]
-    walls_s = [val for sublist in geometry_3D_surroundings for val in sublist['walls']]
-    windows_s = [val for sublist in geometry_3D_surroundings for val in sublist['windows']]
-    roof_s = [val for sublist in geometry_3D_surroundings for val in sublist['roofs']]
+    walls_intercept = [wall for building_geometry in geometry_3D_zone for wall, inter in
+                       zip((building_geometry.walls or []), (building_geometry.intersect_walls or [])) if inter > 0]
+    windows = [window for building_geometry in geometry_3D_zone for window in (building_geometry.windows or [])]
+    walls = [wall for building_geometry in geometry_3D_zone for wall in (building_geometry.walls or [])]
+    roofs = [roof for building_geometry in geometry_3D_zone for roof in (building_geometry.roofs or [])]
+    footprint = [face for building_geometry in geometry_3D_zone for face in (building_geometry.footprint or [])]
+    walls_s = [wall for building_geometry in geometry_3D_surroundings for wall in (building_geometry.walls or [])]
+    windows_s = [window for building_geometry in geometry_3D_surroundings for window in (building_geometry.windows or [])]
+    roof_s = [roof for building_geometry in geometry_3D_surroundings for roof in (building_geometry.roofs or [])]
 
     geometry_buildings_nonop.extend(windows)
     geometry_buildings_nonop.extend(windows_s)
@@ -1314,13 +1346,13 @@ if __name__ == '__main__':
     geometry_buildings.extend(roof_s)
     normals_terrain = calculate.face_normal_as_edges(geometry_terrain, 5)
     utility.visualise([geometry_terrain, geometry_buildings, geometry_buildings_nonop, walls_intercept],
-                      ["GREEN", "WHITE", "BLUE", "RED"])  # install Wxpython
+                      ["GREEN", "WHITE", "BLUE", "RED"], backend="pyside6")  # install Wxpython
 
     utility.visualise([walls_intercept],
-                      ["RED"])
+                      ["RED"], backend="pyside6")
 
     utility.visualise([walls],
-                      ["RED"])
+                      ["RED"], backend="pyside6")
 
     utility.visualise([windows],
-                      ["RED"])
+                      ["RED"], backend="pyside6")

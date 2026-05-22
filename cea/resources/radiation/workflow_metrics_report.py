@@ -342,14 +342,14 @@ def panel_azimuth_deg(
     # Keep this path independent from PANEL_AZIMUTH_OFFSET_DEG, which only undoes non-flat harmonisation.
     if surface_tilt_deg is not None and abs(surface_tilt_deg) <= FLAT_SURFACE_TILT_TOL_DEG:
         return flat_panel_azimuth_deg % 360.0
-    # Use the normal-based azimuth for non-flat rows, then apply optional convention offset.
+    # Prefer CEA azimuth column when available so report binning stays in CEA convention.
+    if surface_azimuth_deg is not None:
+        return (surface_azimuth_deg + PANEL_AZIMUTH_OFFSET_DEG) % 360.0
+    # Fallback for legacy rows missing surface_azimuth_deg.
     if abs(xdir) > 1e-9 or abs(ydir) > 1e-9:
         return (true_azimuth_from_normal(xdir, ydir) + PANEL_AZIMUTH_OFFSET_DEG) % 360.0
-    # Flat roof surfaces often have (xdir, ydir) = (0, 0), but panels are mounted with a tilt.
-    # In that case, use the convention that panel rows face south by default.
-    if surface_azimuth_deg is None:
-        return flat_panel_azimuth_deg % 360.0
-    return (surface_azimuth_deg + PANEL_AZIMUTH_OFFSET_DEG) % 360.0
+    # Last fallback for degenerate rows.
+    return flat_panel_azimuth_deg % 360.0
 
 
 def surface_azimuth_deg_adjusted(
@@ -362,11 +362,11 @@ def surface_azimuth_deg_adjusted(
         if surface_azimuth_deg is None:
             return None
         return surface_azimuth_deg % 360.0
+    if surface_azimuth_deg is not None:
+        return (surface_azimuth_deg + PANEL_AZIMUTH_OFFSET_DEG) % 360.0
     if abs(xdir) > 1e-9 or abs(ydir) > 1e-9:
         return (true_azimuth_from_normal(xdir, ydir) + PANEL_AZIMUTH_OFFSET_DEG) % 360.0
-    if surface_azimuth_deg is None:
-        return None
-    return (surface_azimuth_deg + PANEL_AZIMUTH_OFFSET_DEG) % 360.0
+    return None
 
 
 def weighted_quantile(values: list[float], weights: list[float], q: float) -> float:
